@@ -88,13 +88,15 @@ module Pork
   class Should < BasicObject
     instance_methods.each{ |m| undef_method(m) unless m =~ /^__|^object_id$/ }
 
-    def initialize object
+    def initialize object, message
       @object = object
       @negate = false
+      @message = message
     end
 
     def method_missing msg, *args, &block
-      satisfy("#{@object}.#{msg}(#{args.join(', ')}) to return #{!@negate}") do
+      satisfy("#{@object}.#{msg}(#{args.join(', ')}) to" \
+              " return #{!@negate}\n#{@message}") do
         @object.public_send(msg, *args, &block)
       end
     end
@@ -156,7 +158,7 @@ module Pork
 end
 
 module Kernel
-  def should
-    Pork::Should.new(self)
+  def should message=nil
+    Pork::Should.new(self, message)
   end
 end
