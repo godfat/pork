@@ -26,6 +26,7 @@ module Pork
     module_function
     def describe message, &block
       Pork::Executor.execute(self, message, block)
+      ::Pork.stats.tests += 1
     end
   end
 
