@@ -2,10 +2,10 @@
 require 'thread'
 
 module Pork
-  class Stats < Struct.new(:tests, :assertions, :failures, :errors)
+  class Stats < Struct.new(:tests, :assertions, :failures, :errors, :skips)
     def initialize
       @mutex = Mutex.new
-      super(0, 0, 0, 0)
+      super(0, 0, 0, 0, 0)
     end
     def assertions= num; @mutex.synchronize{ super }            ; end
     def tests=      num; @mutex.synchronize{ super }            ; end
@@ -19,7 +19,8 @@ module Pork
   def self.report
     puts
     printf("Finished in %f seconds.\n\n", Time.now - start)
-    printf("%d tests, %d assertions, %d failures, %d errors\n", *stats.to_a)
+    printf("%d tests, %d assertions, %d failures, %d errors, %d skips\n",
+           *stats.to_a)
   end
 
   module API
@@ -33,31 +34,36 @@ module Pork
 
   Error   = Class.new(Exception)
   Failure = Class.new(Error)
+  Skip    = Class.new(Error)
 
-  class Executor
+  class Executor < Struct.new(:message)
     extend Pork::API
     def self.execute caller, message, block
       parent = if caller.kind_of?(Class) then caller else self end
       Class.new(parent).module_eval(&block)
     end
 
-    def self.would message='', &block
+    def self.would message='Unnamed Test', &block
       assertions = Pork.stats.assertions
-      new.instance_eval(&block)
+      new(message).instance_eval(&block)
       if assertions == Pork.stats.assertions
-        raise Error.new('Missing assertions')
+        raise Error.new("Missing assertions for #{message}")
       end
     rescue Error, StandardError => e
       case e
-      when Error
-        Pork.stats.errors += 1
+      when Skip
+        Pork.stats.skips += 1
       when Failure
         Pork.stats.failures += 1
-      else
+      when Error, StandardError
         Pork.stats.errors += 1
       end
     else
       print '.'
+    end
+
+    def skip
+      raise Skip.new("Skipping #{message}")
     end
   end
 

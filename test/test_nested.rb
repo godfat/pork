@@ -29,6 +29,11 @@ Pork::API.describe 'A' do
         should.raise Pork::Failure
     end
   end
+
+  would 'skip' do
+    skip
+    true.should.eq false
+  end
 end
 
 Pork.report
