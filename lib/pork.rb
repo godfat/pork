@@ -7,28 +7,32 @@ module Pork
       @mutex = Mutex.new
       super(0, 0, 0, 0)
     end
-
-    def assertions= num
-      @mutex.synchronize{ super }
-    end
+    def assertions= num; @mutex.synchronize{ super }            ; end
+    def tests=      num; @mutex.synchronize{ super }            ; end
+    def failures=   num; @mutex.synchronize{ super; print('F') }; end
+    def errors=     num; @mutex.synchronize{ super; print('E') }; end
+    def skips=      num; @mutex.synchronize{ super; print('S') }; end
   end
 
-  def self.stats
-    @stats ||= Stats.new
-  end
-
+  def self.stats; @stats ||= Stats.new; end
+  def self.start; @start ||= Time.now ; end
   def self.report
-    printf("%d tests, %d assertions, %d failures, %d errors\n",
-      *Pork.stats.to_a)
+    puts
+    printf("Finished in %f seconds.\n\n", Time.now - start)
+    printf("%d tests, %d assertions, %d failures, %d errors\n", *stats.to_a)
   end
 
   module API
     module_function
-    def describe message, &block
+    def describe message='', &block
+      Pork.start
       Pork::Executor.execute(self, message, block)
-      ::Pork.stats.tests += 1
+      Pork.stats.tests += 1
     end
   end
+
+  Error   = Class.new(Exception)
+  Failure = Class.new(Error)
 
   class Executor
     extend Pork::API
@@ -37,8 +41,23 @@ module Pork
       Class.new(parent).module_eval(&block)
     end
 
-    def self.would message, &block
+    def self.would message='', &block
+      assertions = Pork.stats.assertions
       new.instance_eval(&block)
+      if assertions == Pork.stats.assertions
+        raise Error.new('Missing assertions')
+      end
+    rescue Error, StandardError => e
+      case e
+      when Error
+        Pork.stats.errors += 1
+      when Failure
+        Pork.stats.failures += 1
+      else
+        Pork.stats.errors += 1
+      end
+    else
+      print '.'
     end
   end
 
@@ -59,11 +78,11 @@ module Pork
     def satisfy desc=@object
       case bool = yield
       when @negate
-        ::Kernel.raise "BAD, expect #{desc}"
+        ::Kernel.raise Failure.new("Expect #{desc}")
       when !@negate
         ::Pork.stats.assertions += 1
       else
-        ::Kernel.raise "BAD, expect #{bool.inspect} to be true or false"
+        ::Kernel.raise Error.new("Expect #{bool.inspect} to be true or false")
       end
     end
 
@@ -82,6 +101,8 @@ module Pork
           @object.call
         rescue *exceptions
           true
+        rescue
+          false
         else
           false
         end

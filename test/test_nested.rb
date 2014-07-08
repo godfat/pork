@@ -17,7 +17,7 @@ Pork::API.describe 'A' do
   would 'f' do
     f.should.eq m
     f.should.kind_of? Fixnum
-    lambda{ f.should.eq '' }.should.raise RuntimeError
+    lambda{ f.should.eq '' }.should.raise Pork::Failure
   end
 
   describe 'B' do
@@ -26,7 +26,7 @@ Pork::API.describe 'A' do
       m.should.not.kind_of? String
       lambda{ throw :halt }.should.throw :halt
       lambda{ lambda{ throw :halt }.should.not.throw :halt }.
-        should.raise RuntimeError
+        should.raise Pork::Failure
     end
   end
 end
