@@ -15,25 +15,29 @@ module Pork
     def numbers
       [tests, assertions, failures.size, errors.size, skips]
     end
+    def start
+      @start ||= Time.now
+    end
+    def report
+      puts
+      puts (failures + errors).map{ |(e, m)|
+        "\n#{m}\n#{e.class}: #{e.message}\n  " +
+        e.backtrace.reject{ |line| line =~ %r{/pork\.rb:\d+} }.join("\n  ")
+      }
+      printf("\nFinished in %f seconds.\n", Time.now - @start)
+      printf("%d tests, %d assertions, %d failures, %d errors, %d skips\n",
+             *numbers)
+    end
   end
 
-  def self.stats; @stats ||= Stats.new; end
-  def self.start; @start ||= Time.now ; end
-  def self.report
-    puts
-    puts (stats.failures + stats.errors).map{ |(e, m)|
-      "\n#{m}\n#{e.class}: #{e.message}\n  " +
-      e.backtrace.reject{ |line| line =~ %r{/pork\.rb:\d+} }.join("\n  ")
-    }
-    printf("\nFinished in %f seconds.\n", Time.now - start)
-    printf("%d tests, %d assertions, %d failures, %d errors, %d skips\n",
-           *stats.numbers)
-  end
+  def self.stats ; @stats ||= Stats.new; end
+  def self.reset ; @stats   = nil      ; end
+  def self.report; stats.report; reset ; end
 
   module API
     module_function
     def describe desc, &block
-      Pork.start
+      Pork.stats.start
       Pork::Executor.execute(self, desc, &block)
       Pork.stats.tests += 1
     end
