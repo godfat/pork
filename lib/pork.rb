@@ -54,7 +54,7 @@ module Pork
     end
 
     def raise *exceptions
-      satisfy("#{__not}raising one of: #{exceptions}") do
+      satisfy("#{__not__}raising one of: #{exceptions}") do
         begin
           @object.call
         rescue *exceptions
@@ -66,7 +66,7 @@ module Pork
     end
 
     def throw msg
-      satisfy("#{__not}throwing #{msg}") do
+      satisfy("#{__not__}throwing #{msg}") do
         flag = true
         ::Kernel.catch(msg) do
           @object.call
@@ -77,7 +77,7 @@ module Pork
     end
 
     private
-    def __not
+    def __not__
       if @negate == true
         'not '
       else
