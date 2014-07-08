@@ -2,32 +2,39 @@
 require 'thread'
 
 module Pork
-  class Stats < Struct.new(:tests, :assertions, :failures, :errors, :skips)
+  class Stats < Struct.new(:tests, :assertions, :skips, :failures, :errors)
     def initialize
       @mutex = Mutex.new
-      super(0, 0, 0, 0, 0)
+      super(0, 0, 0, [], [])
     end
-    def assertions= num; @mutex.synchronize{ super }            ; end
-    def tests=      num; @mutex.synchronize{ super }            ; end
-    def failures=   num; @mutex.synchronize{ super; print('F') }; end
-    def errors=     num; @mutex.synchronize{ super; print('E') }; end
-    def skips=      num; @mutex.synchronize{ super; print('S') }; end
+    def assertions= num; @mutex.synchronize{ super                    }; end
+    def tests=      num; @mutex.synchronize{ super                    }; end
+    def skips=      num; @mutex.synchronize{ super        ; print('s')}; end
+    def add_failure *e ; @mutex.synchronize{ failures << e; print('F')}; end
+    def add_error   *e ; @mutex.synchronize{ errors   << e; print('E')}; end
+    def numbers
+      [tests, assertions, failures.size, errors.size, skips]
+    end
   end
 
   def self.stats; @stats ||= Stats.new; end
   def self.start; @start ||= Time.now ; end
   def self.report
     puts
-    printf("Finished in %f seconds.\n\n", Time.now - start)
+    puts (stats.failures + stats.errors).map{ |(e, m)|
+      "\n#{m}\n#{e.class}: #{e.message}\n  " +
+      e.backtrace.reject{ |line| line =~ %r{/pork\.rb:\d+} }.join("\n  ")
+    }
+    printf("\nFinished in %f seconds.\n", Time.now - start)
     printf("%d tests, %d assertions, %d failures, %d errors, %d skips\n",
-           *stats.to_a)
+           *stats.numbers)
   end
 
   module API
     module_function
-    def describe message='', &block
+    def describe desc, &block
       Pork.start
-      Pork::Executor.execute(self, message, block)
+      Pork::Executor.execute(self, desc, &block)
       Pork.stats.tests += 1
     end
   end
@@ -36,34 +43,45 @@ module Pork
   Failure = Class.new(Error)
   Skip    = Class.new(Error)
 
-  class Executor < Struct.new(:message)
+  class Executor < Struct.new(:name)
     extend Pork::API
-    def self.execute caller, message, block
+    @desc = ''
+    def self.execute caller, desc, &block
       parent = if caller.kind_of?(Class) then caller else self end
-      Class.new(parent).module_eval(&block)
+      Class.new(parent){ @desc = "#{desc}:" }.module_eval(&block)
     end
 
-    def self.would message='Unnamed Test', &block
+    def self.would name, &block
       assertions = Pork.stats.assertions
-      new(message).instance_eval(&block)
+      new(name).instance_eval(&block)
       if assertions == Pork.stats.assertions
-        raise Error.new("Missing assertions for #{message}")
+        raise Error.new('Missing assertions')
       end
     rescue Error, StandardError => e
       case e
       when Skip
         Pork.stats.skips += 1
       when Failure
-        Pork.stats.failures += 1
+        Pork.stats.add_failure(e, description_for("would #{name}"))
       when Error, StandardError
-        Pork.stats.errors += 1
+        Pork.stats.add_error(  e, description_for("would #{name}"))
       end
     else
       print '.'
     end
 
+    def self.description_for name=''
+      supername =
+        if anc = ancestors[1..-1].find{ |a| a.respond_to?(:description_for) }
+          " #{anc.description_for}"
+        else
+          ''
+        end
+      "#{@desc}#{supername}#{name}"
+    end
+
     def skip
-      raise Skip.new("Skipping #{message}")
+      raise Skip.new("Skipping #{name}")
     end
   end
 
@@ -76,7 +94,7 @@ module Pork
     end
 
     def method_missing msg, *args, &block
-      satisfy("#{@object}.#{msg}(#{args.join(', ')}) returns #{!@negate}") do
+      satisfy("#{@object}.#{msg}(#{args.join(', ')}) to return #{!@negate}") do
         @object.public_send(msg, *args, &block)
       end
     end
