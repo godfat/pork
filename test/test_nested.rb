@@ -24,6 +24,9 @@ Pork::API.describe 'A' do
     would 'have the same context' do
       f.should == m
       m.should.not.kind_of? String
+      lambda{ throw :halt }.should.throw :halt
+      lambda{ lambda{ throw :halt }.should.not.throw :halt }.
+        should.raise RuntimeError
     end
   end
 end

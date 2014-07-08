@@ -65,6 +65,17 @@ module Pork
       end
     end
 
+    def throw msg
+      satisfy("#{__not}throwing #{msg}") do
+        flag = true
+        ::Kernel.catch(msg) do
+          @object.call
+          flag = false
+        end
+        flag
+      end
+    end
+
     private
     def __not
       if @negate == true
