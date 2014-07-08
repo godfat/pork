@@ -27,6 +27,23 @@ module Pork
       @negate = false
     end
 
+    def method_missing msg, *args, &block
+      satisfy("#{@object}.#{msg}(#{args.join(', ')}) returns #{!@negate}") do
+        @object.public_send(msg, *args, &block)
+      end
+    end
+
+    def satisfy desc=@object
+      case bool = yield
+      when @negate
+        ::Kernel.raise "BAD, expect #{desc}"
+      when !@negate
+        ::Kernel.puts "GOOD"
+      else
+        ::Kernel.raise "BAD, expect #{bool.inspect} to be true or false"
+      end
+    end
+
     def not
       @negate = !@negate
       self
@@ -36,16 +53,24 @@ module Pork
       self == rhs
     end
 
-    def method_missing msg, *args, &block
-      case bool = @object.public_send(msg, *args, &block)
-      when @negate
-        ::Kernel.raise \
-          "BAD, #{@object}.#{msg}(#{args.join(', ')}) is #{@negate}"
-      when !@negate
-        ::Kernel.puts "GOOD"
+    def raise *exceptions
+      satisfy("#{__not}raising one of: #{exceptions}") do
+        begin
+          @object.call
+        rescue *exceptions
+          true
+        else
+          false
+        end
+      end
+    end
+
+    private
+    def __not
+      if @negate == true
+        'not '
       else
-        ::Kernel.raise "BAD, #{@object}.#{msg}(#{args.join(', ')}) is not a" \
-                       " boolean but: #{bool.inspect}"
+        ''
       end
     end
   end

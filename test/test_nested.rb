@@ -17,6 +17,7 @@ Pork::API.describe 'A' do
   would 'f' do
     f.should.eq m
     f.should.kind_of? Fixnum
+    lambda{ f.should.eq '' }.should.raise RuntimeError
   end
 
   describe 'B' do
