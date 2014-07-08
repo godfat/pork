@@ -16,11 +16,13 @@ Pork::API.describe 'A' do
 
   would 'f' do
     f.should == m
+    f.should.kind_of? Fixnum
   end
 
   describe 'B' do
     would 'have the same context' do
       f.should == m
+      m.should.kind_of? Fixnum
     end
   end
 end

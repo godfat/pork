@@ -19,10 +19,19 @@ module Pork
     end
   end
 
-  class Should < Struct.new(:object)
-    def == rhs
-      raise "BAD, #{object} != #{rhs}" if object != rhs
-      puts "GOOD"
+  class Should < BasicObject
+    instance_methods.each{ |m| undef_method(m) unless m =~ /^__|^object_id$/ }
+
+    def initialize object
+      @object = object
+    end
+
+    def method_missing msg, *args, &block
+      if @object.public_send(msg, *args, &block)
+        ::Kernel.puts "GOOD"
+      else
+        ::Kernel.raise "BAD, #{@object}.#{msg}(#{args.join(', ')})"
+      end
     end
   end
 end
