@@ -15,14 +15,14 @@ Pork::API.describe 'A' do
   end
 
   would 'f' do
-    f.should == m
+    f.should.eq m
     f.should.kind_of? Fixnum
   end
 
   describe 'B' do
     would 'have the same context' do
       f.should == m
-      m.should.kind_of? Fixnum
+      m.should.not.kind_of? String
     end
   end
 end

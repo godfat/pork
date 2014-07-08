@@ -24,13 +24,28 @@ module Pork
 
     def initialize object
       @object = object
+      @negate = false
+    end
+
+    def not
+      @negate = !@negate
+      self
+    end
+
+    def eq rhs
+      self == rhs
     end
 
     def method_missing msg, *args, &block
-      if @object.public_send(msg, *args, &block)
+      case bool = @object.public_send(msg, *args, &block)
+      when @negate
+        ::Kernel.raise \
+          "BAD, #{@object}.#{msg}(#{args.join(', ')}) is #{@negate}"
+      when !@negate
         ::Kernel.puts "GOOD"
       else
-        ::Kernel.raise "BAD, #{@object}.#{msg}(#{args.join(', ')})"
+        ::Kernel.raise "BAD, #{@object}.#{msg}(#{args.join(', ')}) is not a" \
+                       " boolean but: #{bool.inspect}"
       end
     end
   end
