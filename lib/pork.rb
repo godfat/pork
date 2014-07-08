@@ -1,5 +1,27 @@
 
+require 'thread'
+
 module Pork
+  class Stats < Struct.new(:tests, :assertions, :failures, :errors)
+    def initialize
+      @mutex = Mutex.new
+      super(0, 0, 0, 0)
+    end
+
+    def assertions= num
+      @mutex.synchronize{ super }
+    end
+  end
+
+  def self.stats
+    @stats ||= Stats.new
+  end
+
+  def self.report
+    printf("%d tests, %d assertions, %d failures, %d errors\n",
+      *Pork.stats.to_a)
+  end
+
   module API
     module_function
     def describe message, &block
@@ -38,7 +60,7 @@ module Pork
       when @negate
         ::Kernel.raise "BAD, expect #{desc}"
       when !@negate
-        ::Kernel.puts "GOOD"
+        ::Pork.stats.assertions += 1
       else
         ::Kernel.raise "BAD, expect #{bool.inspect} to be true or false"
       end
