@@ -18,35 +18,32 @@ module Pork
 
   module API
     module_function
-    def describe desc=:default, &suite
-      Pork.stats.start
-      Executor.execute(self, desc, &suite)
-      Pork.stats.tests += 1
-    end
-
-    def copy desc=:default, &suite
-      mutex.synchronize{ stash[desc] = suite }
-    end
-
-    # Search for current context first, then the top-level context (API)
-    def paste desc=:default
-      instance_eval(&[stash, API.stash].find{ |s| s[desc] }[desc])
-    end
-
-    def mutex; @mutex ||= Mutex.new; end
-    def stash; @stash ||= {}       ; end
+    def before &block; Executor.before(&block); end
+    def after  &block; Executor.after( &block); end
+    def describe desc=:default, &suite; Executor.describe(desc, &suite); end
+    def copy     desc=:default, &suite; Executor.copy(    desc, &suite); end
+    def paste    desc=:default        ; Executor.paste(   desc, &suite); end
   end
 
-  class Executor < Struct.new(:name)
-    extend Pork::API
-    def self.execute caller, desc, &suite
-      parent = if caller.kind_of?(Class) then caller else self end
-      Class.new(parent){
-        @desc, @before, @after = "#{desc}:", [], []
-      }.module_eval(&suite)
+  module Imp
+    attr_reader :stash
+    def before &block
+      if block_given? then @before << block else @before end
     end
-
-    def self.would name=:default, &test
+    def after  &block
+      if block_given? then @after  << block else @after  end
+    end
+    def describe desc=:default, &suite
+      Pork.stats.start
+      execute(self, desc, &suite)
+      Pork.stats.tests += 1
+    end
+    def copy  desc=:default, &suite; stash[desc] = suite; end
+    def paste desc=:default
+      stashes = [self, super_executor].compact.map(&:stash)
+      instance_eval(&stashes.find{ |s| s[desc] }[desc])
+    end
+    def would name=:default, &test
       assertions = Pork.stats.assertions
       context = new(name)
       run_before(context)
@@ -69,39 +66,34 @@ module Pork
       run_after(context)
     end
 
-    def self.before &block
-      if block_given? then @before << block else @before end
+    protected
+    def init desc=''
+      @desc, @before, @after, @stash = desc, [], [], {}
     end
-    def self.after  &block
-      if block_given? then @after  << block else @after  end
+    def super_executor
+      @super_executor ||= ancestors[1..-1].find{ |a| a <= Executor }
     end
-
-    def self.super_executor
-      @super_executor ||= ancestors[1..-1].find{ |a| a < Executor }
+    def execute caller, desc, &suite
+      parent = if caller.kind_of?(Class) then caller else self end
+      Class.new(parent){ init("#{desc}: ") }.module_eval(&suite)
     end
-
-    def self.description_for name=''
-      supername = if super_executor
-                    " #{super_executor.description_for}"
-                  else
-                    ' '
-                  end
-      "#{@desc}#{supername}#{name}"
+    def description_for name=''
+      "#{@desc}#{super_executor && super_executor.description_for}#{name}"
     end
-
-    def self.run_before context
+    def run_before context
       super_executor.run_before(context) if super_executor
       before.each{ |b| context.instance_eval(&b) }
     end
-
-    def self.run_after context
+    def run_after context
       super_executor.run_after(context) if super_executor
       after.each{ |b| context.instance_eval(&b) }
     end
+  end
 
-    def skip
-      raise Skip.new("Skipping #{name}")
-    end
+  class Executor < Struct.new(:name)
+    extend Pork::Imp, Pork::API
+    init
+    def skip; raise Skip.new("Skipping #{name}"); end
   end
 
   class Should < BasicObject

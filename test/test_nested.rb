@@ -18,6 +18,14 @@ Pork::API.describe 'A' do
     lambda{ f.should.eq '' }.should.raise Pork::Failure
   end
 
+  copy do
+    would do
+      true.should.eq true
+    end
+  end
+
+  paste
+
   describe 'B' do
     would 'have the same context' do
       f.should.eq m
@@ -26,6 +34,8 @@ Pork::API.describe 'A' do
       lambda{ lambda{ throw :halt }.should.not.throw :halt }.
         should.raise Pork::Failure
     end
+
+    paste
   end
 
   would 'skip' do
