@@ -130,8 +130,6 @@ module Pork
           if ::Kernel.block_given? then yield else @object.call end
         rescue exception => e
           e
-        rescue
-          false
         else
           false
         end

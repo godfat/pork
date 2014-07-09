@@ -55,7 +55,9 @@ Pork::API.describe Pork do
     fail lambda { lambda { raise "Error" }.should.not.raise RuntimeError }
 
     fail lambda { lambda { 1 + 1 }.should.raise }
-    fail lambda { lambda { raise "Error" }.should.raise(Interrupt) }
+    lambda {
+      lambda { raise "Error" }.should.raise(Interrupt)
+    }.should.raise
   end
 
   would "should.raise with a block" do
@@ -65,7 +67,9 @@ Pork::API.describe Pork do
     fail lambda { should.not.raise(RuntimeError) { raise "Error" } }
 
     fail lambda { should.raise { 1 + 1 } }
-    fail lambda { should.raise(Interrupt) { raise "Error" } }
+    lambda {
+      should.raise(Interrupt) { raise "Error" }
+    }.should.raise
   end
 
   would "have a should.raise should return the exception" do
@@ -74,61 +78,52 @@ Pork::API.describe Pork do
     ex.message.should =~ /foo/
   end
 
-#   it "should have should.be.an.instance_of" do
-#     lambda { "string".should.be.instance_of String }.should succeed
-#     lambda { "string".should.be.instance_of Hash }.should fail
+  would "have should.nil?" do
+    succeed lambda { nil.should.nil? }
+    fail lambda { nil.should.not.nil? }
+    fail lambda { "foo".should.nil? }
+    succeed lambda { "foo".should.not.nil? }
+  end
 
-#     lambda { "string".should.be.an.instance_of String }.should succeed
-#     lambda { "string".should.be.an.instance_of Hash }.should fail
-#   end
+  would "have should.include?" do
+    succeed lambda { [1,2,3].should.include? 2 }
+    fail lambda { [1,2,3].should.include? 4 }
 
-#   it "should have should.be.nil" do
-#     lambda { nil.should.be.nil }.should succeed
-#     lambda { nil.should.not.be.nil }.should fail
-#     lambda { "foo".should.be.nil }.should fail
-#     lambda { "foo".should.not.be.nil }.should succeed
-#   end
+    succeed lambda { {1=>2, 3=>4}.should.include? 1 }
+    fail lambda { {1=>2, 3=>4}.should.include? 2 }
+  end
 
-#   it "should have should.include" do
-#     lambda { [1,2,3].should.include 2 }.should succeed
-#     lambda { [1,2,3].should.include 4 }.should fail
+  would "have should.kind_of?" do
+    succeed lambda { Array.should.kind_of? Module }
+    succeed lambda { "string".should.kind_of? Object }
+    succeed lambda { 1.should.kind_of? Comparable }
 
-#     lambda { {1=>2, 3=>4}.should.include 1 }.should succeed
-#     lambda { {1=>2, 3=>4}.should.include 2 }.should fail
-#   end
+    succeed lambda { Array.should.kind_of? Module }
+    fail lambda { "string".should.kind_of? Class }
+  end
 
-#   it "should have should.be.a.kind_of" do
-#     lambda { Array.should.be.kind_of Module }.should succeed
-#     lambda { "string".should.be.kind_of Object }.should succeed
-#     lambda { 1.should.be.kind_of Comparable }.should succeed
+  would "have should.match" do
+    succeed lambda { "string".should.match(/strin./) }
+    succeed lambda { "string".should =~ /strin./ }
 
-#     lambda { Array.should.be.a.kind_of Module }.should succeed
+    fail lambda { "string".should.match(/slin./) }
+    fail lambda { "string".should =~ /slin./ }
+  end
 
-#     lambda { "string".should.be.a.kind_of Class }.should fail
-#   end
+  would "have should.not.raise" do
+    succeed lambda { lambda { 1 + 1 }.should.not.raise }
+    succeed lambda { lambda { 1 + 1 }.should.not.raise(Interrupt) }
 
-#   it "should have should.match" do
-#     lambda { "string".should.match(/strin./) }.should succeed
-#     lambda { "string".should =~ /strin./ }.should succeed
+    succeed lambda {
+      lambda {
+        lambda {
+          raise ZeroDivisionError.new("ArgumentError")
+        }.should.not.raise(RuntimeError)
+      }.should.raise(ZeroDivisionError)
+    }
 
-#     lambda { "string".should.match(/slin./) }.should fail
-#     lambda { "string".should =~ /slin./ }.should fail
-#   end
-
-#   it "should have should.not.raise" do
-#     lambda { lambda { 1 + 1 }.should.not.raise }.should succeed
-#     lambda { lambda { 1 + 1 }.should.not.raise(Interrupt) }.should succeed
-
-#     lambda {
-#       lambda {
-#         lambda {
-#           Kernel.raise ZeroDivisionError.new("ArgumentError")
-#         }.should.not.raise(RuntimeError, Comparable)
-#       }.should.raise ZeroDivisionError
-#     }.should succeed
-
-#     lambda { lambda { raise "Error" }.should.not.raise }.should fail
-#   end
+    fail lambda { lambda { raise "Error" }.should.not.raise }
+  end
 
 #   it "should have should.throw" do
 #     lambda { lambda { throw :foo }.should.throw(:foo) }.should succeed
