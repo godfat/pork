@@ -124,12 +124,12 @@ module Pork
       self == rhs
     end
 
-    def raise exception=RuntimeError
+    def raise exception=::RuntimeError
       satisfy("#{__not__}raising #{exception}") do
         begin
           if ::Kernel.block_given? then yield else @object.call end
-        rescue exception
-          true
+        rescue exception => e
+          e
         rescue
           false
         else
