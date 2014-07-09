@@ -156,6 +156,10 @@ module Pork
       end
     end
 
+    def flunk reason='Flunked'
+      ::Kernel.raise Error.new(reason)
+    end
+
     private
     def __not__
       if @negate == true
