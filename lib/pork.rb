@@ -100,7 +100,7 @@ module Pork
 
     def method_missing msg, *args, &block
       satisfy("#{@object}.#{msg}(#{args.join(', ')}) to" \
-              " return #{!@negate}\n#{@message}") do
+              " return #{!@negate}") do
         @object.public_send(msg, *args, &block)
       end
     end
@@ -108,7 +108,7 @@ module Pork
     def satisfy desc=@object
       case bool = yield
       when @negate
-        ::Kernel.raise Failure.new("Expect #{desc}")
+        ::Kernel.raise Failure.new("Expect #{desc}\n#{@message}".chomp)
       when !@negate
         ::Pork.stats.assertions += 1
       else
