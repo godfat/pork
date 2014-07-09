@@ -106,14 +106,13 @@ module Pork
     end
 
     def satisfy desc=@object
-      case bool = yield(@object)
-      when @negate
+      result = yield(@object)
+      if !!result == @negate
         ::Kernel.raise Failure.new("Expect #{desc}\n#{@message}".chomp)
-      when !@negate
-        ::Pork.stats.assertions += 1
       else
-        ::Kernel.raise Error.new("Expect #{bool.inspect} to be true or false")
+        ::Pork.stats.assertions += 1
       end
+      result
     end
 
     def not
