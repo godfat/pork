@@ -11,8 +11,8 @@ module MetaTests
     block.should.raise Pork::Error
   end
 
-  def equal_string x, s
-    x == s.to_s
+  def equal_string x
+    lambda{ |s| x == s.to_s }
   end
 end
 
@@ -21,7 +21,7 @@ Pork::API.describe Pork do
 
   would "have should.satisfy" do
     succeed lambda { should.satisfy { 1 == 1 } }
-    succeed lambda { should.satisfy { !!1 } }
+    succeed lambda { should.satisfy { 1 } }
 
     fail lambda { should.satisfy { 1 != 1 } }
     fail lambda { should.satisfy { false } }
@@ -125,123 +125,106 @@ Pork::API.describe Pork do
     fail lambda { lambda { raise "Error" }.should.not.raise }
   end
 
-#   it "should have should.throw" do
-#     lambda { lambda { throw :foo }.should.throw(:foo) }.should succeed
-#     lambda { lambda {       :foo }.should.throw(:foo) }.should fail
+  would "have should.throw" do
+    succeed lambda { lambda { throw :foo }.should.throw(:foo) }
+    fail lambda { lambda {       :foo }.should.throw(:foo) }
 
-#     should.throw(:foo) { throw :foo }
-#   end
+    should.throw(:foo) { throw :foo }
+  end
 
-#   it "should have should.not.satisfy" do
-#     lambda { should.not.satisfy { 1 == 2 } }.should succeed
-#     lambda { should.not.satisfy { 1 == 1 } }.should fail
-#   end
+  would "have should.not.satisfy" do
+    succeed lambda { should.not.satisfy { 1 == 2 } }
+    fail lambda { should.not.satisfy { 1 == 1 } }
+  end
 
-#   it "should have should.not.equal" do
-#     lambda { "string1".should.not == "string2" }.should succeed
-#     lambda { "string1".should.not == "string1" }.should fail
-#   end
+  would "have should.not.equal" do
+    succeed lambda { "string1".should.not == "string2" }
+    fail lambda { "string1".should.not == "string1" }
+  end
 
-#   it "should have should.not.match" do
-#     lambda { "string".should.not.match(/sling/) }.should succeed
-#     lambda { "string".should.not.match(/string/) }.should fail
-# #    lambda { "string".should.not.match("strin") }.should fail
+  would "have should.not.match" do
+    succeed lambda { "string".should.not.match(/sling/) }
+    fail lambda { "string".should.not.match(/string/) }
+    fail lambda { "string".should.not.match("strin") }
 
-#     lambda { "string".should.not =~ /sling/ }.should succeed
-#     lambda { "string".should.not =~ /string/ }.should fail
-# #    lambda { "string".should.not =~ "strin" }.should fail
-#   end
+    succeed lambda { "string".should.not =~ /sling/ }
+    fail lambda { "string".should.not =~ /string/ }
+  end
 
-#   it "should have should.be.identical_to/same_as" do
-#     lambda { s = "string"; s.should.be.identical_to s }.should succeed
-#     lambda { "string".should.be.identical_to "string" }.should fail
+  would "have should.respond_to" do
+    succeed lambda { "foo".should.respond_to? :to_s }
+    fail lambda { 5.should.respond_to? :to_str }
+    fail lambda { :foo.should.respond_to? :nx }
+  end
 
-#     lambda { s = "string"; s.should.be.same_as s }.should succeed
-#     lambda { "string".should.be.same_as "string" }.should fail
-#   end
+  would "support multiple negation" do
+    succeed lambda { 1.should.eq 1 }
+    fail lambda { 1.should.not.eq 1 }
+    succeed lambda { 1.should.not.not.eq 1 }
+    fail lambda { 1.should.not.not.not.eq 1 }
 
-#   it "should have should.respond_to" do
-#     lambda { "foo".should.respond_to :to_s }.should succeed
-#     lambda { 5.should.respond_to :to_str }.should fail
-#     lambda { :foo.should.respond_to :nx }.should fail
-#   end
+    fail lambda { 1.should.eq 2 }
+    succeed lambda { 1.should.not.eq 2 }
+    fail lambda { 1.should.not.not.eq 2 }
+    succeed lambda { 1.should.not.not.not.eq 2 }
+  end
 
-#   it "should have should.be.close" do
-#     lambda { 1.4.should.be.close 1.4, 0 }.should succeed
-#     lambda { 0.4.should.be.close 0.5, 0.1 }.should succeed
+  would "have should.<predicate>" do
+    succeed lambda { [].should.empty? }
+    succeed lambda { [1,2,3].should.not.empty? }
 
-#     lambda { 0.4.should.be.close 0.5, 0.05 }.should fail
-#     lambda { 0.4.should.be.close Object.new, 0.1 }.should fail
-#     lambda { 0.4.should.be.close 0.5, -0.1 }.should fail
-#   end
+    fail lambda { [].should.not.empty? }
+    fail lambda { [1,2,3].should.empty? }
 
-#   it "should support multiple negation" do
-#     lambda { 1.should.equal 1 }.should succeed
-#     lambda { 1.should.not.equal 1 }.should fail
-#     lambda { 1.should.not.not.equal 1 }.should succeed
-#     lambda { 1.should.not.not.not.equal 1 }.should fail
+    succeed lambda { {1=>2, 3=>4}.should.has_key? 1 }
+    succeed lambda { {1=>2, 3=>4}.should.not.has_key? 2 }
 
-#     lambda { 1.should.equal 2 }.should fail
-#     lambda { 1.should.not.equal 2 }.should succeed
-#     lambda { 1.should.not.not.equal 2 }.should fail
-#     lambda { 1.should.not.not.not.equal 2 }.should succeed
-#   end
+    lambda { nil.should.bla }.should.raise(NoMethodError)
+    lambda { nil.should.not.bla }.should.raise(NoMethodError)
+  end
 
-#   it "should have should.<predicate>" do
-#     lambda { [].should.be.empty }.should succeed
-#     lambda { [1,2,3].should.not.be.empty }.should succeed
+  would "have should <operator> (>, >=, <, <=, ===)" do
+    succeed lambda { 2.should > 1 }
+    fail lambda { 1.should > 2 }
 
-#     lambda { [].should.not.be.empty }.should fail
-#     lambda { [1,2,3].should.be.empty }.should fail
+    succeed lambda { 1.should < 2 }
+    fail lambda { 2.should < 1 }
 
-#     lambda { {1=>2, 3=>4}.should.has_key 1 }.should succeed
-#     lambda { {1=>2, 3=>4}.should.not.has_key 2 }.should succeed
+    succeed lambda { 2.should >= 1 }
+    succeed lambda { 2.should >= 2 }
+    fail lambda { 2.should >= 2.1 }
 
-#     lambda { nil.should.bla }.should.raise(NoMethodError)
-#     lambda { nil.should.not.bla }.should.raise(NoMethodError)
-#   end
+    fail lambda { 2.should <= 1 }
+    succeed lambda { 2.should <= 2 }
+    succeed lambda { 2.should <= 2.1 }
 
-#   it "should have should <operator> (>, >=, <, <=, ===)" do
-#     lambda { 2.should.be > 1 }.should succeed
-#     lambda { 1.should.be > 2 }.should fail
+    succeed lambda { Array.should === [1,2,3] }
+    fail lambda { Integer.should === [1,2,3] }
 
-#     lambda { 1.should.be < 2 }.should succeed
-#     lambda { 2.should.be < 1 }.should fail
+    succeed lambda { /foo/.should === "foobar" }
+    fail lambda { "foobar".should === /foo/ }
+  end
 
-#     lambda { 2.should.be >= 1 }.should succeed
-#     lambda { 2.should.be >= 2 }.should succeed
-#     lambda { 2.should.be >= 2.1 }.should fail
+  would "allow for custom shoulds" do
+    f = equal_string("2")
+    succeed lambda { (1+1).should(&f) }
+    fail lambda { (1+2).should(&f) }
 
-#     lambda { 2.should.be <= 1 }.should fail
-#     lambda { 2.should.be <= 2 }.should succeed
-#     lambda { 2.should.be <= 2.1 }.should succeed
+    succeed lambda { (1+1).should(&f) }
+    fail lambda { (1+2).should(&f) }
 
-#     lambda { Array.should === [1,2,3] }.should succeed
-#     lambda { Integer.should === [1,2,3] }.should fail
+    fail lambda { (1+1).should.not(&f) }
+    succeed lambda { (1+2).should.not(&f) }
+    fail lambda { (1+2).should.not.not(&f) }
 
-#     lambda { /foo/.should === "foobar" }.should succeed
-#     lambda { "foobar".should === /foo/ }.should fail
-#   end
+    fail lambda { (1+1).should.not(&f) }
+    succeed lambda { (1+2).should.not(&f) }
+  end
 
-#   it "should allow for custom shoulds" do
-#     lambda { (1+1).should equal_string("2") }.should succeed
-#     lambda { (1+2).should equal_string("2") }.should fail
-
-#     lambda { (1+1).should.be equal_string("2") }.should succeed
-#     lambda { (1+2).should.be equal_string("2") }.should fail
-
-#     lambda { (1+1).should.not equal_string("2") }.should fail
-#     lambda { (1+2).should.not equal_string("2") }.should succeed
-#     lambda { (1+2).should.not.not equal_string("2") }.should fail
-
-#     lambda { (1+1).should.not.be equal_string("2") }.should fail
-#     lambda { (1+2).should.not.be equal_string("2") }.should succeed
-#   end
-
-#   it "should have should.flunk" do
-#     lambda { should.flunk }.should fail
-#     lambda { should.flunk "yikes" }.should fail
-#   end
+  would "have should.flunk" do
+    fail lambda { should.flunk }
+    fail lambda { should.flunk "yikes" }
+  end
 end
 
 # describe "before/after" do
