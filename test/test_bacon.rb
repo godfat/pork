@@ -227,65 +227,65 @@ Pork::API.describe Pork do
   end
 end
 
-# describe "before/after" do
-#   before do
-#     @a = 1
-#     @b = 2
-#     @c = nil
-#   end
+Pork::API.describe "before/after" do
+  before do
+    @a = 1
+    @b = 2
+    @c = nil
+  end
 
-#   before do
-#     @a = 2
-#   end
+  before do
+    @a = 2
+  end
 
-#   after do
-#     @a.should.equal 2
-#     @a = 3
-#   end
+  after do
+    @a.should.eq 2
+    @a = 3
+  end
 
-#   after do
-#     @a.should.equal 3
-#   end
+  after do
+    @a.should.eq 3
+  end
 
-#   it "should run in the right order" do
-#     @a.should.equal 2
-#     @b.should.equal 2
-#   end
+  would "run in the right order" do
+    @a.should.eq 2
+    @b.should.eq 2
+  end
 
-#   describe "when nested" do
-#     before do
-#       @c = 5
-#     end
+  describe "when nested" do
+    before do
+      @c = 5
+    end
 
-#     it "should run from higher level" do
-#       @a.should.equal 2
-#       @b.should.equal 2
-#     end
+    would "run from higher level" do
+      @a.should.eq 2
+      @b.should.eq 2
+    end
 
-#     it "should run at the nested level" do
-#       @c.should.equal 5
-#     end
+    would "run at the nested level" do
+      @c.should.eq 5
+    end
 
-#     before do
-#       @a = 5
-#     end
+    before do
+      @a = 5
+    end
 
-#     it "should run in the right order" do
-#       @a.should.equal 5
-#       @a = 2
-#     end
-#   end
+    would "run in the right order" do
+      @a.should.eq 5
+      @a = 2
+    end
+  end
 
-#   it "should not run from lower level" do
-#     @c.should.be.nil
-#   end
+  would "not run from lower level" do
+    @c.should.nil?
+  end
 
-#   describe "when nested at a sibling level" do
-#     it "should not run from sibling level" do
-#       @c.should.be.nil
-#     end
-#   end
-# end
+  describe "when nested at a sibling level" do
+    would "not run from sibling level" do
+      @c.should.nil?
+    end
+  end
+end
 
 # shared "a shared context" do
 #   it "gets called where it is included" do

@@ -58,12 +58,16 @@ module Pork
     extend Pork::API
     def self.execute caller, desc, &suite
       parent = if caller.kind_of?(Class) then caller else self end
-      Class.new(parent){ @desc = "#{desc}:" }.module_eval(&suite)
+      Class.new(parent){
+        @desc, @before, @after = "#{desc}:", [], []
+      }.module_eval(&suite)
     end
 
     def self.would name, &test
       assertions = Pork.stats.assertions
-      new(name).instance_eval(&test)
+      context = new(name)
+      run_before(context)
+      context.instance_eval(&test)
       if assertions == Pork.stats.assertions
         raise Error.new('Missing assertions')
       end
@@ -78,6 +82,15 @@ module Pork
       end
     else
       print '.'
+    ensure
+      run_after(context)
+    end
+
+    def self.before &block
+      if block_given? then @before << block else @before end
+    end
+    def self.after  &block
+      if block_given? then @after  << block else @after  end
     end
 
     def self.super_executor
@@ -91,6 +104,16 @@ module Pork
                     ' '
                   end
       "#{@desc}#{supername}#{name}"
+    end
+
+    def self.run_before context
+      super_executor.run_before(context) if super_executor
+      before.each{ |b| context.instance_eval(&b) }
+    end
+
+    def self.run_after context
+      super_executor.run_after(context) if super_executor
+      after.each{ |b| context.instance_eval(&b) }
     end
 
     def skip
