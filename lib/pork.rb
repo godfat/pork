@@ -99,10 +99,11 @@ module Pork
   class Should < BasicObject
     instance_methods.each{ |m| undef_method(m) unless m =~ /^__|^object_id$/ }
 
-    def initialize object, message
+    def initialize object, message, &checker
       @object = object
       @negate = false
       @message = message
+      satisfy(&checker) if checker
     end
 
     def method_missing msg, *args, &block
@@ -122,8 +123,9 @@ module Pork
       result
     end
 
-    def not
+    def not &checker
       @negate = !@negate
+      satisfy(&checker) if checker
       self
     end
 
@@ -147,7 +149,7 @@ module Pork
       satisfy("#{__not__}throwing #{msg}") do
         flag = true
         ::Kernel.catch(msg) do
-          @object.call
+          if ::Kernel.block_given? then yield else @object.call end
           flag = false
         end
         flag
@@ -166,7 +168,7 @@ module Pork
 end
 
 module Kernel
-  def should message=nil
-    Pork::Should.new(self, message)
+  def should message=nil, &checker
+    Pork::Should.new(self, message, &checker)
   end
 end
