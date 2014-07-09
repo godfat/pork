@@ -315,31 +315,31 @@ end
 #   behaves_like "another shared context"
 # end
 
-# describe "Methods" do
-#   def the_meaning_of_life
-#     42
-#   end
+Pork::API.describe "Methods" do
+  def the_meaning_of_life
+    42
+  end
 
-#   def the_towels
-#     yield "DON'T PANIC"
-#   end
+  def the_towels
+    yield "DON'T PANIC"
+  end
 
-#   it "should be accessible in a test" do
-#     the_meaning_of_life.should == 42
-#   end
+  would "be accessible in a test" do
+    the_meaning_of_life.should.eq 42
+  end
 
-#   describe "when in a sibling context" do
-#     it "should be accessible in a test" do
-#       the_meaning_of_life.should == 42
-#     end
+  describe "when in a sibling context" do
+    would "should be accessible in a test" do
+      the_meaning_of_life.should.eq 42
+    end
 
-#     it "should pass the block" do
-#       the_towels do |label|
-#         label.should == "DON'T PANIC"
-#       end.should == true
-#     end
-#   end
-# end
+    would "should pass the block" do
+      the_towels do |label|
+        label.should.eq "DON'T PANIC"
+      end.should.eq true
+    end
+  end
+end
 
 Pork::API.describe 'describe arguments' do
   check = lambda do |ctx, desc, name=nil|
