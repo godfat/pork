@@ -8,24 +8,29 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.require_paths = ["lib"]
   s.authors = ["Lin Jen-Shin (godfat)"]
-  s.date = "2014-07-07"
+  s.date = "2014-07-09"
   s.description = "[Bacon][] reimplemented in an even more lightweight manner.\n\n[Bacon]: https://github.com/chneukirchen/bacon"
   s.email = ["godfat (XD) godfat.org"]
   s.files = [
+  ".gitignore",
   ".gitmodules",
   ".travis.yml",
   "LICENSE",
   "README.md",
   "Rakefile",
   "lib/pork.rb",
+  "lib/pork/task.rb",
   "lib/pork/version.rb",
   "pork.gemspec",
   "task/README.md",
   "task/gemgem.rb",
+  "test/test_bacon.rb",
   "test/test_nested.rb"]
   s.homepage = "https://github.com/godfat/pork"
   s.licenses = ["Apache License 2.0"]
   s.rubygems_version = "2.3.0"
   s.summary = "[Bacon][] reimplemented in an even more lightweight manner."
-  s.test_files = ["test/test_nested.rb"]
+  s.test_files = [
+  "test/test_bacon.rb",
+  "test/test_nested.rb"]
 end
