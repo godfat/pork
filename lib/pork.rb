@@ -1,6 +1,12 @@
 
 require 'thread'
 
+module Kernel
+  def should message=nil, &checker
+    Pork::Should.new(self, message, &checker)
+  end
+end
+
 module Pork
   Error   = Class.new(Exception)
   Failure = Class.new(Error)
@@ -195,11 +201,5 @@ module Pork
         e.backtrace.reject{ |line| line =~ %r{/pork\.rb:\d+} }
       end.join("\n  ")
     end
-  end
-end
-
-module Kernel
-  def should message=nil, &checker
-    Pork::Should.new(self, message, &checker)
   end
 end
