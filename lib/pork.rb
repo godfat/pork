@@ -2,6 +2,23 @@
 require 'thread'
 
 module Pork
+  Error   = Class.new(Exception)
+  Failure = Class.new(Error)
+  Skip    = Class.new(Error)
+
+  def self.stats ; @stats ||= Stats.new; end
+  def self.reset ; @stats   = nil      ; end
+  def self.report; stats.report; reset ; end
+
+  module API
+    module_function
+    def describe desc, &suite
+      Pork.stats.start
+      Executor.execute(self, desc, &suite)
+      Pork.stats.tests += 1
+    end
+  end
+
   class Stats < Struct.new(:tests, :assertions, :skips, :failures, :errors)
     def initialize
       @mutex = Mutex.new
@@ -36,23 +53,6 @@ module Pork
       end.join("\n  ")
     end
   end
-
-  def self.stats ; @stats ||= Stats.new; end
-  def self.reset ; @stats   = nil      ; end
-  def self.report; stats.report; reset ; end
-
-  module API
-    module_function
-    def describe desc, &suite
-      Pork.stats.start
-      Pork::Executor.execute(self, desc, &suite)
-      Pork.stats.tests += 1
-    end
-  end
-
-  Error   = Class.new(Exception)
-  Failure = Class.new(Error)
-  Skip    = Class.new(Error)
 
   class Executor < Struct.new(:name)
     extend Pork::API

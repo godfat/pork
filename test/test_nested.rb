@@ -20,7 +20,7 @@ Pork::API.describe 'A' do
 
   describe 'B' do
     would 'have the same context' do
-      f.should == m
+      f.should.eq m
       m.should.not.kind_of? String
       lambda{ throw :halt }.should.throw :halt
       lambda{ lambda{ throw :halt }.should.not.throw :halt }.
@@ -30,7 +30,7 @@ Pork::API.describe 'A' do
 
   would 'skip' do
     skip
-    true.should.eq false
+    should.flunk
   end
 end
 
