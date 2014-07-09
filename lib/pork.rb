@@ -18,11 +18,23 @@ module Pork
 
   module API
     module_function
-    def describe desc, &suite
+    def describe desc=:default, &suite
       Pork.stats.start
       Executor.execute(self, desc, &suite)
       Pork.stats.tests += 1
     end
+
+    def copy desc=:default, &suite
+      mutex.synchronize{ stash[desc] = suite }
+    end
+
+    # Search for current context first, then the top-level context (API)
+    def paste desc=:default
+      instance_eval(&[stash, API.stash].find{ |s| s[desc] }[desc])
+    end
+
+    def mutex; @mutex ||= Mutex.new; end
+    def stash; @stash ||= {}       ; end
   end
 
   class Executor < Struct.new(:name)
@@ -34,7 +46,7 @@ module Pork
       }.module_eval(&suite)
     end
 
-    def self.would name, &test
+    def self.would name=:default, &test
       assertions = Pork.stats.assertions
       context = new(name)
       run_before(context)

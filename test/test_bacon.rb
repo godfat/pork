@@ -285,35 +285,35 @@ Pork::API.describe "before/after" do
   end
 end
 
-# shared "a shared context" do
-#   it "gets called where it is included" do
-#     true.should.be.true
-#   end
-# end
+Pork::API.copy "a shared context" do
+  would "get called where it is included" do
+    true.should.eq true
+  end
+end
 
-# shared "another shared context" do
-#   it "can access data" do
-#     @magic.should.be.equal 42
-#   end
-# end
+Pork::API.copy "another shared context" do
+  would "access data" do
+    @magic.should.eq 42
+  end
+end
 
-# describe "shared/behaves_like" do
-#   behaves_like "a shared context"
+Pork::API.describe "shared/behaves_like" do
+  paste "a shared context"
 
-#   ctx = self
-#   it "raises NameError when the context is not found" do
-#     lambda {
-#       ctx.behaves_like "whoops"
-#     }.should.raise NameError
-#   end
+  ctx = self
+  would "raise NameError when the context is not found" do
+    lambda {
+      ctx.paste "whoops"
+    }.should.raise NameError
+  end
 
-#   behaves_like "a shared context"
+  paste "a shared context"
 
-#   before {
-#     @magic = 42
-#   }
-#   behaves_like "another shared context"
-# end
+  before {
+    @magic = 42
+  }
+  paste "another shared context"
+end
 
 Pork::API.describe "Methods" do
   def the_meaning_of_life
