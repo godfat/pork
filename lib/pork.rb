@@ -21,12 +21,19 @@ module Pork
     def report
       puts
       puts (failures + errors).map{ |(e, m)|
-        "\n#{m}\n#{e.class}: #{e.message}\n  " +
-        e.backtrace.reject{ |line| line =~ %r{/pork\.rb:\d+} }.join("\n  ")
+        "\n#{m}\n#{e.class}: #{e.message}\n  #{backtrace(e)}"
       }
       printf("\nFinished in %f seconds.\n", Time.now - @start)
       printf("%d tests, %d assertions, %d failures, %d errors, %d skips\n",
              *numbers)
+    end
+    private
+    def backtrace e
+      if $VERBOSE
+        e.backtrace
+      else
+        e.backtrace.reject{ |line| line =~ %r{/pork\.rb:\d+} }
+      end.join("\n  ")
     end
   end
 
