@@ -154,9 +154,11 @@ module Pork
       self
     end
 
-    def eq rhs
-      self == rhs
-    end
+    def eq  rhs; self == rhs; end
+    def lt  rhs; self <  rhs; end
+    def gt  rhs; self >  rhs; end
+    def lte rhs; self <= rhs; end
+    def gte rhs; self >= rhs; end
 
     def raise exception=::RuntimeError
       satisfy("#{__not__}raising #{exception}") do

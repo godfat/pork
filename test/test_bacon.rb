@@ -341,33 +341,43 @@ end
 #   end
 # end
 
-# describe 'describe arguments' do
+Pork::API.describe 'describe arguments' do
+  check = lambda do |ctx, desc, name=nil|
+    ctx.should.lt Pork::Executor
+    ctx.description_for(name).should.eq "#{desc}: #{name}"
+  end
 
-#   def check(ctx,name)
-#     ctx.should.be.an.instance_of Bacon::Context
-#     ctx.instance_variable_get('@name').should == name
-#   end
+  would 'work with string' do
+    str = 'string'
+    Pork::API.describe(str) do
+      check[self, str]
+      would 'a' do check[self.class, str, 'a'] end
+    end
+  end
 
-#   it 'should work with string' do
-#     check(describe('string') {},'string')
-#   end
+  would 'work with symbols' do
+    str = 'behaviour'
+    Pork::API.describe(:behaviour) do
+      check[self, str]
+      would 'b' do check[self.class, str, 'b'] end
+    end
+  end
 
-#   it 'should work with symbols' do
-#     check(describe(:behaviour) {},'behaviour')
-#   end
+  would 'work with modules' do
+    str = 'Pork'
+    Pork::API.describe(Pork) do
+      check[self, str]
+      would 'c' do check[self.class, str, 'c'] end
+    end
+  end
 
-#   it 'should work with modules' do
-#     check(describe(Bacon) {},'Bacon')
-#   end
-
-#   it 'should work with namespaced modules' do
-#     check(describe(Bacon::Context) {},'Bacon::Context')
-#   end
-
-#   it 'should work with multiple arguments' do
-#     check(describe(Bacon::Context, :empty) {},'Bacon::Context empty')
-#   end
-
-# end
+  would 'work with namespaced modules' do
+    str = 'Pork::Executor'
+    Pork::API.describe(Pork::Executor) do
+      check[self, str]
+      would 'd' do check[self.class, str, 'd'] end
+    end
+  end
+end
 
 Pork.report
