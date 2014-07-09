@@ -106,7 +106,7 @@ module Pork
     end
 
     def satisfy desc=@object
-      case bool = yield
+      case bool = yield(@object)
       when @negate
         ::Kernel.raise Failure.new("Expect #{desc}\n#{@message}".chomp)
       when !@negate
