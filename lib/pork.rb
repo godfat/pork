@@ -106,7 +106,7 @@ module Pork
     end
 
     def method_missing msg, *args, &block
-      satisfy("#{@object}.#{msg}(#{args.join(', ')}) to" \
+      satisfy("#{@object.inspect}.#{msg}(#{args.join(', ')}) to" \
               " return #{!@negate}") do
         @object.public_send(msg, *args, &block)
       end
