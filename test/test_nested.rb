@@ -1,14 +1,12 @@
 
 require 'pork'
 
-module M
-  def m
-    object_id
-  end
-end
-
 Pork::API.describe 'A' do
-  include M
+  include Module.new{
+    def m
+      object_id
+    end
+  }
 
   def f
     object_id

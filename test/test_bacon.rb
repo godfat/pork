@@ -1,23 +1,21 @@
 
 require 'pork'
 
-# Hooray for meta-testing.
-module MetaTests
-  def succeed block
-    block.should.not.raise Pork::Error
-  end
-
-  def fail block
-    block.should.raise Pork::Error
-  end
-
-  def equal_string x
-    lambda{ |s| x == s.to_s }
-  end
-end
-
 Pork::API.describe Pork do
-  include MetaTests
+  # Hooray for meta-testing.
+  include Module.new{
+    def succeed block
+      block.should.not.raise Pork::Error
+    end
+
+    def fail block
+      block.should.raise Pork::Error
+    end
+
+    def equal_string x
+      lambda{ |s| x == s.to_s }
+    end
+  }
 
   would "have should.satisfy" do
     succeed lambda { should.satisfy { 1 == 1 } }
