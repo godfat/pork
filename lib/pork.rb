@@ -43,9 +43,9 @@ module Pork
 
   module API
     module_function
-    def describe desc, &block
+    def describe desc, &suite
       Pork.stats.start
-      Pork::Executor.execute(self, desc, &block)
+      Pork::Executor.execute(self, desc, &suite)
       Pork.stats.tests += 1
     end
   end
@@ -56,15 +56,14 @@ module Pork
 
   class Executor < Struct.new(:name)
     extend Pork::API
-    @desc = ''
-    def self.execute caller, desc, &block
+    def self.execute caller, desc, &suite
       parent = if caller.kind_of?(Class) then caller else self end
-      Class.new(parent){ @desc = "#{desc}:" }.module_eval(&block)
+      Class.new(parent){ @desc = "#{desc}:" }.module_eval(&suite)
     end
 
-    def self.would name, &block
+    def self.would name, &test
       assertions = Pork.stats.assertions
-      new(name).instance_eval(&block)
+      new(name).instance_eval(&test)
       if assertions == Pork.stats.assertions
         raise Error.new('Missing assertions')
       end
