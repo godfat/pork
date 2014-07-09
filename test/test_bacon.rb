@@ -23,78 +23,56 @@ Pork::API.describe Pork do
     succeed lambda { should.satisfy { 1 == 1 } }
     succeed lambda { should.satisfy { !!1 } }
 
-    # lambda { should.satisfy { 1 != 1 } }.should fail
-    # lambda { should.satisfy { false } }.should fail
-    # lambda { should.satisfy { false } }.should fail
+    fail lambda { should.satisfy { 1 != 1 } }
+    fail lambda { should.satisfy { false } }
 
-    # lambda { 1.should.satisfy { |n| n % 2 == 0 } }.should fail
-    # lambda { 2.should.satisfy { |n| n % 2 == 0 } }.should succeed
+    fail lambda { 1.should.satisfy { |n| n % 2 == 0 } }
+    succeed lambda { 2.should.satisfy { |n| n % 2 == 0 } }
   end
 
   would "have should.==" do
     succeed lambda { "string1".should == "string1" }
     fail    lambda { "string1".should == "string2" }
 
-    # lambda { [1,2,3].should == [1,2,3] }.should succeed
-    # lambda { [1,2,3].should == [1,2,4] }.should fail
+    succeed lambda { [1,2,3].should == [1,2,3] }
+    fail lambda { [1,2,3].should == [1,2,4] }
   end
 
-#   it "should have should.equal" do
-#     lambda { "string1".should == "string1" }.should succeed
-#     lambda { "string1".should == "string2" }.should fail
-#     lambda { "1".should == 1 }.should fail
+  would "have should.eq" do
+    succeed lambda { "string1".should == "string1" }
+    fail lambda { "string1".should == "string2" }
+    fail lambda { "1".should == 1 }
 
-#     lambda { "string1".should.equal "string1" }.should succeed
-#     lambda { "string1".should.equal "string2" }.should fail
-#     lambda { "1".should.equal 1 }.should fail
-#   end
+    succeed lambda { "string1".should.eq "string1" }
+    fail lambda { "string1".should.eq "string2" }
+    fail lambda { "1".should.eq 1 }
+  end
 
-#   it "should have should.raise" do
-#     lambda { lambda { raise "Error" }.should.raise }.should succeed
-#     lambda { lambda { raise "Error" }.should.raise RuntimeError }.should succeed
-#     lambda { lambda { raise "Error" }.should.not.raise }.should fail
-#     lambda { lambda { raise "Error" }.should.not.raise(RuntimeError) }.should fail
+  would "have should.raise" do
+    succeed lambda { lambda { raise "Error" }.should.raise }
+    succeed lambda { lambda { raise "Error" }.should.raise RuntimeError }
+    fail lambda { lambda { raise "Error" }.should.not.raise }
+    fail lambda { lambda { raise "Error" }.should.not.raise RuntimeError }
 
-#     lambda { lambda { 1 + 1 }.should.raise }.should fail
-#     lambda {
-#       lambda { raise "Error" }.should.raise(Interrupt)
-#     }.should.raise
-#   end
+    fail lambda { lambda { 1 + 1 }.should.raise }
+    fail lambda { lambda { raise "Error" }.should.raise(Interrupt) }
+  end
 
-#   it "should have should.change" do
-#     lambda { lambda {}.should.change { sleep 0.001; Time.now } }.should succeed
+  would "should.raise with a block" do
+    succeed lambda { should.raise { raise "Error" } }
+    succeed lambda { should.raise(RuntimeError) { raise "Error" } }
+    fail lambda { should.not.raise { raise "Error" } }
+    fail lambda { should.not.raise(RuntimeError) { raise "Error" } }
 
-#     lambda {
-#       i = 1
-#       lambda { i *= 2 }.should.change { i }
-#     }.should succeed
+    fail lambda { should.raise { 1 + 1 } }
+    fail lambda { should.raise(Interrupt) { raise "Error" } }
+  end
 
-#     lambda {
-#       i = 0
-#       lambda { i *= 2 }.should.change { i }
-#     }.should fail
-
-#     lambda { should.change { sleep 0.001; Time.now } }.should succeed
-#     lambda { should.change { 42 } }.should fail
-#   end
-
-#   it "should have should.raise with a block" do
-#     lambda { should.raise { raise "Error" } }.should succeed
-#     lambda { should.raise(RuntimeError) { raise "Error" } }.should succeed
-#     lambda { should.not.raise { raise "Error" } }.should fail
-#     lambda { should.not.raise(RuntimeError) { raise "Error" } }.should fail
-
-#     lambda { should.raise { 1 + 1 } }.should fail
-#     lambda {
-#       should.raise(Interrupt) { raise "Error" }
-#     }.should.raise
-#   end
-
-#   it "should have a should.raise should return the exception" do
-#     ex = lambda { raise "foo!" }.should.raise
-#     ex.should.be.kind_of RuntimeError
-#     ex.message.should =~ /foo/
-#   end
+  would "have a should.raise should return the exception" do
+    ex = lambda { raise "foo!" }.should.raise
+    ex.should.kind_of? RuntimeError
+    ex.message.should =~ /foo/
+  end
 
 #   it "should have should.be.an.instance_of" do
 #     lambda { "string".should.be.instance_of String }.should succeed
