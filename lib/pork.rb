@@ -80,13 +80,16 @@ module Pork
       print '.'
     end
 
+    def self.super_executor
+      @super_executor ||= ancestors[1..-1].find{ |a| a < Executor }
+    end
+
     def self.description_for name=''
-      supername =
-        if anc = ancestors[1..-1].find{ |a| a.respond_to?(:description_for) }
-          " #{anc.description_for}"
-        else
-          ''
-        end
+      supername = if super_executor
+                    " #{super_executor.description_for}"
+                  else
+                    ' '
+                  end
       "#{@desc}#{supername}#{name}"
     end
 
