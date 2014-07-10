@@ -110,7 +110,7 @@ module Pork
     end
   end
 
-  module InspectNewLineError
+  module InspectNewlineError
     def inspect_error object, msg, args, negate
       a = args.map(&:inspect).join(', ')
       "\n#{object.inspect}.#{msg}(\n#{a}) to return #{!negate}"
