@@ -43,7 +43,6 @@ module Pork
     def describe desc=:default, &suite
       Pork.stats.start
       execute(self, desc, &suite)
-      Pork.stats.incr_tests
     end
     def copy  desc=:default, &suite; stash[desc] = suite; end
     def paste desc=:default
@@ -70,6 +69,7 @@ module Pork
     else
       print '.'
     ensure
+      Pork.stats.incr_tests
       run_after(context)
     end
 
