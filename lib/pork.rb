@@ -43,7 +43,7 @@ module Pork
     def describe desc=:default, &suite
       Pork.stats.start
       execute(self, desc, &suite)
-      Pork.stats.tests += 1
+      Pork.stats.incr_tests
     end
     def copy  desc=:default, &suite; stash[desc] = suite; end
     def paste desc=:default
@@ -61,7 +61,7 @@ module Pork
     rescue Error, StandardError => e
       case e
       when Skip
-        Pork.stats.skips += 1
+        Pork.stats.incr_skips
       when Failure
         Pork.stats.add_failure(e, description_for("would #{desc}"))
       when Error, StandardError
@@ -156,7 +156,7 @@ module Pork
       if !!result == @negate
         ::Kernel.raise Failure.new("Expect #{desc}\n#{@message}".chomp)
       else
-        ::Pork.stats.assertions += 1
+        ::Pork.stats.incr_assertions
       end
       result
     end
@@ -215,9 +215,9 @@ module Pork
       @mutex = Mutex.new
       super(0, 0, 0, [], [])
     end
-    def assertions= num; @mutex.synchronize{ super                    }; end
-    def tests=      num; @mutex.synchronize{ super                    }; end
-    def skips=      num; @mutex.synchronize{ super        ; print('s')}; end
+    def incr_assertions; @mutex.synchronize{ self.assertions += 1       }; end
+    def incr_tests     ; @mutex.synchronize{ self.tests      += 1       }; end
+    def incr_skips     ; @mutex.synchronize{ self.skips += 1; print('s')}; end
     def add_failure *e ; @mutex.synchronize{ failures << e; print('F')}; end
     def add_error   *e ; @mutex.synchronize{ errors   << e; print('E')}; end
     def numbers
