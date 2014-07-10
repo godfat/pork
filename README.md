@@ -10,8 +10,9 @@ by Lin Jen-Shin ([godfat](http://godfat.org))
 
 ## DESCRIPTION:
 
-[Bacon][] reimplemented in an even more lightweight manner.
-Around 250 lines of code.
+Pork -- Simple and clean testing library.
+
+[Bacon][] reimplemented around 250 lines of code.
 
 [Bacon]: https://github.com/chneukirchen/bacon
 
