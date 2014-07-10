@@ -20,8 +20,12 @@ Pork::API.describe 'A' do
   end
 
   copy do
+    def t
+      true
+    end
+
     would do
-      true.should.eq true
+      t.should.eq true
     end
   end
 
@@ -37,6 +41,10 @@ Pork::API.describe 'A' do
     end
 
     paste
+
+    would do
+      t.should.eq true
+    end
   end
 
   would 'skip' do

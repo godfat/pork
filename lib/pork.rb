@@ -47,7 +47,7 @@ module Pork
     def copy  desc=:default, &suite; stash[desc] = suite; end
     def paste desc=:default
       stashes = [self, super_executor].compact.map(&:stash)
-      instance_eval(&stashes.find{ |s| s[desc] }[desc])
+      module_eval(&stashes.find{ |s| s[desc] }[desc])
     end
     def would desc=:default, &test
       assertions = Pork.stats.assertions
