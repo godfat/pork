@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
   s.authors = ["Lin Jen-Shin (godfat)"]
   s.date = "2014-07-09"
-  s.description = "[Bacon][] reimplemented in an even more lightweight manner.\n\n[Bacon]: https://github.com/chneukirchen/bacon"
+  s.description = "[Bacon][] reimplemented in an even more lightweight manner.\nAround 250 lines of code.\n\n[Bacon]: https://github.com/chneukirchen/bacon"
   s.email = ["godfat (XD) godfat.org"]
   s.files = [
   ".gitignore",
@@ -19,7 +19,6 @@ Gem::Specification.new do |s|
   "README.md",
   "Rakefile",
   "lib/pork.rb",
-  "lib/pork/task.rb",
   "lib/pork/version.rb",
   "pork.gemspec",
   "task/README.md",

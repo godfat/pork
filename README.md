@@ -11,7 +11,7 @@ by Lin Jen-Shin ([godfat](http://godfat.org))
 ## DESCRIPTION:
 
 [Bacon][] reimplemented in an even more lightweight manner.
-Around 200 lines of code.
+Around 250 lines of code.
 
 [Bacon]: https://github.com/chneukirchen/bacon
 
