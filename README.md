@@ -10,7 +10,7 @@ by Lin Jen-Shin ([godfat](http://godfat.org))
 
 ## DESCRIPTION:
 
-Pork -- Simple and clean testing library.
+Pork -- Simple and clean and modular testing library.
 
 [Bacon][] reimplemented around 250 lines of code.
 
