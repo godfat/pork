@@ -43,9 +43,9 @@ module Pork
       stashes = [self, super_executor].compact.map(&:stash)
       instance_eval(&stashes.find{ |s| s[desc] }[desc])
     end
-    def would name=:default, &test
+    def would desc=:default, &test
       assertions = Pork.stats.assertions
-      context = new(name)
+      context = new(desc)
       run_before(context)
       context.instance_eval(&test)
       if assertions == Pork.stats.assertions
@@ -56,9 +56,9 @@ module Pork
       when Skip
         Pork.stats.skips += 1
       when Failure
-        Pork.stats.add_failure(e, description_for("would #{name}"))
+        Pork.stats.add_failure(e, description_for("would #{desc}"))
       when Error, StandardError
-        Pork.stats.add_error(  e, description_for("would #{name}"))
+        Pork.stats.add_error(  e, description_for("would #{desc}"))
       end
     else
       print '.'
