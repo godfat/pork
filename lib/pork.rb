@@ -28,8 +28,8 @@ module Pork
     def after  &block; Executor.after( &block); end
     def describe desc=:default, &suite; Executor.describe(desc, &suite); end
     def copy     desc=:default, &suite; Executor.copy(    desc, &suite); end
-    def paste    desc=:default, *args ; Executor.paste(   desc, *args) ; end
-    def would    desc=:default, &test ; Executor.would(   desc, &test) ; end
+    def paste    desc=:default, *args ; Executor.paste(   desc, *args ); end
+    def would    desc=:default, &test ; Executor.would(   desc, &test ); end
   end
 
   module Imp
