@@ -1,8 +1,7 @@
 
-require 'pork'
-Pork.report_at_exit
+require 'pork/auto'
 
-Pork::API.describe 'A' do
+describe 'A' do
   include Module.new{
     def m
       object_id
@@ -53,6 +52,6 @@ Pork::API.describe 'A' do
   end
 end
 
-Pork::API.would 'also work on top-level' do
+would 'also work on top-level' do
   true.should.eq true
 end

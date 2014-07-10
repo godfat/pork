@@ -1,8 +1,7 @@
 
-require 'pork'
-Pork.report_at_exit
+require 'pork/auto'
 
-Pork::API.describe Pork do
+describe Pork do
   # Hooray for meta-testing.
   include Module.new{
     def succeed block
@@ -226,7 +225,7 @@ Pork::API.describe Pork do
   end
 end
 
-Pork::API.describe "before/after" do
+describe "before/after" do
   before do
     @a = 1
     @b = 2
@@ -286,19 +285,19 @@ Pork::API.describe "before/after" do
   end
 end
 
-Pork::API.copy "a shared context" do
+copy "a shared context" do
   would "get called where it is included" do
     true.should.eq true
   end
 end
 
-Pork::API.copy "another shared context" do
+copy "another shared context" do
   would "access data" do
     @magic.should.eq 42
   end
 end
 
-Pork::API.describe "shared/behaves_like" do
+describe "shared/behaves_like" do
   paste "a shared context"
 
   ctx = self
@@ -316,7 +315,7 @@ Pork::API.describe "shared/behaves_like" do
   paste "another shared context"
 end
 
-Pork::API.describe "Methods" do
+describe "Methods" do
   def the_meaning_of_life
     42
   end
@@ -342,7 +341,7 @@ Pork::API.describe "Methods" do
   end
 end
 
-Pork::API.describe 'describe arguments' do
+describe 'describe arguments' do
   check = lambda do |ctx, desc, name=nil|
     ctx.should.lt Pork::Executor
     ctx.description_for(name).should.eq "#{desc}: #{name}"
@@ -350,7 +349,7 @@ Pork::API.describe 'describe arguments' do
 
   would 'work with string' do
     str = 'string'
-    Pork::API.describe(str) do
+    describe(str) do
       check[self, str]
       would 'a' do check[self.class, str, 'a'] end
     end
@@ -358,7 +357,7 @@ Pork::API.describe 'describe arguments' do
 
   would 'work with symbols' do
     str = 'behaviour'
-    Pork::API.describe(:behaviour) do
+    describe(:behaviour) do
       check[self, str]
       would 'b' do check[self.class, str, 'b'] end
     end
@@ -366,7 +365,7 @@ Pork::API.describe 'describe arguments' do
 
   would 'work with modules' do
     str = 'Pork'
-    Pork::API.describe(Pork) do
+    describe(Pork) do
       check[self, str]
       would 'c' do check[self.class, str, 'c'] end
     end
@@ -374,7 +373,7 @@ Pork::API.describe 'describe arguments' do
 
   would 'work with namespaced modules' do
     str = 'Pork::Executor'
-    Pork::API.describe(Pork::Executor) do
+    describe(Pork::Executor) do
       check[self, str]
       would 'd' do check[self.class, str, 'd'] end
     end
