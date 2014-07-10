@@ -1,5 +1,6 @@
 
 require 'pork'
+Pork.report_at_exit
 
 Pork::API.describe 'A' do
   include Module.new{
@@ -47,5 +48,3 @@ end
 Pork::API.would 'also work on top-level' do
   true.should.eq true
 end
-
-Pork.report

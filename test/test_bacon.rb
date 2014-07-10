@@ -1,5 +1,6 @@
 
 require 'pork'
+Pork.report_at_exit
 
 Pork::API.describe Pork do
   # Hooray for meta-testing.
@@ -379,5 +380,3 @@ Pork::API.describe 'describe arguments' do
     end
   end
 end
-
-Pork.report

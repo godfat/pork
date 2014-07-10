@@ -15,6 +15,12 @@ module Pork
   def self.stats ; @stats ||= Stats.new; end
   def self.reset ; @stats   = nil      ; end
   def self.report; stats.report; reset ; end
+  def self.report_at_exit
+    @report_at_exit ||= at_exit do
+      stats.report
+      exit stats.failures.size + stats.errors.size
+    end
+  end
 
   module API
     module_function
