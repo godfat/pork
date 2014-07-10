@@ -103,8 +103,40 @@ module Pork
     def skip; raise Skip.new("Skipping #{name}"); end
   end
 
+  module InspectInlineError
+    def inspect_error object, msg, args, negate
+      a = args.map(&:inspect).join(', ')
+      "#{object.inspect}.#{msg}(#{a}) to return #{!negate}"
+    end
+  end
+
+  module InspectNewLineError
+    def inspect_error object, msg, args, negate
+      a = args.map(&:inspect).join(', ')
+      "\n#{object.inspect}.#{msg}(\n#{a}) to return #{!negate}"
+    end
+  end
+
+  module InspectDiffError
+    def inspect_error object, msg, args, negate
+      ::Kernel.require 'tempfile'
+      ::Tempfile.open('pork-expect') do |expect|
+        ::Tempfile.open('pork-was') do |was|
+          expect.puts(object.to_s)
+          expect.close
+          was.puts(args.map(&:to_s).join(",\n"))
+          was.close
+          name = "#{object.class}##{msg}(\n"
+          diff = ::Kernel.__send__(:`, "diff #{expect.path} #{was.path}")
+          "#{name}#{diff}) to return #{!negate}"
+        end
+      end
+    end
+  end
+
   class Should < BasicObject
     instance_methods.each{ |m| undef_method(m) unless m =~ /^__|^object_id$/ }
+    include ::Pork::InspectInlineError
 
     def initialize object, message, &checker
       @object = object
@@ -114,8 +146,7 @@ module Pork
     end
 
     def method_missing msg, *args, &block
-      satisfy("#{@object.inspect}.#{msg}(#{args.join(', ')}) to" \
-              " return #{!@negate}") do
+      satisfy(inspect_error(@object, msg, args, @negate)) do
         @object.public_send(msg, *args, &block)
       end
     end
