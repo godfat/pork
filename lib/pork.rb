@@ -28,7 +28,7 @@ module Pork
     def after  &block; Executor.after( &block); end
     def describe desc=:default, &suite; Executor.describe(desc, &suite); end
     def copy     desc=:default, &suite; Executor.copy(    desc, &suite); end
-    def paste    desc=:default        ; Executor.paste(   desc, &suite); end
+    def paste    desc=:default, *args ; Executor.paste(   desc, *args) ; end
     def would    desc=:default, &test ; Executor.would(   desc, &test) ; end
   end
 
@@ -45,9 +45,9 @@ module Pork
       execute(self, desc, &suite)
     end
     def copy  desc=:default, &suite; stash[desc] = suite; end
-    def paste desc=:default
+    def paste desc=:default, *args
       stashes = [self, super_executor].compact.map(&:stash)
-      module_eval(&stashes.find{ |s| s[desc] }[desc])
+      module_exec(*args, &stashes.find{ |s| s[desc] }[desc])
     end
     def would desc=:default, &test
       assertions = Pork.stats.assertions
