@@ -23,6 +23,7 @@ module Pork
     def describe desc=:default, &suite; Executor.describe(desc, &suite); end
     def copy     desc=:default, &suite; Executor.copy(    desc, &suite); end
     def paste    desc=:default        ; Executor.paste(   desc, &suite); end
+    def would    desc=:default, &test ; Executor.would(   desc, &test) ; end
   end
 
   module Imp

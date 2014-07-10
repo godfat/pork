@@ -44,4 +44,8 @@ Pork::API.describe 'A' do
   end
 end
 
+Pork::API.would 'also work on top-level' do
+  true.should.eq true
+end
+
 Pork.report
