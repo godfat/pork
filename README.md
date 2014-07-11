@@ -140,7 +140,7 @@ describe 'instance variables in tests' do
   end
 
   would 'always be 1' do
-    @a.should == 1 # FAIL!
+    @a.should == 1
   end
 end
 ```
