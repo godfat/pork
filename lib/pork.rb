@@ -97,10 +97,10 @@ module Pork
     end
   end
 
-  class Executor < Struct.new(:name)
+  class Executor < Struct.new(:desc)
     extend Pork::Imp, Pork::API
     init
-    def skip; raise Skip.new("Skipping #{name}"); end
+    def skip; raise Skip.new("Skipping #{desc}"); end
   end
 
   module InspectInlineError
