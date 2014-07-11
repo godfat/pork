@@ -272,6 +272,134 @@ describe Hash do
 end
 ```
 
+## The API
+
+### Pork::API.describe
+
+So this creates a test suite which should be containing various test cases
+(`Pork::API.would`). The argument represents the description of the test
+suite, which accepts anything could be converted to a string. The _default_
+description is `:default` (which would be converted to `'default: '`)
+
+Each `describe` block would create a new subclass of `Pork::Executor` for
+isolating test suites. Each nested `describe` block would be a subclass of
+its parent `Pork::Executor`.
+
+``` ruby
+require 'pork/auto'
+
+describe do
+  would 'be default: for the default description' do
+    self.class.desc.should.eq 'default: '
+  end
+end
+```
+
+### Pork::API.would
+
+Essentially runs a test case. It could also be called in the top-level
+without being contained in a `describe` block. The argument represents the
+description of the test case, which accepts anything could be converted to
+a string. The _default_ description is also `:default`.
+
+Each `would` block would be run inside a new instance of the describing
+`Pork::Executor` to isolate instance variables.
+
+``` ruby
+require 'pork/auto'
+
+would do
+  desc.should.eq :default
+end
+```
+
+### Pork::API.before
+
+Each `before` block would be called before each `would` block (test case).
+You would probably want to setup stuffs inside `before` blocks.
+
+Each nested `describe` would also run parents' `before` blocks as well.
+
+``` ruby
+require 'pork/auto'
+
+describe do
+  before do
+    @a = 0
+  end
+
+  describe do
+    before do
+      @a.should.eq 0
+      @a += 1
+    end
+
+    would do
+      @a.should.eq 1
+    end
+  end
+end
+```
+
+### Pork::API.after
+
+Each `after` block would be called after each `would` block (test case).
+You would probably want to cleanup stuffs inside `after` blocks.
+
+Each nested `describe` would also run parents' `after` block as well.
+
+``` ruby
+require 'pork/auto'
+
+describe do
+  after do
+    @a.should.eq 1
+    @a += 1
+  end
+
+  describe do
+    after do
+      @a.should.eq 2
+    end
+
+    would do
+      @a = 1
+      @a.should.eq 1
+    end
+  end
+end
+```
+
+### Pork::API.copy
+
+### Pork::API.paste
+
+### Pork::Executor#skip
+
+### Pork::Executor#flunk
+
+### Pork::Should#satisfy
+
+### Pork::Should#not
+
+### Pork::Should#eq
+
+### Pork::Should#lt
+
+### Pork::Should#gt
+
+### Pork::Should#lte
+
+### Pork::Should#gte
+
+### Pork::Should#raise
+
+### Pork::Should#throw
+
+### Pork.report
+
+### Pork.report_at_exit
+
 ## CONTRIBUTORS:
 
 * Lin Jen-Shin (@godfat)
