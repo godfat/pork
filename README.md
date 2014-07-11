@@ -405,29 +405,206 @@ end
 
 ### Pork::Executor#skip
 
+At times we might want to skip some tests while leave the codes there without
+removing them or commenting them out. This is where `skip` would be helpful.
+
+``` ruby
+require 'pork/auto'
+
+describe do
+  would do
+    skip
+  end
+end
+```
+
+### Pork::Executor#ok
+
+Because Pork would complain if a test case does not have any assertions,
+sometimes we might want to tell Pork that it's ok because we've already
+made some assertions without using Pork's assertions. Then we'll want `ok`.
+
+The reason why complaining about missing assertions is useful is because
+sometimes we might expect some assertions would be made in a certain flow.
+If the flow is not correctly called, we could miss assertions. So it's good
+to explicitly claim that we don't care about assertions rather than letting
+them slip through implicitly.
+
+``` ruby
+require 'pork/auto'
+
+describe do
+  would do
+    'verify with mocks, and pork has no idea about that'.to_s
+    ok
+  end
+end
+```
+
 ### Pork::Executor#flunk
+
+If we're writing program carefully, there are a few cases where a condition
+would never meet. We could `raise "IMPOSSIBLE"` or we could simply call
+`flunk`.
+
+``` ruby
+require 'pork/auto'
+
+describe do
+  would do
+    should.raise(Pork::Error){ flunk }
+  end
+end
+```
 
 ### Pork::Should#satisfy
 
+If we want to have custom verifier, that is it.
+
+``` ruby
+require 'pork/auto'
+
+describe do
+  divided_by_2 = lambda{ |n| n % 2 == 0 }
+
+  would do
+    2.should.satisfy(&divided_by_2)
+  end
+end
+```
+
 ### Pork::Should#not
+
+An easy way to negate the expectation.
+
+``` ruby
+require 'pork/auto'
+
+would{ 1.should.not.eq 2 }
+```
 
 ### Pork::Should#eq
 
+To avoid warnings from Ruby, using `eq` instead of `==`. It's fine if you
+still prefer using `==` if you don't care about warnings.
+
+``` ruby
+require 'pork/auto'
+
+would{ 1.should.eq 1 }
+```
+
 ### Pork::Should#lt
+
+To avoid warnings from Ruby, using `lt` instead of `<`. It's fine if you
+still prefer using `<` if you don't care about warnings.
+
+``` ruby
+require 'pork/auto'
+
+would{ 1.should.lt 2 }
+```
 
 ### Pork::Should#gt
 
+To avoid warnings from Ruby, using `gt` instead of `>`. It's fine if you
+still prefer using `>` if you don't care about warnings.
+
+``` ruby
+require 'pork/auto'
+
+would{ 1.should.gt 0 }
+```
+
 ### Pork::Should#lte
+
+To avoid warnings from Ruby, using `lte` instead of `<=`. It's fine if you
+still prefer using `<=` if you don't care about warnings.
+
+``` ruby
+require 'pork/auto'
+
+would{ 1.should.lte 1 }
+```
 
 ### Pork::Should#gte
 
+To avoid warnings from Ruby, using `gte` instead of `>=`. It's fine if you
+still prefer using `>=` if you don't care about warnings.
+
+``` ruby
+require 'pork/auto'
+
+would{ 1.should.gte 1 }
+```
+
 ### Pork::Should#raise
+
+Expect for exceptions! There are two ways to call it. Either you could use
+lambda to wrap the questioning expression, or you could simply pass a block
+as the questioning expression.
+
+``` ruby
+require 'pork/auto'
+
+describe 'Pork::Should#raise' do
+  would 'check with a block' do
+    e = should.raise(RuntimeError){ raise "nnf" }
+    e.should.message.include?("nnf")
+  end
+
+  would 'check with a lambda' do
+    e = lambda{ raise "nnf" }.should.raise(RuntimeError)
+    e.should.message.include?("nnf")
+  end
+end
+```
 
 ### Pork::Should#throw
 
+Expect for something to be thrown. There are two ways to call it. Either
+you could use lambda to wrap the questioning expression, or you could
+simply pass a block as the questioning expression.
+
+``` ruby
+require 'pork/auto'
+
+describe 'Pork::Should#throw' do
+  would 'check with a block' do
+    e = should.throw(:nnf){ throw :nnf, 0 }
+    e.should.eq [:nnf, 0]
+  end
+
+  would 'check with a lambda' do
+    e = lambda{ throw :nnf, 1 }.should.throw(:nnf)
+    e.should.eq [:nnf, 1]
+  end
+end
+```
+
 ### Pork.report
 
+Report the summary from the tests. Usually you would want to call this at
+program exit, therefore most of the time you would want `Pork.report_at_exit`
+instead, unless you want to report the summary without exiting.
+
+Note that you would probably want to run `Pork.stats.start` at the beginning
+of your tests as well if you want to handle `Pork.report` manually.
+
 ### Pork.report_at_exit
+
+Basically simply call `Pork.stats.start` and setup `Pork.report` at exit,
+and exit with 0 if no error occurs or N for N errors and failures.
+
+If you also plan to pollute the top-level namespace so that you could simply
+call `describe` on top-level instead of calling it `Pork::API.describe`,
+you would probably want to simply `require 'pork/auto'` which is essentially:
+
+``` ruby
+require 'pork'
+extend Pork::API
+Pork.report_at_exit
+```
 
 ## CONTRIBUTORS:
 
