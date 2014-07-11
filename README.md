@@ -16,6 +16,12 @@ Pork -- Simple and clean and modular testing library.
 
 [Bacon]: https://github.com/chneukirchen/bacon
 
+## DESIGN:
+
+* Consistency over convenience.
+* Avoid polluting anything by default to make integration easier.
+* The less codes the better.
+
 ## WHY?
 
 [Bacon][] has some issues which can't be easily worked around. For example,
