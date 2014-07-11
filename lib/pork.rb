@@ -186,11 +186,11 @@ module Pork
     def throw msg
       satisfy("#{__not__}throwing #{msg}") do
         flag = true
-        ::Kernel.catch(msg) do
+        data = ::Kernel.catch(msg) do
           if ::Kernel.block_given? then yield else @object.call end
           flag = false
         end
-        flag
+        flag && [msg, data]
       end
     end
 
