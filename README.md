@@ -370,9 +370,38 @@ describe do
 end
 ```
 
-### Pork::API.copy
+### Pork::API.copy and Pork::API.paste
 
-### Pork::API.paste
+It could be a bit confusing at first, but just think of `copy` as a way to
+store the block with a name (default is `:default`), and whenever we `paste`,
+the stored block would be called at the context where we paste.
+
+The name could be anything, strings, symbols, numbers, classes, anything.
+
+The block passed to `copy` could have parameters. The second through the last
+arguments passed to `paste` would be passing to the block saved in copy.
+
+``` ruby
+require 'pork/auto'
+
+copy :default do |a=0, b=1|
+  before do
+    @a, @b = a, b
+  end
+
+  def f
+    @a + @b
+  end
+end
+
+describe do
+  paste :default, 1, 0
+
+  would do
+    f.should.eq 1
+  end
+end
+```
 
 ### Pork::Executor#skip
 
