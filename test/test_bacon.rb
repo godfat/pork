@@ -219,9 +219,9 @@ describe Pork do
     succeed lambda { (1+2).should.not(&f) }
   end
 
-  would "have should.flunk" do
-    fail lambda { should.flunk }
-    fail lambda { should.flunk "yikes" }
+  would "have flunk" do
+    fail lambda { flunk }
+    fail lambda { flunk "yikes" }
   end
 end
 
