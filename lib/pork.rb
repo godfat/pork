@@ -42,7 +42,7 @@ module Pork
       if block_given? then @after  << block else @after  end
     end
     def describe desc=:default, &suite
-      execute(self, desc, &suite)
+      Class.new(self){ init("#{desc}: ") }.module_eval(&suite)
     end
     def copy  desc=:default, &suite; stash[desc] = suite; end
     def paste desc=:default, *args
@@ -79,10 +79,6 @@ module Pork
     end
     def super_executor
       @super_executor ||= ancestors[1..-1].find{ |a| a <= Executor }
-    end
-    def execute caller, desc, &suite
-      parent = if caller.kind_of?(Class) then caller else self end
-      Class.new(parent){ init("#{desc}: ") }.module_eval(&suite)
     end
     def description_for name=''
       "#{desc}#{super_executor && super_executor.description_for}#{name}"
