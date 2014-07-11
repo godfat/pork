@@ -98,6 +98,7 @@ module Pork
     init
     def skip                  ; raise Skip.new("Skipping #{desc}"); end
     def flunk reason='Flunked'; raise Error.new(reason)           ; end
+    def ok                    ; Pork.stats.incr_assertions        ; end
   end
 
   module InspectInlineError

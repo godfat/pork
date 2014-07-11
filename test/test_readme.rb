@@ -8,6 +8,7 @@ describe 'README.md' do
     each.with_index do |(code), index|
       would 'pass from README.md #%02d' % index do
         Module.new{ extend Pork::API; instance_eval(code) }
+        ok
       end
   end
 end
