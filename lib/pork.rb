@@ -34,7 +34,7 @@ module Pork
   end
 
   module Imp
-    attr_reader :stash
+    attr_reader :stash, :desc
     def before &block
       if block_given? then @before << block else @before end
     end
@@ -85,7 +85,7 @@ module Pork
       Class.new(parent){ init("#{desc}: ") }.module_eval(&suite)
     end
     def description_for name=''
-      "#{@desc}#{super_executor && super_executor.description_for}#{name}"
+      "#{desc}#{super_executor && super_executor.description_for}#{name}"
     end
     def run_before context
       super_executor.run_before(context) if super_executor
