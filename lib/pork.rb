@@ -16,6 +16,7 @@ module Pork
   def self.reset ; @stats   = nil      ; end
   def self.report; stats.report; reset ; end
   def self.report_at_exit
+    Pork.stats.start
     @report_at_exit ||= at_exit do
       stats.report
       exit stats.failures.size + stats.errors.size
@@ -41,7 +42,6 @@ module Pork
       if block_given? then @after  << block else @after  end
     end
     def describe desc=:default, &suite
-      Pork.stats.start
       execute(self, desc, &suite)
     end
     def copy  desc=:default, &suite; stash[desc] = suite; end
