@@ -237,6 +237,41 @@ describe Hash do
 end
 ```
 
+Context sensitive paste:
+
+``` ruby
+require 'pork/auto'
+
+copy 'empty test' do |error|
+  paste :setup_data # it would search from the pasted context
+
+  would "raise #{error} for fetching from non-existing index" do
+    should.raise(error){ @data.fetch(0) }.message.
+      should.match(/\d+/)
+  end
+end
+
+describe Array do
+  copy :setup_data do
+    before do
+      @data = []
+    end
+  end
+
+  paste 'empty test', IndexError
+end
+
+describe Hash do
+  copy :setup_data do
+    before do
+      @data = {}
+    end
+  end
+
+  paste 'empty test', KeyError
+end
+```
+
 ## CONTRIBUTORS:
 
 * Lin Jen-Shin (@godfat)
