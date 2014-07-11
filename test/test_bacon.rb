@@ -349,7 +349,7 @@ describe 'describe arguments' do
 
   would 'work with string' do
     str = 'string'
-    describe(str) do
+    Pork::API.describe(str) do
       check[self, str]
       would 'a' do check[self.class, str, 'a'] end
     end
@@ -357,7 +357,7 @@ describe 'describe arguments' do
 
   would 'work with symbols' do
     str = 'behaviour'
-    describe(:behaviour) do
+    Pork::API.describe(:behaviour) do
       check[self, str]
       would 'b' do check[self.class, str, 'b'] end
     end
@@ -365,7 +365,7 @@ describe 'describe arguments' do
 
   would 'work with modules' do
     str = 'Pork'
-    describe(Pork) do
+    Pork::API.describe(Pork) do
       check[self, str]
       would 'c' do check[self.class, str, 'c'] end
     end
@@ -373,7 +373,7 @@ describe 'describe arguments' do
 
   would 'work with namespaced modules' do
     str = 'Pork::Executor'
-    describe(Pork::Executor) do
+    Pork::API.describe(Pork::Executor) do
       check[self, str]
       would 'd' do check[self.class, str, 'd'] end
     end
