@@ -86,11 +86,11 @@ module Pork
       "#{desc}#{super_executor && super_executor.description_for}#{name}"
     end
     def run_before context
-      super_executor.run_before(context) if super_executor
+      super_executor && super_executor.run_before(context)
       before.each{ |b| context.instance_eval(&b) }
     end
     def run_after context
-      super_executor.run_after(context) if super_executor
+      super_executor && super_executor.run_after(context)
       after.each{ |b| context.instance_eval(&b) }
     end
   end
