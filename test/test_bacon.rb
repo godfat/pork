@@ -304,7 +304,7 @@ describe "shared/behaves_like" do
   would "raise NameError when the context is not found" do
     lambda {
       ctx.paste "whoops"
-    }.should.raise NameError
+    }.should.raise LocalJumpError
   end
 
   paste "a shared context"

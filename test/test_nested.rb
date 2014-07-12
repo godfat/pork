@@ -44,6 +44,10 @@ describe 'A' do
     would do
       t.should.eq true
     end
+
+    describe 'C' do
+      paste
+    end
   end
 
   would 'skip' do

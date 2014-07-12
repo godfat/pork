@@ -46,8 +46,7 @@ module Pork
     end
     def copy  desc=:default, &suite; stash[desc] = suite; end
     def paste desc=:default, *args
-      stashes = [self, super_executor].compact.map(&:stash)
-      module_exec(*args, &stashes.find{ |s| s[desc] }[desc])
+      module_exec(*args, &search_stash(desc))
     end
     def would desc=:default, &test
       assertions = Pork.stats.assertions
@@ -79,6 +78,9 @@ module Pork
     end
     def super_executor
       @super_executor ||= ancestors[1..-1].find{ |a| a <= Executor }
+    end
+    def search_stash desc
+      stash[desc] or super_executor && super_executor.search_stash(desc)
     end
     def description_for name=''
       "#{desc}#{super_executor && super_executor.description_for}#{name}"
