@@ -19,7 +19,7 @@ module Pork
     Pork.stats.start
     @report_at_exit ||= at_exit do
       stats.report
-      exit stats.failures.size + stats.errors.size
+      exit stats.failures.size + stats.errors.size + ($! && 1).to_i
     end
   end
 
