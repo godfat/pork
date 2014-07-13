@@ -22,6 +22,39 @@ module Pork
       exit stats.failures.size + stats.errors.size + ($! && 1).to_i
     end
   end
+  # default to :auto while eliminating warnings for uninitialized ivar
+  def self.inspect_failure_mode mode=nil; @mode = mode || @mode ||= :auto; end
+  def self.inspect_failure *args
+    lambda{ public_send("inspect_failure_#{inspect_failure_mode}", *args) }
+  end
+
+  def self.inspect_failure_auto object, msg, args, negate
+    inspect_failure_inline(object, msg, args, negate)
+  end
+
+  def self.inspect_failure_inline object, msg, args, negate
+    a = args.map(&:inspect).join(', ')
+    "#{object.inspect}.#{msg}(#{a}) to return #{!negate}"
+  end
+
+  def self.inspect_failure_newline object, msg, args, negate
+    a = args.map(&:inspect).join(', ')
+    "\n#{object.inspect}.#{msg}(\n#{a}) to return #{!negate}"
+  end
+
+  def self.inspect_failure_diff object, msg, args, negate
+    require 'tempfile'
+    Tempfile.open('pork-expect') do |expect|
+      Tempfile.open('pork-was') do |was|
+        expect.puts(object.to_s)
+        expect.close
+        was.puts(args.map(&:to_s).join(",\n"))
+        was.close
+        name = "#{object.class}##{msg}(\n"
+        "#{name}#{`diff #{expect.path} #{was.path}`}) to return #{!negate}"
+      end
+    end
+  end
 
   module API
     module_function
@@ -103,41 +136,8 @@ module Pork
     def ok                    ; Pork.stats.incr_assertions        ; end
   end
 
-  module InspectInlineError
-    def inspect_error object, msg, args, negate
-      a = args.map(&:inspect).join(', ')
-      "#{object.inspect}.#{msg}(#{a}) to return #{!negate}"
-    end
-  end
-
-  module InspectNewlineError
-    def inspect_error object, msg, args, negate
-      a = args.map(&:inspect).join(', ')
-      "\n#{object.inspect}.#{msg}(\n#{a}) to return #{!negate}"
-    end
-  end
-
-  module InspectDiffError
-    def inspect_error object, msg, args, negate
-      ::Kernel.require 'tempfile'
-      ::Tempfile.open('pork-expect') do |expect|
-        ::Tempfile.open('pork-was') do |was|
-          expect.puts(object.to_s)
-          expect.close
-          was.puts(args.map(&:to_s).join(",\n"))
-          was.close
-          name = "#{object.class}##{msg}(\n"
-          diff = ::Kernel.__send__(:`, "diff #{expect.path} #{was.path}")
-          "#{name}#{diff}) to return #{!negate}"
-        end
-      end
-    end
-  end
-
   class Should < BasicObject
     instance_methods.each{ |m| undef_method(m) unless m =~ /^__|^object_id$/ }
-    include ::Pork::InspectInlineError
-
     def initialize object, message, &checker
       @object = object
       @negate = false
@@ -146,15 +146,16 @@ module Pork
     end
 
     def method_missing msg, *args, &block
-      satisfy(inspect_error(@object, msg, args, @negate)) do
+      satisfy(nil, ::Pork.inspect_failure(@object, msg, args, @negate)) do
         @object.public_send(msg, *args, &block)
       end
     end
 
-    def satisfy desc=@object
+    def satisfy desc=@object, desc_lazy=nil
       result = yield(@object)
       if !!result == @negate
-        ::Kernel.raise Failure.new("Expect #{desc}\n#{@message}".chomp)
+        d = desc_lazy && desc_lazy.call or desc
+        ::Kernel.raise Failure.new("Expect #{d}\n#{@message}".chomp)
       else
         ::Pork.stats.incr_assertions
       end
