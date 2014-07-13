@@ -34,6 +34,16 @@ module Pork
     elsif object.kind_of?(Hash) && args.first.kind_of?(Hash)
       inspect_failure_inline(Hash[object.sort], msg,
                              [Hash[args.first.sort]], negate)
+    elsif object.kind_of?(String) && object.size > 400 &&
+          object.count("\n") > 4 && !`which diff`.empty?
+      inspect_failure_diff(object, msg, args, negate)
+    else
+      ins = object.inspect
+      if ins.size > 78
+        inspect_failure_newline(object, msg, args, negate)
+      else
+        inspect_failure_inline( object, msg, args, negate)
+      end
     end
   end
 
