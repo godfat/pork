@@ -43,7 +43,7 @@ module Pork
   end
 
   def self.inspect_failure_newline object, msg, args, negate
-    a = args.map(&:inspect).join(', ')
+    a = args.map(&:inspect).join(",\n")
     "\n#{object.inspect}.#{msg}(\n#{a}) to return #{!negate}"
   end
 
