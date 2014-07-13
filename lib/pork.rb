@@ -214,12 +214,8 @@ module Pork
     def incr_skips     ; @mutex.synchronize{ self.skips += 1; print('s')}; end
     def add_failure *e ; @mutex.synchronize{ failures << e; print('F')}; end
     def add_error   *e ; @mutex.synchronize{ errors   << e; print('E')}; end
-    def numbers
-      [tests, assertions, failures.size, errors.size, skips]
-    end
-    def start
-      @start ||= Time.now
-    end
+    def numbers; [tests, assertions, failures.size, errors.size, skips]; end
+    def start  ; @start ||= Time.now                                   ; end
     def report
       puts
       puts (failures + errors).map{ |(e, m)|
