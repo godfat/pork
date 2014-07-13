@@ -29,7 +29,12 @@ module Pork
   end
 
   def self.inspect_failure_auto object, msg, args, negate
-    inspect_failure_inline(object, msg, args, negate)
+    if args.size > 1
+      inspect_failure_inline(object, msg, args, negate)
+    elsif object.kind_of?(Hash) && args.first.kind_of?(Hash)
+      inspect_failure_inline(Hash[object.sort], msg,
+                             [Hash[args.first.sort]], negate)
+    end
   end
 
   def self.inspect_failure_inline object, msg, args, negate
