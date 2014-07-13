@@ -201,13 +201,7 @@ module Pork
     end
 
     private
-    def __not__
-      if @negate == true
-        'not '
-      else
-        ''
-      end
-    end
+    def __not__; if @negate == true then 'not ' else '' end; end
   end
 
   class Stats < Struct.new(:tests, :assertions, :skips, :failures, :errors)
