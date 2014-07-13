@@ -111,9 +111,7 @@ module Pork
     end
 
     protected
-    def init desc=''
-      @desc, @before, @after, @stash = desc, [], [], {}
-    end
+    def init desc=''; @desc, @before, @after, @stash = desc, [], [], {}; end
     def super_executor
       @super_executor ||= ancestors[1..-1].find{ |a| a <= Executor }
     end
