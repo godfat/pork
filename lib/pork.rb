@@ -8,7 +8,7 @@ module Kernel
 end
 
 module Pork
-  Error   = Class.new(Exception)
+  Error   = Class.new(StandardError)
   Failure = Class.new(Error)
   Skip    = Class.new(Error)
 
