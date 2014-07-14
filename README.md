@@ -639,6 +639,7 @@ Then it would always use the mode you specified.
 ## CONTRIBUTORS:
 
 * Lin Jen-Shin (@godfat)
+* Josh Kalderimis (@joshk)
 
 ## LICENSE:
 
