@@ -274,6 +274,133 @@ end
 
 ## The API
 
+### Kernel#should
+
+### Pork::Should#satisfy
+
+If we want to have custom verifier, that is it.
+
+``` ruby
+require 'pork/auto'
+
+describe do
+  divided_by_2 = lambda{ |n| n % 2 == 0 }
+
+  would do
+    2.should.satisfy(&divided_by_2)
+  end
+end
+```
+
+### Pork::Should#not
+
+An easy way to negate the expectation.
+
+``` ruby
+require 'pork/auto'
+
+would{ 1.should.not.eq 2 }
+```
+
+### Pork::Should#eq
+
+To avoid warnings from Ruby, using `eq` instead of `==`. It's fine if you
+still prefer using `==` if you don't care about warnings.
+
+``` ruby
+require 'pork/auto'
+
+would{ 1.should.eq 1 }
+```
+
+### Pork::Should#lt
+
+To avoid warnings from Ruby, using `lt` instead of `<`. It's fine if you
+still prefer using `<` if you don't care about warnings.
+
+``` ruby
+require 'pork/auto'
+
+would{ 1.should.lt 2 }
+```
+
+### Pork::Should#gt
+
+To avoid warnings from Ruby, using `gt` instead of `>`. It's fine if you
+still prefer using `>` if you don't care about warnings.
+
+``` ruby
+require 'pork/auto'
+
+would{ 1.should.gt 0 }
+```
+
+### Pork::Should#lte
+
+To avoid warnings from Ruby, using `lte` instead of `<=`. It's fine if you
+still prefer using `<=` if you don't care about warnings.
+
+``` ruby
+require 'pork/auto'
+
+would{ 1.should.lte 1 }
+```
+
+### Pork::Should#gte
+
+To avoid warnings from Ruby, using `gte` instead of `>=`. It's fine if you
+still prefer using `>=` if you don't care about warnings.
+
+``` ruby
+require 'pork/auto'
+
+would{ 1.should.gte 1 }
+```
+
+### Pork::Should#raise
+
+Expect for exceptions! There are two ways to call it. Either you could use
+lambda to wrap the questioning expression, or you could simply pass a block
+as the questioning expression.
+
+``` ruby
+require 'pork/auto'
+
+describe 'Pork::Should#raise' do
+  would 'check with a block' do
+    e = should.raise(RuntimeError){ raise "nnf" }
+    e.should.message.include?("nnf")
+  end
+
+  would 'check with a lambda' do
+    e = lambda{ raise "nnf" }.should.raise(RuntimeError)
+    e.should.message.include?("nnf")
+  end
+end
+```
+
+### Pork::Should#throw
+
+Expect for something to be thrown. There are two ways to call it. Either
+you could use lambda to wrap the questioning expression, or you could
+simply pass a block as the questioning expression.
+
+``` ruby
+require 'pork/auto'
+
+describe 'Pork::Should#throw' do
+  would 'check with a block' do
+    e = should.throw(:nnf){ throw :nnf, 0 }
+    e.should.eq [:nnf, 0]
+  end
+
+  would 'check with a lambda' do
+    e = lambda{ throw :nnf, 1 }.should.throw(:nnf)
+    e.should.eq [:nnf, 1]
+  end
+end
+```
+
 ### Pork::API.describe
 
 So this creates a test suite which should be containing various test cases
@@ -457,131 +584,6 @@ describe do
 end
 ```
 
-### Pork::Should#satisfy
-
-If we want to have custom verifier, that is it.
-
-``` ruby
-require 'pork/auto'
-
-describe do
-  divided_by_2 = lambda{ |n| n % 2 == 0 }
-
-  would do
-    2.should.satisfy(&divided_by_2)
-  end
-end
-```
-
-### Pork::Should#not
-
-An easy way to negate the expectation.
-
-``` ruby
-require 'pork/auto'
-
-would{ 1.should.not.eq 2 }
-```
-
-### Pork::Should#eq
-
-To avoid warnings from Ruby, using `eq` instead of `==`. It's fine if you
-still prefer using `==` if you don't care about warnings.
-
-``` ruby
-require 'pork/auto'
-
-would{ 1.should.eq 1 }
-```
-
-### Pork::Should#lt
-
-To avoid warnings from Ruby, using `lt` instead of `<`. It's fine if you
-still prefer using `<` if you don't care about warnings.
-
-``` ruby
-require 'pork/auto'
-
-would{ 1.should.lt 2 }
-```
-
-### Pork::Should#gt
-
-To avoid warnings from Ruby, using `gt` instead of `>`. It's fine if you
-still prefer using `>` if you don't care about warnings.
-
-``` ruby
-require 'pork/auto'
-
-would{ 1.should.gt 0 }
-```
-
-### Pork::Should#lte
-
-To avoid warnings from Ruby, using `lte` instead of `<=`. It's fine if you
-still prefer using `<=` if you don't care about warnings.
-
-``` ruby
-require 'pork/auto'
-
-would{ 1.should.lte 1 }
-```
-
-### Pork::Should#gte
-
-To avoid warnings from Ruby, using `gte` instead of `>=`. It's fine if you
-still prefer using `>=` if you don't care about warnings.
-
-``` ruby
-require 'pork/auto'
-
-would{ 1.should.gte 1 }
-```
-
-### Pork::Should#raise
-
-Expect for exceptions! There are two ways to call it. Either you could use
-lambda to wrap the questioning expression, or you could simply pass a block
-as the questioning expression.
-
-``` ruby
-require 'pork/auto'
-
-describe 'Pork::Should#raise' do
-  would 'check with a block' do
-    e = should.raise(RuntimeError){ raise "nnf" }
-    e.should.message.include?("nnf")
-  end
-
-  would 'check with a lambda' do
-    e = lambda{ raise "nnf" }.should.raise(RuntimeError)
-    e.should.message.include?("nnf")
-  end
-end
-```
-
-### Pork::Should#throw
-
-Expect for something to be thrown. There are two ways to call it. Either
-you could use lambda to wrap the questioning expression, or you could
-simply pass a block as the questioning expression.
-
-``` ruby
-require 'pork/auto'
-
-describe 'Pork::Should#throw' do
-  would 'check with a block' do
-    e = should.throw(:nnf){ throw :nnf, 0 }
-    e.should.eq [:nnf, 0]
-  end
-
-  would 'check with a lambda' do
-    e = lambda{ throw :nnf, 1 }.should.throw(:nnf)
-    e.should.eq [:nnf, 1]
-  end
-end
-```
-
 ### Pork.report
 
 Report the summary from the tests. Usually you would want to call this at
@@ -605,6 +607,34 @@ require 'pork'
 extend Pork::API
 Pork.report_at_exit
 ```
+
+### Pork.inspect_failure_mode
+
+By default, `Pork.inspect_failure_mode` is set to `:auto`, which would
+display failures accordingly. For example, if the message is short, it would
+simply show the message. But if the message is long, it would try to insert
+a newline between actual result and expected result, since it would be much
+easier for human to distinguish the difference this way. If the message is
+really long, it would even use `diff` to show the difference.
+
+This is because if the actual string is long, it would be quite painful to
+find the actual difference for human without assistance.
+
+However, this might not really be desired at times. So we should be able to
+switch between each mode. For now, we have the following modes:
+
+* :auto (default)
+* :inline
+* :newline
+* :diff
+
+If you want to force to a specific mode, here's how you would do:
+
+``` ruby
+Pork.inspect_failure_mode :newline
+```
+
+Then it would always use the mode you specified.
 
 ## CONTRIBUTORS:
 
