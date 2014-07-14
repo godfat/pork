@@ -276,9 +276,57 @@ end
 
 ### Kernel#should
 
+All the assertions begin with `should`. Whenever we called `should` on an
+object, it would create an `Pork::Should` object which would verify the
+assertion we make. For the simplest case, this verifies if `1 == 1`:
+
+``` ruby
+require 'pork/auto'
+
+would{ 1.should.eq 1 }
+```
+
+Sometimes we would also want to have a customized message if the assertion
+failed, as in `assert_equal 1, 1, 'the message'`, we pass the message as the
+first argument to should.
+
+``` ruby
+require 'pork/auto'
+
+would{ 1.should('verify one equals to one').eq 1 }
+```
+
+In a rare case, constructing the message could be expensive, so we might not
+want to build the message if the assertion passed. Then we pass the second
+argument as the constructor of the message.
+
+``` ruby
+require 'pork/auto'
+
+would{ 1.should(nil, lambda{'verify one equals to one'}).eq 1 }
+```
+
+Other than built in assertions such as `eq`, all methods in the questioning
+object are available. For example, for arrays we could use `empty?`,
+`include?` and `[]`.
+
+``` ruby
+describe Array do
+  would 'have array methods as verifiers' do
+    [ ].should.empty?
+    [1].should.include? 1
+    [1].should[0]
+  end
+end
+```
+
+The assertions would only fail whenever the result was `false` or `nil`,
+otherwise pass.
+
 ### Pork::Should#satisfy
 
-If we want to have custom verifier, that is it.
+If we want to have custom verifier other than the methods from questioning
+object, this is it.
 
 ``` ruby
 require 'pork/auto'
@@ -288,6 +336,21 @@ describe do
 
   would do
     2.should.satisfy(&divided_by_2)
+  end
+end
+```
+
+The message argument applies to `should` also applies to `satisfy`.
+
+``` ruby
+require 'pork/auto'
+
+describe do
+  divided_by_2 = lambda{ |n| n % 2 == 0 }
+
+  would do
+    2.should.satisfy('be divided by two', &divided_by_2)
+    2.should.satisfy(nil, lambda{'be divided by two'}, &divided_by_2)
   end
 end
 ```
@@ -628,13 +691,13 @@ switch between each mode. For now, we have the following modes:
 * :newline
 * :diff
 
-If you want to force to a specific mode, here's how you would do:
+If we want to force to a specific mode, here's how we would do:
 
 ``` ruby
 Pork.inspect_failure_mode :newline
 ```
 
-Then it would always use the mode you specified.
+Then it would always use the mode we specified.
 
 ## CONTRIBUTORS:
 
