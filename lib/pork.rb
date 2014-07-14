@@ -167,7 +167,7 @@ module Pork
     def satisfy desc=@object, desc_lazy=nil
       result = yield(@object)
       if !!result == @negate
-        d = desc_lazy && desc_lazy.call or desc
+        d = desc_lazy && desc_lazy.call || desc
         ::Kernel.raise Failure.new("Expect #{d}\n#{@message}".chomp)
       else
         ::Pork.stats.incr_assertions
