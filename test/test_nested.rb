@@ -80,3 +80,16 @@ describe 'Pork.inspect_failure' do
       should.eq "String#==(\n#{n}a#{n+1}\n> b\n) to return false"
   end
 end
+
+describe 'should(message)' do
+  would 'show message' do
+    should.raise(Pork::Failure){ should('nnf').satisfy('qoo'){ false } }.
+      message.should.eq "Expect qoo\nnnf"
+  end
+
+  would 'show lazy message' do
+    should.raise(Pork::Failure) do
+      should(nil, lambda{'nnf'}).satisfy(nil, lambda{'qoo'}){ false }
+    end.message.should.eq "Expect qoo\nnnf"
+  end
+end

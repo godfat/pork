@@ -2,8 +2,8 @@
 require 'thread'
 
 module Kernel
-  def should message=nil, &checker
-    Pork::Should.new(self, message, &checker)
+  def should message=nil, message_lazy=nil, &checker
+    Pork::Should.new(self, message, message_lazy, &checker)
   end
 end
 
@@ -151,10 +151,9 @@ module Pork
 
   class Should < BasicObject
     instance_methods.each{ |m| undef_method(m) unless m =~ /^__|^object_id$/ }
-    def initialize object, message, &checker
-      @object = object
-      @negate = false
-      @message = message
+    def initialize object, message=nil, message_lazy=nil, &checker
+      @object, @negate = object, false
+      @message, @message_lazy = message, message_lazy
       satisfy(&checker) if checker
     end
 
@@ -167,8 +166,9 @@ module Pork
     def satisfy desc=@object, desc_lazy=nil
       result = yield(@object)
       if !!result == @negate
-        d = desc_lazy && desc_lazy.call || desc
-        ::Kernel.raise Failure.new("Expect #{d}\n#{@message}".chomp)
+        d =     desc_lazy &&     desc_lazy.call || desc
+        m = @message_lazy && @message_lazy.call || @message
+        ::Kernel.raise Failure.new("Expect #{d}\n#{m}".chomp)
       else
         ::Pork.stats.incr_assertions
       end
