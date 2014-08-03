@@ -1,11 +1,9 @@
 
 language: ruby
 rvm:
-  - 1.9.3
   - 2.0.0
   - ruby
   - rbx-2
   - jruby
 
 script: 'ruby -r bundler/setup -S rake test'
-sudo: false
