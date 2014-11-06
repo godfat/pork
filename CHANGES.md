@@ -1,12 +1,17 @@
 # CHANGES
 
+## Pork 0.9.2 -- 2014-11-07
+
+* Pork::Error is now a StandardError instead of an Exception.
+  We should all try to avoid using Exception directly, since
+  we don't want to interferer with signal handling.
+
 ## Pork 0.9.1 -- 2014-07-14
 
 ### Bugs fixed
 
 * It would now properly `exit(1)` when there's an error.
 * It would now properly search the stashes chain upon `paste`.
-
 
 ### Enhancement
 
