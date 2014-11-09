@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.require_paths = ["lib"]
   s.authors = ["Lin Jen-Shin (godfat)"]
-  s.date = "2014-11-07"
+  s.date = "2014-11-10"
   s.description = "Pork -- Simple and clean and modular testing library.\n\n[Bacon][] reimplemented around 250 lines of code.\n\n[Bacon]: https://github.com/chneukirchen/bacon"
   s.email = ["godfat (XD) godfat.org"]
   s.files = [
@@ -16,6 +16,7 @@ Gem::Specification.new do |s|
   ".gitmodules",
   ".travis.yml",
   "CHANGES.md",
+  "Gemfile",
   "LICENSE",
   "README.md",
   "Rakefile",
