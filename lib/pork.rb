@@ -142,7 +142,7 @@ module Pork
   end
 
   class Executor < Struct.new(:desc)
-    extend Pork::Imp, Pork::API
+    extend Pork::Imp
     init
     def skip                  ; raise Skip.new("Skipping #{desc}"); end
     def flunk reason='Flunked'; raise Error.new(reason)           ; end
