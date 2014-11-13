@@ -24,7 +24,7 @@ module Pork
     def execute
       Thread.current[:pork_executor] = self
       @before, @after, @stat = [], [], Stat.new
-      stat.start
+      yield if block_given?
       tests.each do |(type, *args)|
         case type
         when :before

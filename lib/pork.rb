@@ -20,7 +20,7 @@ module Pork
 
   def self.report_at_exit
     @report_at_exit ||= at_exit do
-      Executor.execute
+      Executor.execute{ Executor.stat.start }
       Executor.stat.report
       exit Executor.stat.failures.size +
            Executor.stat.errors.size + ($! && 1).to_i
