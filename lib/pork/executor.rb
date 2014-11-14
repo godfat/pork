@@ -102,11 +102,11 @@ module Pork
     init
 
     def initialize desc
-      @__pork__desc = desc
+      @__pork__desc__ = desc
     end
 
     def skip
-     raise Skip.new("Skipping #{@__pork__desc}")
+     raise Skip.new("Skipping #{@__pork__desc__}")
     end
 
     def flunk reason='Flunked'

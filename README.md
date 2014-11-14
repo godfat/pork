@@ -499,7 +499,7 @@ Each `would` block would be run inside a new instance of the describing
 require 'pork/auto'
 
 would do
-  @__pork__desc.should.eq :default
+  @__pork__desc__.should.eq :default
 end
 ```
 
