@@ -18,8 +18,8 @@ module Pork
     def expect *args, &block; Expect.new(Executor, *args, &block); end
   end
 
-  def self.report_at_exit
-    @report_at_exit ||= at_exit do
+  def self.autorun
+    @autorun ||= at_exit do
       Executor.execute{ Executor.stat.start }
       Executor.stat.report
       exit Executor.stat.failures.size +
