@@ -2,7 +2,7 @@
 require 'pork/stat'
 
 module Pork
-  class Executor < Struct.new(:desc)
+  class Executor
     singleton_class.module_eval do
       attr_reader :stat
 
@@ -100,8 +100,21 @@ module Pork
     end
 
     init
-    def skip                  ; raise Skip.new("Skipping #{desc}"); end
-    def flunk reason='Flunked'; raise Error.new(reason)           ; end
-    def ok                    ; self.class.stat.incr_assertions   ; end
+
+    def initialize desc
+      @__pork__desc = desc
+    end
+
+    def skip
+     raise Skip.new("Skipping #{@__pork__desc}")
+    end
+
+    def flunk reason='Flunked'
+      raise Error.new(reason)
+    end
+
+    def ok
+      self.class.stat.incr_assertions
+    end
   end
 end
