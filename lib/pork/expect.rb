@@ -1,4 +1,6 @@
 
+require 'pork/inspect'
+
 module Pork
   class Expect < BasicObject
     instance_methods.each{ |m| undef_method(m) unless m =~ /^__|^object_id$/ }
