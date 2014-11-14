@@ -1,6 +1,5 @@
 
 require 'pork/executor'
-require 'pork/ext'
 
 module Pork
   Error   = Class.new(StandardError)
