@@ -4,7 +4,7 @@ require 'pork/stat'
 module Pork
   class Executor
     singleton_class.module_eval do
-      attr_reader :stat
+      attr_reader :io, :stat
 
       def copy  desc=:default, &suite
         @stash[desc] = suite
@@ -36,7 +36,7 @@ module Pork
         group.add(thread)
         thread[:pork_executor] = self
         stat.start
-        execute_with_parent(stat, io)
+        execute_with_parent(io, stat)
       ensure
         original_group.add(thread)
       end
@@ -47,10 +47,10 @@ module Pork
         @super_executor = ancestors[1..-1].find{ |a| a <= Executor }
       end
 
-      def run desc, test, io=$stdout
+      def run desc, test
         assertions = stat.assertions
         context = new(desc)
-        run_protected(desc, io) do
+        run_protected(desc) do
           run_before(context)
           context.instance_eval(&test)
           if assertions == stat.assertions
@@ -60,10 +60,10 @@ module Pork
         end
       ensure
         stat.incr_tests
-        run_protected(desc, io){ run_after(context) }
+        run_protected(desc){ run_after(context) }
       end
 
-      def run_protected desc, io=$stdout
+      def run_protected desc
         yield
       rescue Error, StandardError => e
         case e
@@ -80,8 +80,8 @@ module Pork
       end
 
       protected
-      def execute_with_parent stat=Stat.new, io=$stdout
-        @stat = stat
+      def execute_with_parent io=$stdout, stat=Stat.new
+        @stat, @io = stat, io
         @tests.each do |(type, arg, test)|
           case type
           when :before
@@ -89,9 +89,9 @@ module Pork
           when :after
             @after  << arg
           when :describe
-            arg.execute_with_parent(stat, io)
+            arg.execute_with_parent(io, stat)
           when :would
-            run(arg, test, io)
+            run(arg, test)
           end
         end
       end
