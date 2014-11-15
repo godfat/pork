@@ -4,7 +4,7 @@ require 'pork/stat'
 module Pork
   class Executor
     singleton_class.module_eval do
-      attr_reader :desc, :io, :stat
+      attr_reader :desc, :tests, :io, :stat
 
       def copy  desc=:default, &suite
         @stash[desc] = suite
@@ -39,6 +39,14 @@ module Pork
         execute_with_parent(io, stat)
       ensure
         original_group.add(thread)
+      end
+
+      def passed?
+        stat.failures + stat.errors == 0
+      end
+
+      def all_tests
+        @all_tests ||= Hash[build_all_tests]
       end
 
       private
@@ -112,6 +120,19 @@ module Pork
 
       def description_for name=''
         "#{@desc}#{@super_executor && @super_executor.description_for}#{name}"
+      end
+
+      def build_all_tests paths=[]
+        @tests.flat_map.with_index do |(type, arg, test), index|
+          case type
+          when :describe
+            arg.build_all_tests(paths + [index])
+          when :would
+            [["#{desc.chomp(': ')}#{arg}", paths + [index]]]
+          else
+            []
+          end
+        end
       end
     end
 

@@ -42,16 +42,32 @@ module Mutant
       #
       # rubocop:disable MethodLength
       #
-      def run(_)
+      def run(test)
+        paths = ::Pork::Executor.all_tests[test.expression.syntax]
+        executor = ::Pork::Executor # TODO: use extend so that we could dup
+        tests = paths[0..-2].inject(::Pork::Executor.tests) do |tests, index|
+          tests.first(index).each do |(type, block, _)|
+            case type
+            when :before
+              executor.before(&block)
+            when :after
+              executor.after(&block)
+            end
+          end
+          tests[index][1].tests
+        end
+        _, desc, block = tests[paths.last]
+        executor.would(desc, &block)
+
         out = StringIO.new
-        ::Pork::Executor.execute(out)
+        executor.execute(out)
+
         Result::Test.new(
           test:     nil,
           mutation: nil,
           output:   out.string,
-          runtime:  Time.now - ::Pork::Executor.stat.start,
-          passed:   ::Pork::Executor.stat.failures +
-                      ::Pork::Executor.stat.errors == 0
+          runtime:  Time.now - executor.stat.start,
+          passed:   executor.passed?
         )
       end
 
@@ -62,7 +78,10 @@ module Mutant
       # @api private
       #
       def all_tests
-        [Test.new(self, Expression.parse(ARGV.first))]
+        ::Pork::Executor.all_tests.keys.inject([]) do |tests, description|
+          expression = Expression.try_parse(description) or next tests
+          tests << Test.new(self, expression)
+        end
       end
       memoize :all_tests
 
