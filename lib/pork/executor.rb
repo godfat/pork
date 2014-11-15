@@ -30,28 +30,20 @@ module Pork
         Expect.new(self, *args, &block)
       end
 
-      def execute
-        Thread.current[:pork_executor] = self
-        @tests.each do |(type, arg, test)|
-          case type
-          when :before
-            @before << arg
-          when :after
-            @after  << arg
-          when :describe
-            arg.execute
-            Thread.current[:pork_executor] = self
-            stat.merge(arg.stat)
-          when :would
-            run(arg, test)
-          end
-        end
+      def execute stat=Stat.new
+        thread = Thread.current
+        original_group, group = thread.group, ThreadGroup.new
+        group.add(thread)
+        thread[:pork_executor] = self
+        stat.start
+        execute_with_parent(stat)
+      ensure
+        original_group.add(thread)
       end
 
       private
       def init desc=''
-        @desc, @stat, @tests, @stash = desc, Stat.new, [], {}
-        @before, @after = [], []
+        @desc, @tests, @stash, @before, @after = desc, [], {}, [], []
         @super_executor = ancestors[1..-1].find{ |a| a <= Executor }
       end
 
@@ -80,6 +72,22 @@ module Pork
       end
 
       protected
+      def execute_with_parent stat=Stat.new
+        @stat = stat
+        @tests.each do |(type, arg, test)|
+          case type
+          when :before
+            @before << arg
+          when :after
+            @after  << arg
+          when :describe
+            arg.execute_with_parent(stat)
+          when :would
+            run(arg, test)
+          end
+        end
+      end
+
       def search_stash desc
         @stash[desc] or @super_executor && @super_executor.search_stash(desc)
       end

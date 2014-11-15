@@ -8,8 +8,8 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.require_paths = ["lib"]
   s.authors = ["Lin Jen-Shin (godfat)"]
-  s.date = "2014-11-14"
-  s.description = "Pork -- Simple and clean and modular testing library.\n\n[Bacon][] reimplemented around 250 lines of code.\n\n[Bacon]: https://github.com/chneukirchen/bacon"
+  s.date = "2014-11-15"
+  s.description = "Pork -- Simple and clean and modular testing library.\n\nInspired by [Bacon][].\n\n[Bacon]: https://github.com/chneukirchen/bacon"
   s.email = ["godfat (XD) godfat.org"]
   s.files = [
   ".gitignore",
@@ -25,7 +25,7 @@ Gem::Specification.new do |s|
   "lib/pork/executor.rb",
   "lib/pork/expect.rb",
   "lib/pork/ext.rb",
-  "lib/pork/imp.rb",
+  "lib/pork/inspect.rb",
   "lib/pork/stat.rb",
   "lib/pork/version.rb",
   "pork.gemspec",

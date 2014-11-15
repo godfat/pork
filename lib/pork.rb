@@ -19,7 +19,6 @@ module Pork
 
   def self.autorun
     @autorun ||= at_exit do
-      Executor.stat.start
       Executor.execute
       Executor.stat.report
       exit Executor.stat.failures.size +
