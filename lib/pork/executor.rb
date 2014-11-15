@@ -50,11 +50,21 @@ module Pork
       def run desc, test
         assertions = stat.assertions
         context = new(desc)
-        run_before(context)
-        context.instance_eval(&test)
-        if assertions == stat.assertions
-          raise Error.new('Missing assertions')
+        run_protected(desc) do
+          run_before(context)
+          context.instance_eval(&test)
+          if assertions == stat.assertions
+            raise Error.new('Missing assertions')
+          end
+          print '.'
         end
+      ensure
+        stat.incr_tests
+        run_protected(desc){ run_after(context) }
+      end
+
+      def run_protected desc
+        yield
       rescue Error, StandardError => e
         case e
         when Skip
@@ -64,11 +74,6 @@ module Pork
         when Error, StandardError
           stat.add_error(  e, description_for("would #{desc}"))
         end
-      else
-        print '.'
-      ensure
-        stat.incr_tests
-        run_after(context)
       end
 
       protected
