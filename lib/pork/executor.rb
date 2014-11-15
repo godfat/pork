@@ -30,7 +30,7 @@ module Pork
         Expect.new(stat, *args, &block)
       end
 
-      def execute stat=Stat.new, io=$stdout
+      def execute io=$stdout, stat=Stat.new
         thread = Thread.current
         original_group, group = thread.group, ThreadGroup.new
         group.add(thread)
