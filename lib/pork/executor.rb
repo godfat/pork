@@ -69,10 +69,13 @@ module Pork
         case e
         when Skip
           stat.incr_skips
+          print 's'
         when Failure
           stat.add_failure(e, description_for("would #{desc}"))
+          print 'F'
         when Error, StandardError
           stat.add_error(  e, description_for("would #{desc}"))
+          print 'E'
         end
       end
 
@@ -119,7 +122,7 @@ module Pork
     end
 
     def skip
-     raise Skip.new("Skipping #{@__pork__desc__}")
+      raise Skip.new("Skipping #{@__pork__desc__}")
     end
 
     def flunk reason='Flunked'

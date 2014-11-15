@@ -7,11 +7,12 @@ module Pork
       @mutex = Mutex.new
       super(0, 0, 0, [], [])
     end
-    def incr_assertions; @mutex.synchronize{ self.assertions += 1       }; end
-    def incr_tests     ; @mutex.synchronize{ self.tests      += 1       }; end
-    def incr_skips     ; @mutex.synchronize{ self.skips += 1; print('s')}; end
-    def add_failure *e ; @mutex.synchronize{ failures << e; print('F')}; end
-    def add_error   *e ; @mutex.synchronize{ errors   << e; print('E')}; end
+
+    def incr_assertions; @mutex.synchronize{ self.assertions += 1 }; end
+    def incr_tests     ; @mutex.synchronize{ self.tests      += 1 }; end
+    def incr_skips     ; @mutex.synchronize{ self.skips      += 1 }; end
+    def add_failure *e ; @mutex.synchronize{ failures        << e }; end
+    def add_error   *e ; @mutex.synchronize{ errors          << e }; end
     def numbers; [tests, assertions, failures.size, errors.size, skips]; end
     def start  ; @start ||= Time.now                                   ; end
     def report
@@ -23,6 +24,7 @@ module Pork
       printf("%d tests, %d assertions, %d failures, %d errors, %d skips\n",
              *numbers)
     end
+
     private
     def backtrace e
       if $VERBOSE
