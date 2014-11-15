@@ -28,7 +28,7 @@ module Pork
       if $VERBOSE
         e.backtrace
       else
-        e.backtrace.reject{ |line| line =~ %r{/pork\.rb:\d+} }
+        e.backtrace.reject{ |line| line =~ %r{/pork(/\w+)?\.rb:\d+} }
       end.join("\n  ")
     end
   end
