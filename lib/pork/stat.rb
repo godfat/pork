@@ -14,15 +14,6 @@ module Pork
     def add_error   *e ; @mutex.synchronize{ errors   << e; print('E')}; end
     def numbers; [tests, assertions, failures.size, errors.size, skips]; end
     def start  ; @start ||= Time.now                                   ; end
-    def merge stat
-      @mutex.synchronize do
-        self.assertions += stat.assertions
-        self.tests += stat.tests
-        self.skips += stat.skips
-        self.failures += stat.failures
-        self.errors += stat.errors
-      end
-    end
     def report
       puts
       puts (failures + errors).map{ |(e, m)|
