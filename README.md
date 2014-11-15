@@ -480,7 +480,7 @@ require 'pork/auto'
 
 describe do
   would 'be default: for the default description' do
-    self.class.instance_variable_get(:@desc).should.eq 'default: '
+    self.class.desc.should.eq 'default: '
   end
 end
 ```

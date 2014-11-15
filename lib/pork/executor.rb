@@ -4,7 +4,7 @@ require 'pork/stat'
 module Pork
   class Executor
     singleton_class.module_eval do
-      attr_reader :io, :stat
+      attr_reader :desc, :io, :stat
 
       def copy  desc=:default, &suite
         @stash[desc] = suite
