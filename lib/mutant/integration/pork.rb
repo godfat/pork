@@ -44,7 +44,8 @@ module Mutant
       #
       def run(test)
         paths = ::Pork::Executor.all_tests[test.expression.syntax]
-        executor = ::Pork::Executor # TODO: use extend so that we could dup
+        executor = ::Pork::Executor.dup
+        executor.singleton_class.send(:public, execute_with_parent)
         tests = paths[0..-2].inject(::Pork::Executor.tests) do |tests, index|
           tests.first(index).each do |(type, block, _)|
             case type
