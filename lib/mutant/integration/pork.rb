@@ -45,6 +45,7 @@ module Mutant
       def run(test)
         paths = ::Pork::Executor.all_tests[test.expression.syntax]
         executor = ::Pork::Executor.dup
+        # workaround MRI bug which didn't properly dup protected methods
         executor.singleton_class.send(:public, execute_with_parent)
         tests = paths[0..-2].inject(::Pork::Executor.tests) do |tests, index|
           tests.first(index).each do |(type, block, _)|
