@@ -27,7 +27,7 @@ module Pork
       end
 
       def expect *args, &block
-        Expect.new(self, *args, &block)
+        Expect.new(stat, *args, &block)
       end
 
       def execute stat=Stat.new

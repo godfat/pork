@@ -14,7 +14,7 @@ module Pork
     def copy     desc=:default, &suite; Executor.copy(    desc, &suite); end
     def paste    desc=:default, *args ; Executor.paste(   desc, *args ); end
     def would    desc=:default, &test ; Executor.would(   desc, &test ); end
-    def expect *args, &block; Expect.new(Executor, *args, &block); end
+    def expect *args, &block;  Expect.new(Executor.stat, *args, &block); end
   end
 
   def self.autorun auto=true

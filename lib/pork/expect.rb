@@ -4,8 +4,8 @@ require 'pork/inspect'
 module Pork
   class Expect < BasicObject
     instance_methods.each{ |m| undef_method(m) unless m =~ /^__|^object_id$/ }
-    def initialize executor, object, message=nil, message_lazy=nil, &checker
-      @executor, @object, @negate = executor, object, false
+    def initialize stat, object, message=nil, message_lazy=nil, &checker
+      @stat, @object, @negate = stat, object, false
       @message, @message_lazy = message, message_lazy
       satisfy(&checker) if checker
     end
@@ -23,7 +23,7 @@ module Pork
         m = @message_lazy && @message_lazy.call || @message
         ::Kernel.raise Failure.new("Expect #{d}\n#{m}".chomp)
       else
-        @executor.stat.incr_assertions
+        @stat.incr_assertions
       end
       result
     end
