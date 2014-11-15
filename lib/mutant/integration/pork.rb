@@ -1,5 +1,6 @@
 
 require 'pork'
+require 'stringio'
 
 module Mutant
   class Integration
@@ -23,7 +24,9 @@ module Mutant
       # @api private
       #
       def setup
-        # TODO: how do we load tests?
+        Dir['test/**/test_*.rb'].each do |path|
+          require "./#{path}"
+        end
         ::Pork.autorun(false)
         self
       end
@@ -40,14 +43,15 @@ module Mutant
       # rubocop:disable MethodLength
       #
       def run(_)
-        # ::Pork::Executor.execute
+        out = StringIO.new
+        ::Pork::Executor.execute(out)
         Result::Test.new(
           test:     nil,
           mutation: nil,
-          output:   '',
-          runtime:  Time.now - Time.now, #::Pork::Executor.stat.start,
-          passed:   false#::Pork::Executor.stat.failures +
-                    #  ::Pork::Executor.stat.errors == 0
+          output:   out.string,
+          runtime:  Time.now - ::Pork::Executor.stat.start,
+          passed:   ::Pork::Executor.stat.failures +
+                      ::Pork::Executor.stat.errors == 0
         )
       end
 
@@ -58,8 +62,7 @@ module Mutant
       # @api private
       #
       def all_tests
-        # [Test.new(self, Expression.parse(ARGV.first))]
-        []
+        [Test.new(self, Expression.parse(ARGV.first))]
       end
       memoize :all_tests
 
