@@ -30,13 +30,13 @@ module Pork
         Expect.new(stat, *args, &block)
       end
 
-      def execute stat=Stat.new
+      def execute stat=Stat.new, io=$stdout
         thread = Thread.current
         original_group, group = thread.group, ThreadGroup.new
         group.add(thread)
         thread[:pork_executor] = self
         stat.start
-        execute_with_parent(stat)
+        execute_with_parent(stat, io)
       ensure
         original_group.add(thread)
       end
@@ -47,40 +47,40 @@ module Pork
         @super_executor = ancestors[1..-1].find{ |a| a <= Executor }
       end
 
-      def run desc, test
+      def run desc, test, io=$stdout
         assertions = stat.assertions
         context = new(desc)
-        run_protected(desc) do
+        run_protected(desc, io) do
           run_before(context)
           context.instance_eval(&test)
           if assertions == stat.assertions
             raise Error.new('Missing assertions')
           end
-          print '.'
+          io.print '.'
         end
       ensure
         stat.incr_tests
-        run_protected(desc){ run_after(context) }
+        run_protected(desc, io){ run_after(context) }
       end
 
-      def run_protected desc
+      def run_protected desc, io=$stdout
         yield
       rescue Error, StandardError => e
         case e
         when Skip
           stat.incr_skips
-          print 's'
+          io.print 's'
         when Failure
           stat.add_failure(e, description_for("would #{desc}"))
-          print 'F'
+          io.print 'F'
         when Error, StandardError
           stat.add_error(  e, description_for("would #{desc}"))
-          print 'E'
+          io.print 'E'
         end
       end
 
       protected
-      def execute_with_parent stat=Stat.new
+      def execute_with_parent stat=Stat.new, io=$stdout
         @stat = stat
         @tests.each do |(type, arg, test)|
           case type
@@ -89,9 +89,9 @@ module Pork
           when :after
             @after  << arg
           when :describe
-            arg.execute_with_parent(stat)
+            arg.execute_with_parent(stat, io)
           when :would
-            run(arg, test)
+            run(arg, test, io)
           end
         end
       end
