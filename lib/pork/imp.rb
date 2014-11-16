@@ -7,15 +7,15 @@ module Pork
   module Imp
     attr_reader :desc, :tests, :io, :stat
 
+    def before &block; @tests << [:before, block]; end
+    def after  &block; @tests << [:after , block]; end
+
     def copy  desc=:default, &suite
       @stash[desc] = suite
     end
     def paste desc=:default, *args
       module_exec(*args, &search_stash(desc))
     end
-
-    def before &block; @tests << [:before, block]; end
-    def after  &block; @tests << [:after , block]; end
 
     def describe desc=:default, &suite
       executor = Class.new(self){ init("#{desc}: ") }
@@ -25,10 +25,6 @@ module Pork
 
     def would desc=:default, &test
       @tests << [:would, desc, test]
-    end
-
-    def expect *args, &block
-      Expect.new(stat, *args, &block)
     end
 
     def execute io=$stdout, stat=Stat.new

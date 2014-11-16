@@ -6,11 +6,10 @@ module Pork
     module_function
     def before &block; Executor.before(&block); end
     def after  &block; Executor.after( &block); end
-    def describe desc=:default, &suite; Executor.describe(desc, &suite); end
-    def copy     desc=:default, &suite; Executor.copy(    desc, &suite); end
+    def copy     desc=:default, &block; Executor.copy(    desc, &block); end
     def paste    desc=:default, *args ; Executor.paste(   desc, *args ); end
+    def describe desc=:default, &suite; Executor.describe(desc, &suite); end
     def would    desc=:default, &test ; Executor.would(   desc, &test ); end
-    def expect *args, &block;  Expect.new(Executor.stat, *args, &block); end
   end
 
   def self.autorun auto=true
