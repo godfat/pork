@@ -1,10 +1,16 @@
 
+require 'pork/expect'
 require 'pork/error'
 
 module Pork
   module Context
+    private
     def initialize desc
       @__pork__desc__ = desc
+    end
+
+    def expect *args, &block
+      Expect.new(self.class.stat, *args, &block)
     end
 
     def skip

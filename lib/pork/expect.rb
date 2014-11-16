@@ -4,7 +4,7 @@ require 'pork/inspect'
 module Pork
   class Expect < BasicObject
     instance_methods.each{ |m| undef_method(m) unless m =~ /^__|^object_id$/ }
-    def initialize stat, object, message=nil, message_lazy=nil, &checker
+    def initialize stat, object=nil, message=nil, message_lazy=nil, &checker
       @stat, @object, @negate = stat, object, false
       @message, @message_lazy = message, message_lazy
       satisfy(&checker) if checker
