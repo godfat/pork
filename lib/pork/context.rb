@@ -1,4 +1,6 @@
 
+require 'pork/error'
+
 module Pork
   module Context
     def initialize desc

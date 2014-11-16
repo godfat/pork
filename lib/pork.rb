@@ -2,10 +2,6 @@
 require 'pork/executor'
 
 module Pork
-  Error   = Class.new(StandardError)
-  Failure = Class.new(Error)
-  Skip    = Class.new(Error)
-
   module API
     module_function
     def before &block; Executor.before(&block); end

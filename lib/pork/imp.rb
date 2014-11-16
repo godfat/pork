@@ -1,5 +1,6 @@
 
 require 'pork/stat'
+require 'pork/error'
 require 'pork/expect'
 
 module Pork
