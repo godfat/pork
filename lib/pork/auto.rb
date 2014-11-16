@@ -1,5 +1,5 @@
 
 require 'pork'
-require 'pork/ext'
+require 'pork/should'
 extend Pork::API
 Pork.autorun
