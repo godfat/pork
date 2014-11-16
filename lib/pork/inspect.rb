@@ -10,52 +10,51 @@ module Pork
       lambda{ public_send("with_#{Pork.inspect_failure_mode}", *args) }
     end
 
-    def self.with_auto object, msg, args, negate
+    def self.with_auto expect, msg, args, negate
       if args.size > 1
-        with_inline(object, msg, args, negate)
+        with_inline(expect, msg, args, negate)
 
-      elsif object.kind_of?(Hash) && args.first.kind_of?(Hash)
-        if object.inspect.size > 78
-          require 'pp'
-          Inspect.new(true).diff_hash(object, args.first).
-            merge(Inspect.new(false).diff_hash(args.first, object)).
-              pretty_inspect
+      elsif expect.kind_of?(Hash) && args.first.kind_of?(Hash)
+        if expect.inspect.size > 78
+          for_diff_hash(msg, negate,
+            Inspect.new(true).diff_hash(expect, args.first).
+              merge(Inspect.new(false).diff_hash(args.first, expect)))
         else
-          with_inline(Hash[object.sort], msg, [Hash[args.first.sort]], negate)
+          with_inline(Hash[expect.sort], msg, [Hash[args.first.sort]], negate)
         end
 
-      elsif object.kind_of?(String) && object.size > 400 &&
-            object.count("\n") > 4 && !`which diff`.empty?
-        with_diff(object, msg, args, negate)
+      elsif expect.kind_of?(String) && expect.size > 400 &&
+            expect.count("\n") > 4 && !`which diff`.empty?
+        with_diff(expect, msg, args, negate)
 
-      elsif object.inspect.size > 78
-        with_newline(object, msg, args, negate)
+      elsif expect.inspect.size > 78
+        with_newline(expect, msg, args, negate)
 
       else
-        with_inline( object, msg, args, negate)
+        with_inline( expect, msg, args, negate)
       end
     end
 
-    def self.with_inline object, msg, args, negate
+    def self.with_inline expect, msg, args, negate
       a = args.map(&:inspect).join(', ')
-      "#{object.inspect}.#{msg}(#{a}) to return #{!negate}"
+      "#{expect.inspect}.#{msg}(#{a}) to return #{!negate}"
     end
 
-    def self.with_newline object, msg, args, negate
+    def self.with_newline expect, msg, args, negate
       a = args.map(&:inspect).join(",\n")
-      "\n#{object.inspect}.#{msg}(\n#{a}) to return #{!negate}"
+      "\n#{expect.inspect}.#{msg}(\n#{a}) to return #{!negate}"
     end
 
-    def self.with_diff object, msg, args, negate
+    def self.with_diff expect, msg, args, negate
       require 'tempfile'
-      Tempfile.open('pork-expect') do |expect|
+      Tempfile.open('pork-expect') do |its|
         Tempfile.open('pork-was') do |was|
-          expect.puts(object.to_s)
-          expect.close
+          its.puts(expect.to_s)
+          its.close
           was.puts(args.map(&:to_s).join(",\n"))
           was.close
-          name = "#{object.class}##{msg}(\n"
-          "#{name}#{`diff #{expect.path} #{was.path}`}) to return #{!negate}"
+          name = "#{expect.class}##{msg}(\n"
+          "#{name}#{`diff #{its.path} #{was.path}`}) to return #{!negate}"
         end
       end
     end
