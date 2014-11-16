@@ -118,7 +118,7 @@ module Pork
     end
 
     def build_all_tests paths=[]
-      @tests.flat_map.with_index do |(type, arg, test), index|
+      @tests.flat_map.with_index do |(type, arg, _), index|
         case type
         when :describe
           arg.build_all_tests(paths + [index])
