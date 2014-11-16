@@ -9,7 +9,7 @@ module Kernel
 end
 
 module Pork
-  module Ext
+  module Should
     def execute *args
       thread = Thread.current
       original_group, group = thread.group, ThreadGroup.new
@@ -21,5 +21,5 @@ module Pork
     end
   end
 
-  Executor.extend(Ext)
+  Executor.extend(Should)
 end
