@@ -11,7 +11,7 @@ module Pork
     end
 
     def method_missing msg, *args, &block
-      satisfy(nil, ::Pork.inspect_failure(@object, msg, args, @negate)) do
+      satisfy(nil, Inspect.with(@object, msg, args, @negate)) do
         @object.public_send(msg, *args, &block)
       end
     end
