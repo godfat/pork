@@ -35,6 +35,13 @@ module Pork
       end
     end
 
+    def self.for_diff_hash msg, negate, result
+      "\n" + result.map do |key, (expect, actual)|
+        body = with_auto(expect, msg, [actual], negate)
+        "\tHash with key path: #{key.inspect}\n#{body.sub(/\A\n/, '')}"
+      end.join("\n\n")
+    end
+
     def self.with_inline expect, msg, args, negate
       a = args.map(&:inspect).join(', ')
       "#{expect.inspect}.#{msg}(#{a}) to return #{!negate}"
