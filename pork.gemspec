@@ -24,6 +24,7 @@ Gem::Specification.new do |s|
   "lib/pork.rb",
   "lib/pork/auto.rb",
   "lib/pork/context.rb",
+  "lib/pork/error.rb",
   "lib/pork/executor.rb",
   "lib/pork/expect.rb",
   "lib/pork/ext.rb",
