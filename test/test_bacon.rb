@@ -344,7 +344,7 @@ end
 describe 'describe arguments' do
   check = lambda do |ctx, desc, name=nil|
     ctx.should.lt Pork::Executor
-    ctx.description_for(name).should.eq "#{desc}:#{name}"
+    ctx.description_for(name).should.eq "#{desc}: #{name}"
   end
 
   would 'work with string' do
