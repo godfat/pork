@@ -44,6 +44,7 @@ module Pork
       executor = Class.new do
         extend Imp
         include Context
+        init
       end
 
       paths = all_tests[name]
@@ -61,6 +62,7 @@ module Pork
       end[paths.last]
 
       executor.would(desc, &block)
+      executor
     end
 
     private
