@@ -40,6 +40,29 @@ module Pork
       @all_tests ||= Hash[build_all_tests]
     end
 
+    def isolate name
+      executor = Class.new do
+        extend Imp
+        include Context
+      end
+
+      paths = all_tests[name]
+
+      _, desc, block = paths[0..-2].inject(tests) do |ts, index|
+        ts.first(index).each do |(type, block, _)|
+          case type
+          when :before
+            executor.before(&block)
+          when :after
+            executor.after(&block)
+          end
+        end
+        ts[index][1].tests
+      end[paths.last]
+
+      executor.would(desc, &block)
+    end
+
     private
     def init desc=''
       @desc, @tests, @stash, @before, @after = desc, [], {}, [], []

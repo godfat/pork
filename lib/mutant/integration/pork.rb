@@ -43,25 +43,7 @@ module Mutant
       # rubocop:disable MethodLength
       #
       def run(test)
-        paths = ::Pork::Executor.all_tests[test.expression.syntax]
-        executor = Class.new do
-          extend ::Pork::Imp
-          include ::Pork::Context
-        end
-        tests = paths[0..-2].inject(::Pork::Executor.tests) do |tests, index|
-          tests.first(index).each do |(type, block, _)|
-            case type
-            when :before
-              executor.before(&block)
-            when :after
-              executor.after(&block)
-            end
-          end
-          tests[index][1].tests
-        end
-        _, desc, block = tests[paths.last]
-        executor.would(desc, &block)
-
+        executor = ::Pork::Executor.isolate(test.expression.syntax)
         out = StringIO.new
         executor.execute(out)
 
