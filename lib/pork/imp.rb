@@ -18,7 +18,7 @@ module Pork
     end
 
     def describe desc=:default, &suite
-      executor = Class.new(self){ init("#{desc}: ") }
+      executor = Class.new(self){ init("#{desc}:") }
       executor.module_eval(&suite)
       @tests << [:describe, executor]
     end
@@ -44,7 +44,7 @@ module Pork
       executor = Class.new do
         extend Imp
         include Context
-        init
+        init(name)
       end
 
       paths = all_tests[name]
@@ -95,10 +95,10 @@ module Pork
         stat.incr_skips
         io.print 's'
       when Failure
-        stat.add_failure(e, description_for("would #{desc}"))
+        stat.add_failure(e, description_for(" would #{desc}"))
         io.print 'F'
       when Error, StandardError
-        stat.add_error(  e, description_for("would #{desc}"))
+        stat.add_error(  e, description_for(" would #{desc}"))
         io.print 'E'
       end
     end
@@ -144,7 +144,7 @@ module Pork
         when :describe
           arg.build_all_tests(paths + [index])
         when :would
-          [["#{desc.chomp(': ')}#{arg}", paths + [index]]]
+          [["#{desc.chomp(': ')} #{arg} ##{index}", paths + [index]]]
         else
           []
         end
