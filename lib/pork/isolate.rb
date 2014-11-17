@@ -17,6 +17,7 @@ module Pork
 
       paths, mods, meths = all_tests[name]
       executor.include(*mods)
+      # TODO: define instance methods from meths
 
       _, desc, block = paths[0..-2].inject(tests) do |ts, index|
         ts.first(index).each do |(type, block, _)|
