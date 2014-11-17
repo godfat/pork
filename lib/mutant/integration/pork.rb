@@ -1,5 +1,6 @@
 
 require 'pork'
+require 'pork/isolate'
 require 'stringio'
 
 module Mutant
