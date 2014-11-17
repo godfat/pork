@@ -20,7 +20,7 @@ module Pork
       executor.include(*mods)
       # TODO: define instance methods from meths
 
-      _, desc, block = paths[0..-2].inject(tests) do |ts, index|
+      _, desc, test = paths[0..-2].inject(tests) do |ts, index|
         ts.first(index).each do |(type, block, _)|
           case type
           when :before
@@ -32,7 +32,7 @@ module Pork
         ts[index][1].tests
       end[paths.last]
 
-      executor.would(desc, &block)
+      executor.would(desc, &test)
       executor
     end
 
