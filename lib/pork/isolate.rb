@@ -11,6 +11,7 @@ module Pork
     def isolate name
       executor = Class.new do
         extend Imp
+        extend Should if Pork.const_defined?(:Should)
         include Context
         init(name)
       end

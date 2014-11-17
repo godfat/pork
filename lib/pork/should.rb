@@ -20,6 +20,15 @@ module Pork
     ensure
       original_group.add(thread)
     end
+
+    def stat
+      executor = Thread.current.group.list.first[:pork_executor]
+      if self == executor
+        super
+      else
+        executor.stat
+      end
+    end
   end
 
   Executor.extend(Should)
