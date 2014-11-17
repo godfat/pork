@@ -1,4 +1,5 @@
 
+require 'pork/env'
 require 'pork/stat'
 require 'pork/error'
 require 'pork/expect'
@@ -43,11 +44,11 @@ module Pork
       @super_executor = ancestors[1..-1].find{ |a| a <= Executor }
     end
 
-    def run desc, test
+    def run desc, test, env
       assertions = stat.assertions
       context = new(desc)
       run_protected(desc) do
-        run_before(context)
+        env.run_before(context)
         context.instance_eval(&test)
         if assertions == stat.assertions
           raise Error.new('Missing assertions')
@@ -56,7 +57,7 @@ module Pork
       end
     ensure
       stat.incr_tests
-      run_protected(desc){ run_after(context) }
+      run_protected(desc){ env.run_after(context) }
     end
 
     def run_protected desc
@@ -76,34 +77,24 @@ module Pork
     end
 
     protected
-    def execute_with_parent io=$stdout, stat=Stat.new
-      @io, @stat, @before, @after = io, stat, [], []
+    def execute_with_parent io=$stdout, stat=Stat.new, super_env=nil
+      @io, @stat, env = io, stat, Env.new(super_env)
       @tests.each do |(type, arg, test)|
         case type
         when :before
-          @before << arg
+          env.before << arg
         when :after
-          @after  << arg
+          env.after  << arg
         when :describe
-          arg.execute_with_parent(io, stat)
+          arg.execute_with_parent(io, stat, env)
         when :would
-          run(arg, test)
+          run(arg, test, env)
         end
       end
     end
 
     def search_stash desc
       @stash[desc] or @super_executor && @super_executor.search_stash(desc)
-    end
-
-    def run_before context
-      @super_executor && @super_executor.run_before(context)
-      @before.each{ |b| context.instance_eval(&b) }
-    end
-
-    def run_after context
-      @super_executor && @super_executor.run_after(context)
-      @after.each{ |b| context.instance_eval(&b) }
     end
 
     def description_for name=''
