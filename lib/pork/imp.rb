@@ -77,7 +77,7 @@ module Pork
 
     protected
     def execute_with_parent io=$stdout, stat=Stat.new
-      @stat, @io, @before, @after = stat, io, [], []
+      @io, @stat, @before, @after = io, stat, [], []
       @tests.each do |(type, arg, test)|
         case type
         when :before
