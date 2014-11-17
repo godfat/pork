@@ -33,7 +33,7 @@ module Pork
     end
 
     def passed?
-      stat.failures + stat.errors == 0
+      stat.failures.size + stat.errors.size == 0
     end
 
     def all_tests
