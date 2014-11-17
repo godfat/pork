@@ -39,7 +39,7 @@ module Pork
 
     private
     def init desc=''
-      @desc, @tests, @stash, @before, @after = desc, [], {}, [], []
+      @desc, @tests, @stash = desc, [], {}
       @super_executor = ancestors[1..-1].find{ |a| a <= Executor }
     end
 
@@ -77,7 +77,7 @@ module Pork
 
     protected
     def execute_with_parent io=$stdout, stat=Stat.new
-      @stat, @io = stat, io
+      @stat, @io, @before, @after = stat, io, [], []
       @tests.each do |(type, arg, test)|
         case type
         when :before
