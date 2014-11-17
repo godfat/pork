@@ -30,6 +30,7 @@ module Pork
     def execute io=$stdout, stat=Stat.new
       stat.start
       execute_with_parent(io, stat)
+      self
     end
 
     def passed?
