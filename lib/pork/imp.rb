@@ -48,7 +48,8 @@ module Pork
         init(name)
       end
 
-      paths = all_tests[name]
+      paths, mods, meths = all_tests[name]
+      executor.include(*mods)
 
       _, desc, block = paths[0..-2].inject(tests) do |ts, index|
         ts.first(index).each do |(type, block, _)|
@@ -145,11 +146,22 @@ module Pork
         when :describe
           arg.build_all_tests(paths + [index])
         when :would
-          [["#{desc.chomp(': ')} #{arg} ##{index} ", paths + [index]]]
+          [["#{desc.chomp(': ')} #{arg} ##{index} ",
+            [paths + [index], included_modules, executor_methods]]]
         else
           []
         end
       end
+    end
+
+    def included_modules
+      ancestors.drop(1).first(ancestors.index(Pork::Executor)).reject do |a|
+        a.kind_of?(Class)
+      end
+    end
+
+    def executor_methods
+      instance_methods(false).map{ |m| instance_method(m) }
     end
   end
 end
