@@ -31,6 +31,7 @@ Gem::Specification.new do |s|
   "lib/pork/imp.rb",
   "lib/pork/inspect.rb",
   "lib/pork/isolate.rb",
+  "lib/pork/parallel.rb",
   "lib/pork/should.rb",
   "lib/pork/shuffle.rb",
   "lib/pork/stat.rb",
@@ -42,6 +43,7 @@ Gem::Specification.new do |s|
   "test/test_inspect.rb",
   "test/test_isolate.rb",
   "test/test_nested.rb",
+  "test/test_parallel.rb",
   "test/test_readme.rb",
   "test/test_shuffle.rb"]
   s.homepage = "https://github.com/godfat/pork"
@@ -53,6 +55,7 @@ Gem::Specification.new do |s|
   "test/test_inspect.rb",
   "test/test_isolate.rb",
   "test/test_nested.rb",
+  "test/test_parallel.rb",
   "test/test_readme.rb",
   "test/test_shuffle.rb"]
 
