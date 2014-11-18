@@ -6,7 +6,7 @@ require 'pork/expect'
 
 module Pork
   module Imp
-    attr_reader :desc, :tests, :io, :stat
+    attr_reader :desc, :tests, :stat
 
     def before &block; @tests << [:before, block]; end
     def after  &block; @tests << [:after , block]; end
@@ -34,20 +34,16 @@ module Pork
       self
     end
 
-    def passed?
-      stat.failures.size + stat.errors.size == 0
-    end
-
     private
     def init desc=''
       @desc, @tests, @stash = desc, [], {}
       @super_executor = ancestors[1..-1].find{ |a| a <= Executor }
     end
 
-    def run desc, test, env
+    def run desc, test, io, env
       assertions = stat.assertions
       context = new(desc)
-      run_protected(desc) do
+      run_protected(desc, io) do
         env.run_before(context)
         context.instance_eval(&test)
         if assertions == stat.assertions
@@ -57,10 +53,10 @@ module Pork
       end
     ensure
       stat.incr_tests
-      run_protected(desc){ env.run_after(context) }
+      run_protected(desc, io){ env.run_after(context) }
     end
 
-    def run_protected desc
+    def run_protected desc, io
       yield
     rescue Error, StandardError => e
       case e
@@ -78,7 +74,7 @@ module Pork
 
     protected
     def execute_with_parent io=$stdout, stat=Stat.new, super_env=nil
-      @io, @stat, env = io, stat, Env.new(super_env)
+      @stat, env = stat, Env.new(super_env)
       @tests.each do |(type, arg, test)|
         case type
         when :before
@@ -88,7 +84,7 @@ module Pork
         when :describe
           arg.execute_with_parent(io, stat, env)
         when :would
-          run(arg, test, env)
+          run(arg, test, io, env)
         end
       end
     end

@@ -13,6 +13,7 @@ module Pork
     def incr_skips     ; @mutex.synchronize{ self.skips      += 1 }; end
     def add_failure *e ; @mutex.synchronize{ failures        << e }; end
     def add_error   *e ; @mutex.synchronize{ errors          << e }; end
+    def passed?; failures.size + errors.size == 0                      ; end
     def numbers; [tests, assertions, failures.size, errors.size, skips]; end
     def start  ; @start ||= Time.now                                   ; end
     def report

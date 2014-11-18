@@ -8,32 +8,9 @@ module Pork
       @all_tests ||= Hash[build_all_tests]
     end
 
-    def isolate name
-      executor = Class.new do
-        extend Imp
-        extend Should if Pork.const_defined?(:Should)
-        include Context
-        init(name)
-      end
-
-      paths, mods, meths = all_tests[name]
-      executor.include(*mods)
-      # TODO: define instance methods from meths
-
-      _, desc, test = paths[0..-2].inject(tests) do |ts, index|
-        ts.first(index).each do |(type, block, _)|
-          case type
-          when :before
-            executor.before(&block)
-          when :after
-            executor.after(&block)
-          end
-        end
-        ts[index][1].tests
-      end[paths.last]
-
-      executor.would(desc, &test)
-      executor
+    def isolate name, io=$stdout, stat=Stat.new
+      execute_with_isolation(all_tests[name], io, stat)
+      stat
     end
 
     protected
@@ -43,22 +20,33 @@ module Pork
         when :describe
           arg.build_all_tests(paths + [index])
         when :would
-          [["#{desc.chomp(': ')} #{arg} ##{index} ",
-            [paths + [index], included_modules, executor_methods]]]
+          [["#{desc.chomp(': ')} #{arg} ##{index} ", paths + [index]]]
         else
           []
         end
       end
     end
 
-    def included_modules
-      ancestors.drop(1).first(ancestors.index(Pork::Executor)).reject do |a|
-        a.kind_of?(Class)
-      end
-    end
+    def execute_with_isolation paths, io, stat, super_env=nil
+      env = Env.new(super_env)
+      idx = paths.first
 
-    def executor_methods
-      instance_methods(false).map{ |m| instance_method(m) }
+      @tests.first(idx).each do |(type, arg, _)|
+        case type
+        when :before
+          env.before << arg
+        when :after
+          env.after  << arg
+        end
+      end
+
+      if paths.size == 1
+        _, desc, test = @tests[idx]
+        run(desc, test, io, env)
+      else
+        @tests[idx][1].
+          execute_with_isolation(paths.drop(1), io, stat, env)
+      end
     end
   end
 
