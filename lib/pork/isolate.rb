@@ -17,11 +17,12 @@ module Pork
     protected
     def build_all_tests paths=[]
       @tests.flat_map.with_index do |(type, arg, _), index|
+        current = paths + [index]
         case type
         when :describe
-          arg.build_all_tests(paths + [index])
+          arg.build_all_tests(current)
         when :would
-          [["#{desc.chomp(': ')} #{arg} ##{index} ", paths + [index]]]
+          [["#{desc.chomp(': ')} #{arg} ##{current} ", current]]
         else
           []
         end
