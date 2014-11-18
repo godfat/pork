@@ -22,7 +22,7 @@ module Pork
         when :describe
           arg.build_all_tests(current)
         when :would
-          [["#{desc.chomp(': ')} #{arg} ##{current} ", current]]
+          [["#{desc.chomp(': ')} #{arg} ##{current}", current]]
         else
           []
         end

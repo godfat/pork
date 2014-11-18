@@ -35,6 +35,7 @@ Gem::Specification.new do |s|
   "lib/pork/should.rb",
   "lib/pork/shuffle.rb",
   "lib/pork/stat.rb",
+  "lib/pork/test.rb",
   "lib/pork/version.rb",
   "pork.gemspec",
   "task/README.md",
