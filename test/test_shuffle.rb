@@ -11,7 +11,9 @@ describe Pork::Shuffle do
 
   would '#shuffle' do
     Muack::API.stub(Pork::Executor.all_tests).keys.peek_return do |names|
-      names.reject{ |n| n.start_with?('Pork::Shuffle ') }
+      names.reject do |n|
+        n =~ /^Pork::(Isolate|Shuffle|Parallel) /
+      end
     end
     stat = Pork::Executor.shuffle(@__pork__stat__)
     expect(stat.passed?, stat.inspect).eq true
