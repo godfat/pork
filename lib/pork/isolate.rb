@@ -8,9 +8,10 @@ module Pork
       @all_tests ||= Hash[build_all_tests]
     end
 
-    def isolate name, io=$stdout, stat=Stat.new
-      execute_with_isolation(all_tests[name], io, stat)
-      stat
+    def isolate name, stat=Stat.new
+      execute(stat) do |s|
+        execute_with_isolation(all_tests[name], s)
+      end
     end
 
     protected
@@ -27,7 +28,7 @@ module Pork
       end
     end
 
-    def execute_with_isolation paths, io, stat, super_env=nil
+    def execute_with_isolation paths, stat, super_env=nil
       env = Env.new(super_env)
       idx = paths.first
 
@@ -42,10 +43,9 @@ module Pork
 
       if paths.size == 1
         _, desc, test = @tests[idx]
-        run(desc, test, io, env)
+        run(desc, test, stat, env)
       else
-        @tests[idx][1].
-          execute_with_isolation(paths.drop(1), io, stat, env)
+        @tests[idx][1].execute_with_isolation(paths.drop(1), stat, env)
       end
     end
   end

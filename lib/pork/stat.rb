@@ -2,10 +2,11 @@
 require 'thread'
 
 module Pork
-  class Stat < Struct.new(:tests, :assertions, :skips, :failures, :errors)
-    def initialize
+  class Stat < Struct.new(:tests, :assertions, :skips,
+                          :failures, :errors, :start, :io)
+    def initialize io=$stdout
       @mutex = Mutex.new
-      super(0, 0, 0, [], [])
+      super(0, 0, 0, [], [], Time.now, io)
     end
 
     def incr_assertions; @mutex.synchronize{ self.assertions += 1 }; end
@@ -15,15 +16,14 @@ module Pork
     def add_error   *e ; @mutex.synchronize{ errors          << e }; end
     def passed?; failures.size + errors.size == 0                      ; end
     def numbers; [tests, assertions, failures.size, errors.size, skips]; end
-    def start  ; @start ||= Time.now                                   ; end
     def report
-      puts
-      puts (failures + errors).map{ |(e, m)|
+      io.puts
+      io.puts (failures + errors).map{ |(e, m)|
         "\n#{m}\n#{e.class}: #{e.message}\n  #{backtrace(e)}"
       }
-      printf("\nFinished in %f seconds.\n", Time.now - @start)
-      printf("%d tests, %d assertions, %d failures, %d errors, %d skips\n",
-             *numbers)
+      io.printf("\nFinished in %f seconds.\n", Time.now - start)
+      io.printf("%d tests, %d assertions, %d failures, %d errors, %d skips\n",
+                *numbers)
     end
 
     private

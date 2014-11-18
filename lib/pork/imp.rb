@@ -6,7 +6,7 @@ require 'pork/expect'
 
 module Pork
   module Imp
-    attr_reader :desc, :tests, :stat
+    attr_reader :desc, :tests
 
     def before &block; @tests << [:before, block]; end
     def after  &block; @tests << [:after , block]; end
@@ -28,10 +28,13 @@ module Pork
       @tests << [:would, desc, test]
     end
 
-    def execute io=$stdout, stat=Stat.new
-      stat.start
-      execute_with_parent(io, stat)
-      self
+    def execute stat=Stat.new
+      if block_given?
+        yield(stat)
+      else
+        execute_with_parent(stat)
+      end
+      stat
     end
 
     private
@@ -40,41 +43,41 @@ module Pork
       @super_executor = ancestors[1..-1].find{ |a| a <= Executor }
     end
 
-    def run desc, test, io, env
+    def run desc, test, stat, env
       assertions = stat.assertions
-      context = new(desc)
-      run_protected(desc, io) do
+      context = new(desc, stat)
+      run_protected(desc, stat) do
         env.run_before(context)
         context.instance_eval(&test)
         if assertions == stat.assertions
           raise Error.new('Missing assertions')
         end
-        io.print '.'
+        stat.io.print '.'
       end
     ensure
       stat.incr_tests
-      run_protected(desc, io){ env.run_after(context) }
+      run_protected(desc, stat){ env.run_after(context) }
     end
 
-    def run_protected desc, io
+    def run_protected desc, stat
       yield
     rescue Error, StandardError => e
       case e
       when Skip
         stat.incr_skips
-        io.print 's'
+        stat.io.print 's'
       when Failure
         stat.add_failure(e, description_for("would #{desc}"))
-        io.print 'F'
+        stat.io.print 'F'
       when Error, StandardError
         stat.add_error(  e, description_for("would #{desc}"))
-        io.print 'E'
+        stat.io.print 'E'
       end
     end
 
     protected
-    def execute_with_parent io=$stdout, stat=Stat.new, super_env=nil
-      @stat, env = stat, Env.new(super_env)
+    def execute_with_parent stat, super_env=nil
+      env = Env.new(super_env)
       @tests.each do |(type, arg, test)|
         case type
         when :before
@@ -82,9 +85,9 @@ module Pork
         when :after
           env.after  << arg
         when :describe
-          arg.execute_with_parent(io, stat, env)
+          arg.execute_with_parent(stat, env)
         when :would
-          run(arg, test, io, env)
+          run(arg, test, stat, env)
         end
       end
     end

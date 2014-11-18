@@ -44,13 +44,13 @@ module Mutant
       # rubocop:disable MethodLength
       #
       def run(test)
-        out = StringIO.new
-        stat = ::Pork::Executor.isolate(test.expression.syntax, out)
+        stat = ::Pork::Executor.isolate(test.expression.syntax,
+                                        ::Pork::Stat.new(StringIO.new))
 
         Result::Test.new(
           test:     nil,
           mutation: nil,
-          output:   out.string,
+          output:   stat.io.string,
           runtime:  Time.now - stat.start,
           passed:   stat.passed?
         )

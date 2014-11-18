@@ -16,10 +16,9 @@ module Pork
     @auto = auto
     @autorun ||= at_exit do
       next unless @auto
-      Executor.execute
-      Executor.stat.report
-      exit Executor.stat.failures.size +
-           Executor.stat.errors.size + ($! && 1).to_i
+      stat = Executor.execute
+      stat.report
+      exit stat.failures.size + stat.errors.size + ($! && 1).to_i
     end
   end
 end

@@ -5,12 +5,12 @@ require 'pork/error'
 module Pork
   module Context
     private
-    def initialize desc
-      @__pork__desc__ = desc
+    def initialize desc, stat
+      @__pork__desc__, @__pork__stat__ = desc, stat
     end
 
     def expect *args, &block
-      Expect.new(self.class.stat, *args, &block)
+      Expect.new(@__pork__stat__, *args, &block)
     end
 
     def skip
@@ -22,7 +22,7 @@ module Pork
     end
 
     def ok
-      self.class.stat.incr_assertions
+      @__pork__stat__.incr_assertions
     end
   end
 end
