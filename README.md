@@ -272,6 +272,97 @@ describe Hash do
 end
 ```
 
+## What if I don't want any monkey patches?
+
+For the lazies and the greatest convenience but the least flexibility, we
+could simply `require 'pork/auto'` and everything above should work.
+However, as you can see, there are some monkey patches around, and you
+might not want to see any of them. In this case *DON'T* require it.
+
+Here's what `require 'pork/auto'` would do:
+
+``` ruby
+require 'pork'
+require 'pork/should'
+extend Pork::API
+Pork.autorun
+```
+
+Here it `require 'pork/should'`, and it would load the monkey patches for
+inserting `Kernel#should` shown in above. This is actually optional, and
+could be replaced with `Pork::Executor#expect`. For example, we could
+also write it this way:
+
+``` ruby
+require 'pork'
+
+Pork::API.describe Array do
+  before do
+    @array = []
+  end
+
+  after do
+    @array.clear
+  end
+
+  would 'be empty' do
+    expect(@array).empty?
+    expect(@array).not.include? 1
+  end
+end
+
+# or: Pork.autorun
+Pork::Executor.execute.report
+```
+
+As you can see, this way we no longer use any monkey patches and we don't
+even use `at_exit` hook to run tests. Also note that we could turn autorun
+off by passing `false` to it:
+
+``` ruby
+Pork.autorun(false)
+```
+
+We might need to turn autorun off occasionally, for example, we do need to
+turn this off when integrating [mutant][]. Passing `true` again to autorun
+could re-enable it.
+
+[mutant]: https://github.com/mbj/mutant
+
+## Where's the pork command?
+
+It's not implemented. No strong reasons. You could simply run the tests by
+requiring the files defining tests, or execute them directly, with autorun
+enabled. (by `require 'pork/auto'` or call `Pork.autorun`)
+
+Here's a example command to require all test files and automatically run them.
+With Fish shell:
+
+    ruby -Ilib -rpork/auto -r(ls ./test/test_*.rb) -e ''
+
+Or
+
+    ruby -Ilib -rpork/auto -r(find ./test -name '*.rb' -type f) -e ''
+
+With Bash shell:
+
+    ruby -Ilib -rpork/auto $(ls ./test/test_*.rb | awk '{print "-r" $0}') -e ''
+
+Personally I have a [rake task][gemgem] which would do this for me, so I just
+run `rake test` to run all the tests.
+
+[gemgem]: https://github.com/godfat/gemgem
+
+## Mutant integration
+
+Pork also ships with [mutant][] integration. Here's an example to run it:
+
+    mutant -Ilib -rjellyfish --use pork Jellyfish
+
+for [jellyfish][].
+
+[jellyfish]: https://github.com/godfat/jellyfish
+
 ## The API
 
 ### Kernel#should
@@ -587,6 +678,30 @@ end
 
 ### Pork::Executor#expect
 
+It is the core of `Kernel#should`. Think of:
+
+``` ruby
+object.should.eq(1)
+```
+
+is equivalent to:
+
+``` ruby
+expect(object).eq(1)
+```
+
+Also:
+
+``` ruby
+object.should('message').eq(1)
+```
+
+is equivalent to:
+
+``` ruby
+expect(object, 'message').eq(1)
+```
+
 ### Pork::Executor#skip
 
 At times we might want to skip some tests while leave the codes there without
@@ -641,28 +756,43 @@ describe do
 end
 ```
 
-### Pork.report
-
-Report the summary from the tests. Usually you would want to call this at
-program exit, therefore most of the time you would want `Pork.report_at_exit`
-instead, unless you want to report the summary without exiting.
-
-Note that you would probably want to run `Pork.stats.start` at the beginning
-of your tests as well if you want to handle `Pork.report` manually.
-
 ### Pork.autorun
 
-Basically simply call `Pork.stats.start` and setup `Pork.report` at exit,
-and exit with 0 if no error occurs or N for N errors and failures.
+Calling this would register an `at_exit` hook to run tests at exit.
+This also accepts an argument to turn on and off autorun. Calling this
+multiple times is ok. (It's not thread safe though, don't call this twice
+from different threads at the same time. If you really want to do this,
+let's add a mutex for this)
 
-If you also plan to pollute the top-level namespace so that you could simply
-call `describe` on top-level instead of calling it `Pork::API.describe`,
-you would probably want to simply `require 'pork/auto'` which is essentially:
+It would also exit with 0 if no error occurs or N for N errors and failures.
 
 ``` ruby
-require 'pork'
-extend Pork::API
-Pork.report_at_exit
+Pork.autorun        # enable
+Pork.autorun(false) # disable
+Pork.autorun(true)  # enable
+```
+
+`require 'pork/auto'` would call `Pork.autorun`
+
+### Pork.execute_mode
+
+By default, `Pork.execute_mode` is set to `:execute`, which would
+execute all tests in a sequential manner. The other options are:
+
+* :execute (default)
+* :shuffle
+* :parallel
+
+With `:shuffle`, it would execute all tests in a random order. It would be
+slightly slower than `:execute`. With `:parallel`, it would run tests with
+8 threads concurrently, and of course, the orders are all random as well.
+You'll need to make sure your tests are thread safe or random tests would
+fail with this mode.
+
+Pass the symbol to it to use the mode:
+
+``` ruby
+Pork.execute_mode :shuffle
 ```
 
 ### Pork.inspect_failure_mode
@@ -692,8 +822,6 @@ Pork.inspect_failure_mode :newline
 ```
 
 Then it would always use the mode we specified.
-
-### Pork.execute_mode
 
 ## CONTRIBUTORS:
 
