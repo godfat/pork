@@ -808,6 +808,28 @@ really long, it would even use `diff` to show the difference.
 This is because if the actual string is long, it would be quite painful to
 find the actual difference for human without assistance.
 
+Additionally, if both the actually object and expected object are hashes,
+and if the actually hash is fairly large, it would also try to differentiate
+the two and give you a more readable result like:
+
+```
+Pork::Failure: Expect
+        Hash with key path: "categories:0:chats:0:mentor:username"
+"Expect Name".==("Actual Name") to return true
+```
+
+For this:
+
+``` ruby
+mentor = {"Some" => "Random", "Data" => "Here", "This's" => "Large"}
+expect("categories" => [{"chats" => [{"mentor" =>
+         mentor.merge("username" => "Actual Name")}]}]).eq \
+       "categories" => [{"chats" => [{"mentor" =>
+         mentor.merge("username" => "Expect Name")}]}]
+```
+
+This should much improve the time to figure out why it's failing.
+
 However, this might not really be desired at times. So we should be able to
 switch between each mode. For now, we have the following modes:
 
