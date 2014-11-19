@@ -1,6 +1,6 @@
 
 require 'pork/test'
-require 'pork/parallel'
+require 'pork/mode/parallel'
 
 describe Pork::Parallel do
   paste

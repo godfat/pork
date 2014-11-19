@@ -12,11 +12,17 @@ module Pork
     def would    desc=:default, &test ; Executor.would(   desc, &test ); end
   end
 
+  # default to :execute while eliminating warnings for uninitialized ivar
+  def self.execute_mode execute=nil
+    @execute = execute || @execute ||= :execute
+  end
+
   def self.autorun auto=true
     @auto = auto
     @autorun ||= at_exit do
       next unless @auto
-      stat = Executor.execute
+      require "pork/mode/#{execute_mode}" unless execute_mode == :execute
+      stat = Executor.public_send(execute_mode)
       stat.report
       exit stat.failures.size + stat.errors.size + ($! && 1).to_i
     end

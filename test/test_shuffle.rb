@@ -1,6 +1,6 @@
 
 require 'pork/test'
-require 'pork/shuffle'
+require 'pork/mode/shuffle'
 
 describe Pork::Shuffle do
   paste
