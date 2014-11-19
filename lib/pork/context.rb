@@ -5,12 +5,8 @@ require 'pork/error'
 module Pork
   module Context
     private
-    def initialize stat
-      @__pork__stat__ = stat
-    end
-
     def expect *args, &block
-      Expect.new(@__pork__stat__, *args, &block)
+      Expect.new(pork_stat, *args, &block)
     end
 
     def skip
@@ -22,7 +18,7 @@ module Pork
     end
 
     def ok
-      @__pork__stat__.incr_assertions
+      pork_stat.incr_assertions
     end
   end
 end
