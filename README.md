@@ -289,8 +289,8 @@ Pork.autorun
 ```
 
 Here it `require 'pork/should'`, and it would load the monkey patches for
-inserting `Kernel#should` shown in above. This is actually optional, and
-could be replaced with `Pork::Executor#expect`. For example, we could
+inserting `Kernel#should` shown in SYNOPSIS. This is actually optional,
+and could be replaced with `Pork::Executor#expect`. For example, we could
 also write it this way:
 
 ``` ruby
@@ -324,7 +324,7 @@ Pork.autorun(false)
 ```
 
 We might need to turn autorun off occasionally, for example, we do need to
-turn this off when integrating [mutant][]. Passing `true` again to autorun
+turn this off when integrating [mutant][]. Passing `true` again to `autorun`
 could re-enable it.
 
 [mutant]: https://github.com/mbj/mutant
@@ -336,7 +336,7 @@ requiring the files defining tests, or execute them directly, with autorun
 enabled. (by `require 'pork/auto'` or call `Pork.autorun`)
 
 Here's a example command to require all test files and automatically run them.
-With Fish shell:
+With [Fish shell][]:
 
     ruby -Ilib -rpork/auto -r(ls ./test/test_*.rb) -e ''
 
@@ -351,6 +351,7 @@ With Bash shell:
 Personally I have a [rake task][gemgem] which would do this for me, so I just
 run `rake test` to run all the tests.
 
+[Fish shell]: http://fishshell.com/
 [gemgem]: https://github.com/godfat/gemgem
 
 ## Mutant integration
@@ -779,9 +780,9 @@ Pork.autorun(true)  # enable
 By default, `Pork.execute_mode` is set to `:execute`, which would
 execute all tests in a sequential manner. The other options are:
 
-* :execute (default)
-* :shuffle
-* :parallel
+* `:execute` (default)
+* `:shuffle`
+* `:parallel`
 
 With `:shuffle`, it would execute all tests in a random order. It would be
 slightly slower than `:execute`. With `:parallel`, it would run tests with
@@ -810,10 +811,10 @@ find the actual difference for human without assistance.
 However, this might not really be desired at times. So we should be able to
 switch between each mode. For now, we have the following modes:
 
-* :auto (default)
-* :inline
-* :newline
-* :diff
+* `:auto` (default)
+* `:inline`
+* `:newline`
+* `:diff`
 
 If we want to force to a specific mode, here's how we would do:
 
