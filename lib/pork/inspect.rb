@@ -1,8 +1,8 @@
 
 module Pork
   # default to :auto while eliminating warnings for uninitialized ivar
-  def self.inspect_failure_mode mode=nil
-    @mode = mode || @mode ||= :auto
+  def self.inspect_failure_mode inspect=nil
+    @inspect = inspect || @inspect ||= :auto
   end
 
   class Inspect < Struct.new(:flip)
