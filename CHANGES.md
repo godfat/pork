@@ -14,7 +14,7 @@
 * Simply `require 'pork'` would no longer introduce `Kernel#should`.
   Use `require 'pork/should'` to bring it back. (`require 'pork/auto'`
   would already do this for you)
-* Removed @__pork__desc__ (which is implementation detail anyway)
+* Removed `@__pork__desc__` (which is implementation detail anyway)
 * Renamed `Pork.report_at_exit` to `Pork.autorun`
 
 ### Enhancement
