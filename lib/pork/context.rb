@@ -5,8 +5,8 @@ require 'pork/error'
 module Pork
   module Context
     private
-    def initialize desc, stat
-      @__pork__desc__, @__pork__stat__ = desc, stat
+    def initialize stat
+      @__pork__stat__ = stat
     end
 
     def expect *args, &block
@@ -14,7 +14,7 @@ module Pork
     end
 
     def skip
-      raise Skip.new("Skipping #{@__pork__desc__}")
+      raise Skip.new
     end
 
     def flunk reason='Flunked'

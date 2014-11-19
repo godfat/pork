@@ -495,14 +495,6 @@ a string. The _default_ description is also `:default`.
 Each `would` block would be run inside a new instance of the describing
 `Pork::Executor` to isolate instance variables.
 
-``` ruby
-require 'pork/auto'
-
-would do
-  @__pork__desc__.should.eq :default
-end
-```
-
 ### Pork::API.before
 
 Each `before` block would be called before each `would` block (test case).
