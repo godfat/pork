@@ -323,7 +323,7 @@ end
 The assertions would only fail whenever the result was `false` or `nil`,
 otherwise pass.
 
-### Pork::Should#satisfy
+### Pork::Expect#satisfy
 
 If we want to have custom verifier other than the methods from questioning
 object, this is it.
@@ -355,7 +355,7 @@ describe do
 end
 ```
 
-### Pork::Should#not
+### Pork::Expect#not
 
 An easy way to negate the expectation.
 
@@ -365,7 +365,7 @@ require 'pork/auto'
 would{ 1.should.not.eq 2 }
 ```
 
-### Pork::Should#eq
+### Pork::Expect#eq
 
 To avoid warnings from Ruby, using `eq` instead of `==`. It's fine if you
 still prefer using `==` if you don't care about warnings.
@@ -376,7 +376,7 @@ require 'pork/auto'
 would{ 1.should.eq 1 }
 ```
 
-### Pork::Should#lt
+### Pork::Expect#lt
 
 To avoid warnings from Ruby, using `lt` instead of `<`. It's fine if you
 still prefer using `<` if you don't care about warnings.
@@ -387,7 +387,7 @@ require 'pork/auto'
 would{ 1.should.lt 2 }
 ```
 
-### Pork::Should#gt
+### Pork::Expect#gt
 
 To avoid warnings from Ruby, using `gt` instead of `>`. It's fine if you
 still prefer using `>` if you don't care about warnings.
@@ -398,7 +398,7 @@ require 'pork/auto'
 would{ 1.should.gt 0 }
 ```
 
-### Pork::Should#lte
+### Pork::Expect#lte
 
 To avoid warnings from Ruby, using `lte` instead of `<=`. It's fine if you
 still prefer using `<=` if you don't care about warnings.
@@ -409,7 +409,7 @@ require 'pork/auto'
 would{ 1.should.lte 1 }
 ```
 
-### Pork::Should#gte
+### Pork::Expect#gte
 
 To avoid warnings from Ruby, using `gte` instead of `>=`. It's fine if you
 still prefer using `>=` if you don't care about warnings.
@@ -420,7 +420,7 @@ require 'pork/auto'
 would{ 1.should.gte 1 }
 ```
 
-### Pork::Should#raise
+### Pork::Expect#raise
 
 Expect for exceptions! There are two ways to call it. Either you could use
 lambda to wrap the questioning expression, or you could simply pass a block
@@ -429,7 +429,7 @@ as the questioning expression.
 ``` ruby
 require 'pork/auto'
 
-describe 'Pork::Should#raise' do
+describe 'Pork::Expect#raise' do
   would 'check with a block' do
     e = should.raise(RuntimeError){ raise "nnf" }
     e.should.message.include?("nnf")
@@ -442,7 +442,7 @@ describe 'Pork::Should#raise' do
 end
 ```
 
-### Pork::Should#throw
+### Pork::Expect#throw
 
 Expect for something to be thrown. There are two ways to call it. Either
 you could use lambda to wrap the questioning expression, or you could
@@ -585,6 +585,8 @@ describe do
 end
 ```
 
+### Pork::Executor#expect
+
 ### Pork::Executor#skip
 
 At times we might want to skip some tests while leave the codes there without
@@ -648,7 +650,7 @@ instead, unless you want to report the summary without exiting.
 Note that you would probably want to run `Pork.stats.start` at the beginning
 of your tests as well if you want to handle `Pork.report` manually.
 
-### Pork.report_at_exit
+### Pork.autorun
 
 Basically simply call `Pork.stats.start` and setup `Pork.report` at exit,
 and exit with 0 if no error occurs or N for N errors and failures.
@@ -690,6 +692,8 @@ Pork.inspect_failure_mode :newline
 ```
 
 Then it would always use the mode we specified.
+
+### Pork.execute_mode
 
 ## CONTRIBUTORS:
 
