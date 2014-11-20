@@ -1,13 +1,10 @@
 
-require 'pork/error'
 require 'pork/executor'
 
 module Kernel
   def should *args, &block
-    stat = Thread.current.group.list.first[:pork_stat]
-    raise Pork::Bug.new(
-      "No Stat set. Thread list: #{Thread.current.group.list}") if stat.nil?
-    Pork::Expect.new(stat, self, *args, &block)
+    Pork::Expect.new(
+      Thread.current.group.list.first[:pork_stat], self, *args, &block)
   end
 end
 
