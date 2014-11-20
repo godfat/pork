@@ -17,8 +17,8 @@ module Pork
       elsif expect.kind_of?(Hash) && args.first.kind_of?(Hash)
         if expect.inspect.size > 78
           for_diff_hash(msg, negate,
-            Inspect.new(true).diff_hash(expect, args.first).
-              merge(Inspect.new(false).diff_hash(args.first, expect)))
+            Inspect.new(false).diff_hash(expect, args.first).
+              merge(Inspect.new(true).diff_hash(args.first, expect)))
         else
           with_inline(Hash[expect.sort], msg, [Hash[args.first.sort]], negate)
         end

@@ -30,11 +30,11 @@ describe Pork::Inspect do
     expect(f.message).eq <<-MSG.sub(/\AExpect/, 'Expect ').chop
 Expect
 \tHash with key path: "category_chats:0:chat_list:0:mentor"
-nil.==({"timezone_str"=>"+00:00", "timezone_offset"=>0, "timezone_display"=>"UTC (+00:00)", "username"=>"menmen", "name"=>"Menmen", "level"=>"mentor", "rating"=>0.0, "role"=>"mentor", "avatar_url"=>"https://www.gravatar.com/avatar/556611444ab1143c8ad30206fda3926f?d=mm", "small_avatar_url"=>"https://www.gravatar.com/avatar/556611444ab1143c8ad30206fda3926f?d=mm?s=64&d=mm"}) to return true
+{"timezone_str"=>"+00:00", "timezone_offset"=>0, "timezone_display"=>"UTC (+00:00)", "username"=>"menmen", "name"=>"Menmen", "level"=>"mentor", "rating"=>0.0, "role"=>"mentor", "avatar_url"=>"https://www.gravatar.com/avatar/556611444ab1143c8ad30206fda3926f?d=mm", "small_avatar_url"=>"https://www.gravatar.com/avatar/556611444ab1143c8ad30206fda3926f?d=mm?s=64&d=mm"}.==(
+nil) to return true
 
 \tHash with key path: "my:0"
-{"mentee"=>{"timezone_str"=>"+00:00", "timezone_offset"=>0, "timezone_display"=>"UTC (+00:00)", "username"=>"example", "name"=>"Example", "level"=>"mentor", "rating"=>0.0, "role"=>"user", "avatar_url"=>"https://www.gravatar.com/avatar/55502f40dc8b7c769880b10874abc9d0?d=mm", "small_avatar_url"=>"https://www.gravatar.com/avatar/55502f40dc8b7c769880b10874abc9d0?d=mm?s=64&d=mm"}, "chatroom_id"=>"8c3dd9387dd30499a4053e07e4a41be4", "chatroom_firebase_id"=>"49c31f7444e199bdaea610dbe518d329"}.==(
-nil) to return true
+nil.==({"mentee"=>{"timezone_str"=>"+00:00", "timezone_offset"=>0, "timezone_display"=>"UTC (+00:00)", "username"=>"example", "name"=>"Example", "level"=>"mentor", "rating"=>0.0, "role"=>"user", "avatar_url"=>"https://www.gravatar.com/avatar/55502f40dc8b7c769880b10874abc9d0?d=mm", "small_avatar_url"=>"https://www.gravatar.com/avatar/55502f40dc8b7c769880b10874abc9d0?d=mm?s=64&d=mm"}, "chatroom_id"=>"8c3dd9387dd30499a4053e07e4a41be4", "chatroom_firebase_id"=>"49c31f7444e199bdaea610dbe518d329"}) to return true
 Additional Message
     MSG
   end
