@@ -1,14 +1,14 @@
 # -*- encoding: utf-8 -*-
-# stub: pork 1.0.0 ruby lib
+# stub: pork 1.0.1 ruby lib
 
 Gem::Specification.new do |s|
   s.name = "pork"
-  s.version = "1.0.0"
+  s.version = "1.0.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.require_paths = ["lib"]
   s.authors = ["Lin Jen-Shin (godfat)"]
-  s.date = "2014-11-20"
+  s.date = "2014-11-21"
   s.description = "Pork -- Simple and clean and modular testing library.\n\nInspired by [Bacon][].\n\n[Bacon]: https://github.com/chneukirchen/bacon"
   s.email = ["godfat (XD) godfat.org"]
   s.files = [
@@ -46,6 +46,7 @@ Gem::Specification.new do |s|
   "test/test_nested.rb",
   "test/test_parallel.rb",
   "test/test_readme.rb",
+  "test/test_should.rb",
   "test/test_shuffle.rb"]
   s.homepage = "https://github.com/godfat/pork"
   s.licenses = ["Apache License 2.0"]
@@ -58,6 +59,7 @@ Gem::Specification.new do |s|
   "test/test_nested.rb",
   "test/test_parallel.rb",
   "test/test_readme.rb",
+  "test/test_should.rb",
   "test/test_shuffle.rb"]
 
   if s.respond_to? :specification_version then

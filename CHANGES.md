@@ -1,5 +1,9 @@
 # CHANGES
 
+## Pork 1.0.1 -- 2014-11-21
+
+* Fixed the failure message for hash diff.
+
 ## Pork 1.0.0 -- 2014-11-20
 
 ### Bugs fixed
