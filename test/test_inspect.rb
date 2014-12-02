@@ -26,29 +26,29 @@ describe Pork::Inspect do
     a, b = {:z => z, :a => nil}, {:z => z}
     Pork::Inspect.with_auto(a, :==, [b], false).should.start_with? <<-MSG.chop
 
-\tHash with key path: "a"
+\tHash with key path: :a
 nil.==(<undefined>) to return true
     MSG
 
     Pork::Inspect.with_auto(b, :==, [a], false).should.start_with? <<-MSG.chop
 
-\tHash with key path: "a"
+\tHash with key path: :a
 <undefined>.==(nil) to return true
     MSG
   end
 
   would '#diff_hash with nil and <out-of-bound>' do
     z = 'z'*80
-    a, b = {:a => [z, nil]}, {:a => [z]}
+    a, b = {:a => {:b => [z, nil]}}, {:a => {:b => [z]}}
     Pork::Inspect.with_auto(a, :==, [b], false).should.start_with? <<-MSG.chop
 
-\tHash with key path: "a:1"
+\tHash with key path: :a/:b/1
 nil.==(<out-of-bound>) to return true
     MSG
 
     Pork::Inspect.with_auto(b, :==, [a], false).should.start_with? <<-MSG.chop
 
-\tHash with key path: "a:1"
+\tHash with key path: :a/:b/1
 <out-of-bound>.==(nil) to return true
     MSG
   end
@@ -61,11 +61,11 @@ nil.==(<out-of-bound>) to return true
     f = expect.raise(Pork::Failure){ expect(a, 'Additional Message').eq(b) }
     expect(f.message).eq <<-MSG.sub(/\AExpect/, 'Expect ').chop
 Expect
-\tHash with key path: "category_chats:0:chat_list:0:mentor"
+\tHash with key path: "category_chats"/0/"chat_list"/0/"mentor"
 {"timezone_str"=>"+00:00", "timezone_offset"=>0, "timezone_display"=>"UTC (+00:00)", "username"=>"menmen", "name"=>"Menmen", "level"=>"mentor", "rating"=>0.0, "role"=>"mentor", "avatar_url"=>"https://www.gravatar.com/avatar/556611444ab1143c8ad30206fda3926f?d=mm", "small_avatar_url"=>"https://www.gravatar.com/avatar/556611444ab1143c8ad30206fda3926f?d=mm?s=64&d=mm"}.==(
 <undefined>) to return true
 
-\tHash with key path: "my:0"
+\tHash with key path: "my"/0
 <out-of-bound>.==({"mentee"=>{"timezone_str"=>"+00:00", "timezone_offset"=>0, "timezone_display"=>"UTC (+00:00)", "username"=>"example", "name"=>"Example", "level"=>"mentor", "rating"=>0.0, "role"=>"user", "avatar_url"=>"https://www.gravatar.com/avatar/55502f40dc8b7c769880b10874abc9d0?d=mm", "small_avatar_url"=>"https://www.gravatar.com/avatar/55502f40dc8b7c769880b10874abc9d0?d=mm?s=64&d=mm"}, "chatroom_id"=>"8c3dd9387dd30499a4053e07e4a41be4", "chatroom_firebase_id"=>"49c31f7444e199bdaea610dbe518d329"}) to return true
 Additional Message
     MSG

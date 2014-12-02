@@ -51,7 +51,7 @@ module Pork
     def self.for_diff_hash msg, negate, result
       "\n" + result.map do |key, (expect, actual)|
         body = with_auto(expect, msg, [actual], negate)
-        "\tHash with key path: #{key.inspect}\n#{body.sub(/\A\n/, '')}"
+        "\tHash with key path: #{key}\n#{body.sub(/\A\n/, '')}"
       end.join("\n\n")
     end
 
@@ -86,7 +86,7 @@ module Pork
         else
           Undefined
         end
-        diff_object(e, a, r, "#{prefix}#{key}")
+        diff_object(e, a, r, "#{prefix}#{key.inspect}")
       end
     end
 
@@ -105,9 +105,9 @@ module Pork
       return result if expect == actual
 
       if expect.kind_of?(Hash) && actual.kind_of?(Hash)
-        diff_hash(expect, actual, result, "#{prefix}:")
+        diff_hash(expect, actual, result, "#{prefix}/")
       elsif expect.kind_of?(Array) && actual.kind_of?(Array)
-        diff_array(expect, actual, result, "#{prefix}:")
+        diff_array(expect, actual, result, "#{prefix}/")
       elsif flip
         result[prefix] = [actual, expect]
       else
