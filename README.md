@@ -848,6 +848,7 @@ Then it would always use the mode we specified.
 
 ## CONTRIBUTORS:
 
+* Chun-Yi Liu (@trantorliu)
 * Lin Jen-Shin (@godfat)
 * Josh Kalderimis (@joshk)
 
