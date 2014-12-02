@@ -6,6 +6,19 @@ module Pork
   end
 
   class Inspect < Struct.new(:flip)
+    Undefined = Object.new
+    Undefined.singleton_class.module_eval do
+      def inspect
+        '<undefined>'
+      end
+    end
+    OutOfBound = Object.new
+    OutOfBound.singleton_class.module_eval do
+      def inspect
+        '<out-of-bound>'
+      end
+    end
+
     def self.with *args
       lambda{ public_send("with_#{Pork.inspect_failure_mode}", *args) }
     end
@@ -68,13 +81,23 @@ module Pork
 
     def diff_hash expect, actual, result={}, prefix=''
       expect.inject(result) do |r, (key, e)|
-        diff_object(e, actual[key], r, "#{prefix}#{key}")
+        a = if actual.key?(key)
+          actual[key]
+        else
+          Undefined
+        end
+        diff_object(e, a, r, "#{prefix}#{key}")
       end
     end
 
     def diff_array expect, actual, result={}, prefix=''
       expect.each.with_index.inject(result) do |r, (e, idx)|
-        diff_object(e, actual[idx], r, "#{prefix}#{idx}")
+        a = if idx < actual.size
+          actual[idx]
+        else
+          OutOfBound
+        end
+        diff_object(e, a, r, "#{prefix}#{idx}")
       end
     end
 
