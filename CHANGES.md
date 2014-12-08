@@ -1,5 +1,15 @@
 # CHANGES
 
+## Pork 1.0.2 -- 2014-12-09
+
+* Hash difference is much improved. Now it uses `/` to separate keys,
+  and use quotes for string keys and colons for symbol keys, so that
+  we won't be confused when comparing string hashes and symbol hashes.
+  Further more, it would show `<undefined>` for hashes missing a key,
+  and `<out-of-bound>` for arrays out of bound. Previously, hash with
+  nil values are indistinguishable with hash missing keys.
+  Thanks Chun-Yi Liu (@trantorliu).
+
 ## Pork 1.0.1 -- 2014-11-21
 
 * Fixed the failure message for hash diff.
