@@ -3,8 +3,8 @@ require 'pork/executor'
 
 module Kernel
   def should *args, &block
-    Pork::Expect.new(
-      Thread.current.group.list.first[:pork_stat], self, *args, &block)
+    stat = Thread.current.group.list.find{ |t| t[:pork_stat] }[:pork_stat]
+    Pork::Expect.new(stat, self, *args, &block)
   end
 end
 
