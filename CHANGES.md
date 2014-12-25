@@ -1,5 +1,10 @@
 # CHANGES
 
+## Pork 1.0.3 -- 2014-12-26
+
+* Fix `Kernel#should` compatibility for JRuby 1.7.18- and Ruby 2.2.0 by
+  never assuming ThreadGroup#list would preserve the order.
+
 ## Pork 1.0.2 -- 2014-12-09
 
 * Hash difference is much improved. Now it uses `/` to separate keys,
