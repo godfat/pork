@@ -4,9 +4,9 @@ require 'thread'
 module Pork
   class Stat < Struct.new(:tests, :assertions, :skips,
                           :failures, :errors, :start, :io)
-    def initialize io=$stdout
+    def initialize io=$stdout, t=0, a=0, s=0, f=[], e=[], st=Time.now
       @mutex = Mutex.new
-      super(0, 0, 0, [], [], Time.now, io)
+      super(t, a, s, f, e, st, io)
     end
 
     def incr_assertions; @mutex.synchronize{ self.assertions += 1 }; end
@@ -24,6 +24,11 @@ module Pork
       io.printf("\nFinished in %f seconds.\n", Time.now - start)
       io.printf("%d tests, %d assertions, %d failures, %d errors, %d skips\n",
                 *numbers)
+    end
+    def merge stat
+      self.class.new(io, tests + stat.tests, assertions + stat.assertions,
+                     skips + stat.skips, failures + stat.failures,
+                     errors + stat.errors, start)
     end
 
     private

@@ -1,5 +1,6 @@
 
 require 'pork/auto'
+# Pork.execute_mode :parallel
 
 describe Pork do
   # Hooray for meta-testing.
@@ -16,6 +17,10 @@ describe Pork do
       lambda{ |s| x == s.to_s }
     end
   }
+
+  # would 'fail with no assertions' do
+  #   sleep 0.5
+  # end
 
   would "have should.satisfy" do
     succeed lambda { should.satisfy { 1 == 1 } }
