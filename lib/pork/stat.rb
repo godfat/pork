@@ -2,18 +2,17 @@
 require 'thread'
 
 module Pork
-  class Stat < Struct.new(:tests, :assertions, :skips,
-                          :failures, :errors, :start, :io)
-    def initialize io=$stdout, t=0, a=0, s=0, f=[], e=[], st=Time.now
-      @mutex = Mutex.new
-      super(t, a, s, f, e, st, io)
+  class Stat < Struct.new(:io, :start, :mutex,
+                          :tests, :assertions, :skips, :failures, :errors)
+    def initialize io=$stdout, st=Time.now, mu=Mutex.new,
+                   t=0, a=0, s=0, f=[], e=[]
+      super
     end
-
-    def incr_assertions; @mutex.synchronize{ self.assertions += 1 }; end
-    def incr_tests     ; @mutex.synchronize{ self.tests      += 1 }; end
-    def incr_skips     ; @mutex.synchronize{ self.skips      += 1 }; end
-    def add_failure *e ; @mutex.synchronize{ failures        << e }; end
-    def add_error   *e ; @mutex.synchronize{ errors          << e }; end
+    def incr_assertions; mutex.synchronize{ self.assertions += 1 }; end
+    def incr_tests     ; mutex.synchronize{ self.tests      += 1 }; end
+    def incr_skips     ; mutex.synchronize{ self.skips      += 1 }; end
+    def add_failure *e ; mutex.synchronize{ failures        << e }; end
+    def add_error   *e ; mutex.synchronize{ errors          << e }; end
     def passed?; failures.size + errors.size == 0                      ; end
     def numbers; [tests, assertions, failures.size, errors.size, skips]; end
     def report
@@ -26,8 +25,8 @@ module Pork
                 *numbers)
     end
     def merge stat
-      self.class.new(io, *to_a[0..-3].zip(stat.to_a[0..-3]).
-                          map{ |(a, b)| a + b }, start)
+      self.class.new(io, start, nil,
+        *to_a.drop(3).zip(stat.to_a.drop(3)).map{ |(a, b)| a + b })
     end
 
     private
