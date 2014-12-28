@@ -26,9 +26,8 @@ module Pork
                 *numbers)
     end
     def merge stat
-      self.class.new(io, tests + stat.tests, assertions + stat.assertions,
-                     skips + stat.skips, failures + stat.failures,
-                     errors + stat.errors, start)
+      self.class.new(io, *to_a[0..-3].zip(stat.to_a[0..-3]).
+                          map{ |(a, b)| a + b }, start)
     end
 
     private
