@@ -36,8 +36,20 @@ module Pork
       if $VERBOSE
         e.backtrace
       else
-        e.backtrace.reject{ |line| line =~ %r{/pork(/\w+)?\.rb:\d+} }
+        strip(e.backtrace.reject{ |line| line =~ %r{/pork(/\w+)?\.rb:\d+} })
       end.join("\n  ")
+    end
+
+    def strip backtrace
+      strip_home(strip_cwd(backtrace))
+    end
+
+    def strip_home backtrace
+      backtrace.map{ |path| path.sub(ENV['HOME'], '~') }
+    end
+
+    def strip_cwd backtrace
+      backtrace.map{ |path| path.sub(Dir.pwd, '.') }
     end
   end
 end
