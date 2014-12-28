@@ -1,14 +1,14 @@
 # -*- encoding: utf-8 -*-
-# stub: pork 1.0.3 ruby lib
+# stub: pork 1.0.4 ruby lib
 
 Gem::Specification.new do |s|
   s.name = "pork"
-  s.version = "1.0.3"
+  s.version = "1.0.4"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.require_paths = ["lib"]
   s.authors = ["Lin Jen-Shin (godfat)"]
-  s.date = "2014-12-26"
+  s.date = "2014-12-29"
   s.description = "Pork -- Simple and clean and modular testing library.\n\nInspired by [Bacon][].\n\n[Bacon]: https://github.com/chneukirchen/bacon"
   s.email = ["godfat (XD) godfat.org"]
   s.files = [

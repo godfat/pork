@@ -1,5 +1,12 @@
 # CHANGES
 
+## Pork 1.0.4 -- 2014-12-29
+
+* Make backtrace easier to read by using `.` and `~`.
+* Fix parallels mode to detect missing assertions properly.
+* Slightly changed `Pork::Stat`. A kinda incompatible change,
+  but using `Pork::Stat` should be considered private.
+
 ## Pork 1.0.3 -- 2014-12-26
 
 * Fix `Kernel#should` compatibility for JRuby 1.7.18- and Ruby 2.2.0 by
