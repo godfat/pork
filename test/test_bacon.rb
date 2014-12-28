@@ -18,10 +18,6 @@ describe Pork do
     end
   }
 
-  # would 'fail with no assertions' do
-  #   sleep 0.5
-  # end
-
   would "have should.satisfy" do
     succeed lambda { should.satisfy { 1 == 1 } }
     succeed lambda { should.satisfy { 1 } }
