@@ -1,6 +1,5 @@
 
 require 'pork/auto'
-# Pork.execute_mode :parallel
 
 describe Pork do
   # Hooray for meta-testing.
