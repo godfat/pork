@@ -4,9 +4,9 @@ require 'pork/isolate'
 
 module Pork
   module Shuffle
-    def shuffle stat=Stat.new
-      all_tests.values.flatten(1).shuffle.each do |path|
-        isolate(path, stat)
+    def shuffle stat=Stat.new, paths=all_tests.values.flatten(1)
+      paths.shuffle.each do |p|
+        isolate(p, stat)
       end
       stat
     end

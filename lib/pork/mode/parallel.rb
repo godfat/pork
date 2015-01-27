@@ -4,11 +4,15 @@ require 'pork/isolate'
 
 module Pork
   module Parallel
-    def parallel stat=Stat.new, cores=8
-      all_tests.values.flatten(1).shuffle.each_slice(cores).map do |paths|
+    def cores
+      8
+    end
+
+    def parallel stat=Stat.new, paths=all_tests.values.flatten(1)
+      paths.shuffle.each_slice(cores).map do |paths_slice|
         Thread.new do
           s = Stat.new
-          paths.each{ |p| isolate(p, s) }
+          paths_slice.each{ |p| isolate(p, s) }
           s
         end
       end.map(&:value).inject(stat, &:merge)

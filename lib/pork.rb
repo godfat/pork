@@ -17,20 +17,42 @@ module Pork
     @execute = execute || @execute ||= :execute
   end
 
+  def self.stat
+    @stat ||= Pork::Stat.new
+  end
+
+  def self.trap sig='SIGINT'
+    Signal.trap(sig) do
+      stat.report
+      puts "\nterminated by signal SIGINT"
+      exit! 255
+    end
+  end
+
   def self.autorun auto=true
     @auto = auto
     @autorun ||= at_exit do
       next unless @auto
       require "pork/mode/#{execute_mode}" unless execute_mode == :execute
-      stat = Pork::Stat.new
 
-      Signal.trap('SIGINT') do
-        stat.report
-        puts "\nterminated by signal SIGINT"
-        exit! 255
+      trap
+
+      if ENV['PORK']
+        require 'pork/isolate'
+        if paths = Executor.all_tests[ENV['PORK']]
+          case execute_mode
+          when :execute
+            paths.each{ |p| Executor.isolate(p, stat) }
+          else
+            @stat = Executor.public_send(execute_mode, stat, paths)
+          end
+        else
+          puts "Cannot find test: #{ENV['PORK']}"
+          exit! 254
+        end
+      else
+        @stat = Executor.public_send(execute_mode, stat)
       end
-
-      Executor.public_send(execute_mode, stat)
 
       stat.report
       exit! stat.failures.size + stat.errors.size + ($! && 1).to_i
