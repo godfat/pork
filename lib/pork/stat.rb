@@ -60,7 +60,7 @@ module Pork
     end
 
     def pork name
-      "PORK='#{name.gsub("'", "\\\\'")}'"
+      "PORK_TEST='#{name.gsub("'", "\\\\'")}'"
     end
 
     def pork_mode

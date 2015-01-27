@@ -34,9 +34,9 @@ module Pork
   end
 
   def self.run
-    if ENV['PORK']
+    if ENV['PORK_TEST']
       require 'pork/isolate'
-      if paths = Executor.all_tests[ENV['PORK']]
+      if paths = Executor.all_tests[ENV['PORK_TEST']]
         case execute_mode
         when :execute
           paths.each{ |p| Executor.isolate(p, stat) }
@@ -44,7 +44,7 @@ module Pork
           @stat = Executor.public_send(execute_mode, stat, paths)
         end
       else
-        puts "Cannot find test: #{ENV['PORK']}"
+        puts "Cannot find test: #{ENV['PORK_TEST']}"
         exit! 254
       end
     else
