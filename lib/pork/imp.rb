@@ -30,7 +30,7 @@ module Pork
 
     def execute stat=Stat.new
       if block_given?
-        yield(stat)
+        yield(stat) # XXX: see Isolate#isolate
       else
         execute_with_parent(stat)
       end

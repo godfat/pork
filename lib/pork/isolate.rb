@@ -9,6 +9,10 @@ module Pork
     end
 
     def isolate path, stat=Stat.new
+      # XXX: 91152211182a086de20e3e84c96b6befca655975
+      #      Executor.execute is a no-op when Should is not loaded,
+      #      but if it's loaded, it's essential to call Should#execute to
+      #      setup the stat in thread group. Try to come up a better way!
       execute(stat) do |s|
         execute_with_isolation(path, s)
       end
