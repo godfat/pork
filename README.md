@@ -796,6 +796,14 @@ Pass the symbol to it to use the mode:
 Pork.execute_mode :shuffle
 ```
 
+On the other hand, you could also set `ENV['PORK_MODE']` for picking an
+execution mode. This would be convenient if you just want to switch to a
+particular mode temporary via command line. For example:
+
+``` shell
+env PORK_MODE=shuffle rake test
+```
+
 ### Pork.inspect_failure_mode
 
 By default, `Pork.inspect_failure_mode` is set to `:auto`, which would
