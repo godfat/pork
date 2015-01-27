@@ -804,6 +804,12 @@ particular mode temporary via command line. For example:
 env PORK_MODE=shuffle rake test
 ```
 
+Or:
+
+``` shell
+env PORK_MODE=shuffle ruby -Ilib test/test_pork.rb
+```
+
 ### Pork.inspect_failure_mode
 
 By default, `Pork.inspect_failure_mode` is set to `:auto`, which would
