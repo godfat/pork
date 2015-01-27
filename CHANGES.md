@@ -1,5 +1,27 @@
 # CHANGES
 
+## Pork 1.1.0 -- 2015-01-28
+
+### Bugs fixed
+
+* Now we can interrupt the tests and still see current report.
+* Use `exit!` in `at_exit` to avoid issues.
+* Fixed the description order for nested test cases.
+
+### Incompatible changes
+
+* Pork::Parallel.parallel API slightly changed.
+* Pork::Isolate.isolate API slightly changed.
+* Pork::Isolate.all_tests format changed.
+* Mutant::Integration::Pork could be broken now... but it never really works.
+
+### Enhancement
+
+* Accept `ENV['PORK_MODE']` for `Pork.execute_mode`
+* Accept `ENV['PORK_SEED']` for setting up srand.
+* Accept `ENV['PORK_TEST']` for running a particular test case.
+* For failure tests, it would now print the replicating command.
+
 ## Pork 1.0.4 -- 2014-12-29
 
 * Make backtrace easier to read by using `.` and `~`.
