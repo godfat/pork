@@ -97,7 +97,7 @@ module Pork
     end
 
     def description_for name=''
-      "#{@desc}#{@super_executor && @super_executor.description_for}#{name}"
+      "#{@super_executor && @super_executor.description_for}#{@desc}#{name}"
     end
   end
 end
