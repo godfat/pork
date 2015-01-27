@@ -29,31 +29,32 @@ module Pork
     end
   end
 
+  def self.run
+    if ENV['PORK']
+      require 'pork/isolate'
+      if paths = Executor.all_tests[ENV['PORK']]
+        case execute_mode
+        when :execute
+          paths.each{ |p| Executor.isolate(p, stat) }
+        else
+          @stat = Executor.public_send(execute_mode, stat, paths)
+        end
+      else
+        puts "Cannot find test: #{ENV['PORK']}"
+        exit! 254
+      end
+    else
+      @stat = Executor.public_send(execute_mode, stat)
+    end
+  end
+
   def self.autorun auto=true
     @auto = auto
     @autorun ||= at_exit do
       next unless @auto
       require "pork/mode/#{execute_mode}" unless execute_mode == :execute
-
       trap
-
-      if ENV['PORK']
-        require 'pork/isolate'
-        if paths = Executor.all_tests[ENV['PORK']]
-          case execute_mode
-          when :execute
-            paths.each{ |p| Executor.isolate(p, stat) }
-          else
-            @stat = Executor.public_send(execute_mode, stat, paths)
-          end
-        else
-          puts "Cannot find test: #{ENV['PORK']}"
-          exit! 254
-        end
-      else
-        @stat = Executor.public_send(execute_mode, stat)
-      end
-
+      run
       stat.report
       exit! stat.failures.size + stat.errors.size + ($! && 1).to_i
     end
