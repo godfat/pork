@@ -1,5 +1,9 @@
 # CHANGES
 
+## Pork 1.1.2 -- 2015-01-28
+
+* Really fixed passing `ENV['PORK_MODE']=execute`. I should sleep now.
+
 ## Pork 1.1.1 -- 2015-01-28
 
 * Fixed passing `ENV['PORK_MODE']=execute`
