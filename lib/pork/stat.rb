@@ -18,7 +18,7 @@ module Pork
     def report
       io.puts
       io.puts (failures + errors).map{ |(e, m)|
-        "\n#{m}\n#{e.class}: #{e.message}\n  #{backtrace(e)}"
+        "\n#{m}\n#{e.class}: #{e.message}\n  #{backtrace(e)}\n#{command(m)}"
       }
       io.printf("\nFinished in %f seconds.\n", Time.now - start)
       io.printf("%d tests, %d assertions, %d failures, %d errors, %d skips\n",
@@ -48,6 +48,19 @@ module Pork
 
     def strip_cwd backtrace
       backtrace.map{ |path| path.sub(Dir.pwd, '.') }
+    end
+
+    def command name
+      "You can replicate this test with the following command:\n  " \
+      "env #{pork(name)} #{pork_seed} #{Gem.ruby} -S #{$0} #{ARGV.join(' ')}"
+    end
+
+    def pork name
+      "PORK='#{name.gsub("'", "\\\\'")}'"
+    end
+
+    def pork_seed
+      "PORK_SEED=#{Random::DEFAULT.seed}"
     end
   end
 end

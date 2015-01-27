@@ -52,6 +52,7 @@ module Pork
     @auto = auto
     @autorun ||= at_exit do
       next unless @auto
+      Random.srand(ENV['PORK_SEED'].to_i) if ENV['PORK_SEED']
       require "pork/mode/#{execute_mode}" unless execute_mode == :execute
       trap
       run
