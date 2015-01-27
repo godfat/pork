@@ -27,12 +27,13 @@ module Pork
       Signal.trap('SIGINT') do
         stat.report
         puts "\nterminated by signal SIGINT"
-        exit 1
+        exit! 255
       end
 
       Executor.public_send(execute_mode, stat)
+
       stat.report
-      exit stat.failures.size + stat.errors.size + ($! && 1).to_i
+      exit! stat.failures.size + stat.errors.size + ($! && 1).to_i
     end
   end
 end
