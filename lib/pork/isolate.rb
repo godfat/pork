@@ -19,14 +19,14 @@ module Pork
     end
 
     protected
-    def build_all_tests result=Hash.new{|r,k|r[k]=[]}, path=[]
+    def build_all_tests result={}, path=[]
       @tests.each_with_index.inject(result) do |r, ((type, arg, _), index)|
         current = path + [index]
         case type
         when :describe
           arg.build_all_tests(r, current)
         when :would
-          r[description_for("would #{arg}")] << current
+          (r[description_for("would #{arg}")] ||= []) << current
         end
         r
       end
