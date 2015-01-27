@@ -6,7 +6,7 @@ describe Pork::Parallel do
   paste
 
   would '#parallel' do
-    stat = Pork::Executor.parallel(8, pork_stat)
+    stat = Pork::Executor.parallel(pork_stat, 8)
     expect(stat.passed?, stat.inspect).eq true
   end
 end

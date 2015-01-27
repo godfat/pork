@@ -4,7 +4,7 @@ require 'pork/isolate'
 
 module Pork
   module Parallel
-    def parallel cores=8, stat=Stat.new
+    def parallel stat=Stat.new, cores=8
       all_tests.values.flatten(1).shuffle.each_slice(cores).map do |paths|
         Thread.new do
           s = Stat.new

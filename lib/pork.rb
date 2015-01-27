@@ -22,7 +22,15 @@ module Pork
     @autorun ||= at_exit do
       next unless @auto
       require "pork/mode/#{execute_mode}" unless execute_mode == :execute
-      stat = Executor.public_send(execute_mode)
+      stat = Pork::Stat.new
+
+      Signal.trap('SIGINT') do
+        stat.report
+        puts "\nterminated by signal SIGINT"
+        exit 1
+      end
+
+      Executor.public_send(execute_mode, stat)
       stat.report
       exit stat.failures.size + stat.errors.size + ($! && 1).to_i
     end
