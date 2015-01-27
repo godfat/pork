@@ -1,5 +1,9 @@
 # CHANGES
 
+## Pork 1.1.1 -- ?
+
+* Fixed passing `ENV['PORK_MODE']=execute`
+
 ## Pork 1.1.0 -- 2015-01-28
 
 ### Bugs fixed
