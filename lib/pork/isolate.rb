@@ -5,33 +5,32 @@ require 'pork/executor'
 module Pork
   module Isolate
     def all_tests
-      @all_tests ||= Hash[build_all_tests]
+      @all_tests ||= build_all_tests
     end
 
-    def isolate name, stat=Stat.new
+    def isolate path, stat=Stat.new
       execute(stat) do |s|
-        execute_with_isolation(all_tests[name], s)
+        execute_with_isolation(path, s)
       end
     end
 
     protected
-    def build_all_tests paths=[]
-      @tests.flat_map.with_index do |(type, arg, _), index|
-        current = paths + [index]
+    def build_all_tests result=Hash.new{|r,k|r[k]=[]}, path=[]
+      @tests.each_with_index.inject(result) do |r, ((type, arg, _), index)|
+        current = path + [index]
         case type
         when :describe
-          arg.build_all_tests(current)
+          arg.build_all_tests(r, current)
         when :would
-          [["#{desc.chomp(': ')} #{arg} ##{current}", current]]
-        else
-          []
+          r[description_for("would #{arg}")] << current
         end
+        r
       end
     end
 
-    def execute_with_isolation paths, stat, super_env=nil
+    def execute_with_isolation path, stat, super_env=nil
       env = Env.new(super_env)
-      idx = paths.first
+      idx = path.first
 
       @tests.first(idx).each do |(type, arg, _)|
         case type
@@ -42,11 +41,11 @@ module Pork
         end
       end
 
-      if paths.size == 1
+      if path.size == 1
         _, desc, test = @tests[idx]
         run(desc, test, stat, env)
       else
-        @tests[idx][1].execute_with_isolation(paths.drop(1), stat, env)
+        @tests[idx][1].execute_with_isolation(path.drop(1), stat, env)
       end
     end
   end
