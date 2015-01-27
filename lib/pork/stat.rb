@@ -52,15 +52,23 @@ module Pork
 
     def command name
       "You can replicate this test with the following command:\n  " \
-      "env #{pork(name)} #{pork_seed} #{Gem.ruby} -S #{$0} #{ARGV.join(' ')}"
+      "#{env(name)} #{Gem.ruby} -S #{$0} #{ARGV.join(' ')}"
+    end
+
+    def env name
+      "env #{pork(name)} #{pork_mode} #{pork_seed}"
     end
 
     def pork name
       "PORK='#{name.gsub("'", "\\\\'")}'"
     end
 
+    def pork_mode
+      "PORK_MODE=#{Pork.execute_mode}"
+    end
+
     def pork_seed
-      "PORK_SEED=#{Random::DEFAULT.seed}"
+      "PORK_SEED=#{Pork.seed}"
     end
   end
 end

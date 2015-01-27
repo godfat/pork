@@ -21,6 +21,10 @@ module Pork
     @stat ||= Pork::Stat.new
   end
 
+  def self.seed
+    @seed ||= Random::DEFAULT.seed
+  end
+
   def self.trap sig='SIGINT'
     Signal.trap(sig) do
       stat.report
@@ -53,7 +57,9 @@ module Pork
     @autorun ||= at_exit do
       next unless @auto
       Random.srand(ENV['PORK_SEED'].to_i) if ENV['PORK_SEED']
+      execute_mode(ENV['PORK_MODE'])      if ENV['PORK_MODE']
       require "pork/mode/#{execute_mode}" unless execute_mode == :execute
+      seed
       trap
       run
       stat.report
