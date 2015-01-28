@@ -3,21 +3,32 @@ require 'thread'
 
 module Pork
   class Stat < Struct.new(:io, :start, :mutex,
-                          :tests, :assertions, :skips, :failures, :errors)
+                          :tests, :assertions, :skips, :failures, :errors,
+                          :exceptions)
     def initialize io=$stdout, st=Time.now, mu=Mutex.new,
-                   t=0, a=0, s=0, f=[], e=[]
+                   t=0, a=0, s=0, f=0, e=0, x=[]
       super
     end
     def incr_assertions; mutex.synchronize{ self.assertions += 1 }; end
     def incr_tests     ; mutex.synchronize{ self.tests      += 1 }; end
     def incr_skips     ; mutex.synchronize{ self.skips      += 1 }; end
-    def add_failure *e ; mutex.synchronize{ failures        << e }; end
-    def add_error   *e ; mutex.synchronize{ errors          << e }; end
-    def passed?; failures.size + errors.size == 0                      ; end
-    def numbers; [tests, assertions, failures.size, errors.size, skips]; end
+    def add_failure *e
+      mutex.synchronize do
+        self.failures += 1
+        exceptions << e
+      end
+    end
+    def add_error *e
+      mutex.synchronize do
+        self.errors += 1
+        exceptions << e
+      end
+    end
+    def passed?; exceptions.size == 0                        ; end
+    def numbers; [tests, assertions, failures, errors, skips]; end
     def report
       io.puts
-      io.puts (failures + errors).map{ |(e, m)|
+      io.puts exceptions.map{ |(e, m)|
         "\n#{m}\n#{e.class}: #{e.message}\n  #{backtrace(e)}\n#{command(m)}"
       }
       io.printf("\nFinished in %f seconds.\n", Time.now - start)
