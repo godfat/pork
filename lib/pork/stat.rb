@@ -111,6 +111,4 @@ module Pork
   end
 
   Stat.__send__(:include, Stat::Imp)
-  Stat.__send__(:include, BottomupBacktrace)
-  Stat.__send__(:include, Color)
 end
