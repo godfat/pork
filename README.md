@@ -867,9 +867,9 @@ Pork.inspect_failure_mode :newline
 
 Then it would always use the mode we specified.
 
-### Pork.rainbows!
+### Pork.Rainbows!
 
-Have you seen rainbows!?
+Have you seen Rainbows!?
 
 ## CONTRIBUTORS:
 

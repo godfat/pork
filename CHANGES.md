@@ -4,7 +4,7 @@
 
 * Fixed exit status.
 * Introduced `require 'pork/more'` for colored output and bottom-up backtrace.
-* Introduced `Pork.rainbows!` for fun.
+* Introduced `Pork.Rainbows!` for fun.
 
 ## Pork 1.1.2 -- 2015-01-28
 
