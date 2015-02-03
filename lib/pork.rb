@@ -33,7 +33,7 @@ module Pork
     Signal.trap(sig) do
       stat.report
       puts "\nterminated by signal SIGINT"
-      exit! 255
+      exit 255
     end
   end
 
@@ -49,7 +49,7 @@ module Pork
         end
       else
         puts "Cannot find test: #{ENV['PORK_TEST']}"
-        exit! 254
+        exit 254
       end
     else
       @stat = Executor.public_send(execute_mode, stat)
@@ -67,7 +67,7 @@ module Pork
       trap
       run
       stat.report
-      exit! stat.failures.size + stat.errors.size + ($! && 1).to_i
+      exit stat.failures.size + stat.errors.size + ($! && 1).to_i
     end
   end
 end
