@@ -67,7 +67,7 @@ module Pork
       trap
       run
       stat.report
-      exit stat.failures.size + stat.errors.size + ($! && 1).to_i
+      exit stat.failures + stat.errors + ($! && 1).to_i
     end
   end
 end
