@@ -34,6 +34,7 @@ Gem::Specification.new do |s|
   "lib/pork/isolate.rb",
   "lib/pork/mode/parallel.rb",
   "lib/pork/mode/shuffle.rb",
+  "lib/pork/more.rb",
   "lib/pork/more/bottomup_backtrace.rb",
   "lib/pork/more/color.rb",
   "lib/pork/should.rb",

@@ -284,6 +284,7 @@ Here's what `require 'pork/auto'` would do:
 ``` ruby
 require 'pork'
 require 'pork/should'
+require 'pork/more'
 extend Pork::API
 Pork.autorun
 ```
@@ -328,6 +329,12 @@ turn this off when integrating [mutant][]. Passing `true` again to `autorun`
 could re-enable it.
 
 [mutant]: https://github.com/mbj/mutant
+
+Also note that there's a number of plugins would be loaded upon:
+
+``` ruby
+require 'pork/more'
+```
 
 ## Where's the pork command?
 
