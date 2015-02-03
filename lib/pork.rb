@@ -17,6 +17,11 @@ module Pork
     @execute = execute || @execute ||= :execute
   end
 
+  def self.rainbows!
+    require 'pork/extra/rainbows'
+    Pork::Stat.__send__(:include, Pork::Rainbows)
+  end
+
   def self.stat
     @stat ||= Pork::Stat.new
   end
