@@ -23,7 +23,7 @@ module Pork
     end
 
     def numbers
-      super.zip(%i[green green magenta red yellow]).map do |(num, col)|
+      super.zip(%w[green green magenta red yellow]).map do |(num, col)|
         if num == 0
           num
         else
