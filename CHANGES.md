@@ -1,5 +1,10 @@
 # CHANGES
 
+## Pork 1.1.3 -- 2015-02-04
+
+* Fixed exit status.
+* Introduced `require 'pork/more'` for colored output and bottom-up backtrace.
+
 ## Pork 1.1.2 -- 2015-01-28
 
 * Really fixed passing `ENV['PORK_MODE']=execute`. I should sleep now.
