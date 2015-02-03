@@ -1,7 +1,4 @@
 
-require 'pork/more/bottomup_backtrace'
-require 'pork/more/color'
-
 require 'thread'
 
 module Pork
