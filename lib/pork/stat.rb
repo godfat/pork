@@ -29,13 +29,18 @@ module Pork
         exceptions << err
       end
     end
+    def case_pass    msg='.'; io.print msg; end
+    def case_skip    msg='s'; io.print msg; end
+    def case_failed  msg='F'; io.print msg; end
+    def case_errored msg='E'; io.print msg; end
     def passed?; exceptions.size == 0                        ; end
     def numbers; [tests, assertions, failures, errors, skips]; end
+    def time_spent; Time.now - start; end
     def report
       io.puts
       io.puts report_exceptions
-      io.printf("\nFinished in %f seconds.\n", Time.now - start)
-      io.printf("%d tests, %d assertions, %d failures, %d errors, %d skips\n",
+      io.printf("\nFinished in %s seconds.\n", time_spent)
+      io.printf("%s tests, %s assertions, %s failures, %s errors, %s skips\n",
                 *numbers)
     end
     def merge stat

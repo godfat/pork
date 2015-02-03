@@ -1,6 +1,10 @@
 
 module Pork
   module Color
+    def case_skip    msg='s'; super(yellow {msg}); end
+    def case_failed  msg='F'; super(magenta{msg}); end
+    def case_errored msg='E'; super(red    {msg}); end
+
     private
     def command name
       gray{super}
@@ -12,6 +16,20 @@ module Pork
 
     def show_exception err
       magenta{super}
+    end
+
+    def time_spent
+      cyan{super}
+    end
+
+    def numbers
+      super.zip(%i[green green magenta red yellow]).map do |(num, col)|
+        if num == 0
+          num
+        else
+          send(col){ num }
+        end
+      end
     end
 
     def backtrace err

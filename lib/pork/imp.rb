@@ -52,7 +52,7 @@ module Pork
         if assertions == stat.assertions
           raise Error.new('Missing assertions')
         end
-        stat.io.print '.'
+        stat.case_pass
       end
     ensure
       stat.incr_tests
@@ -65,13 +65,13 @@ module Pork
       case e
       when Skip
         stat.incr_skips
-        stat.io.print 's'
+        stat.case_skip
       when Failure
         stat.add_failure(e, description_for("would #{desc}"))
-        stat.io.print 'F'
+        stat.case_failed
       when Error, StandardError
         stat.add_error(  e, description_for("would #{desc}"))
-        stat.io.print 'E'
+        stat.case_errored
       end
     end
 
