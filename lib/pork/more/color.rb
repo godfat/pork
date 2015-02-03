@@ -33,10 +33,9 @@ module Pork
     def magenta &block; color(   35 , &block); end
     def    cyan &block; color(   36 , &block); end
     def   white &block; color(   37 , &block); end
-    def   reset &block; color(    0 , &block); end
 
     def color rgb
-      "\e[#{rgb}m" + if block_given? then "#{yield}#{reset}" else '' end
+      "\e[#{rgb}m#{yield}\e[0m"
     end
   end
 end
