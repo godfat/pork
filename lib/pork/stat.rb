@@ -32,7 +32,8 @@ module Pork
     def passed?; exceptions.size == 0                        ; end
     def numbers; [tests, assertions, failures, errors, skips]; end
     def report
-      io.printf("\n#{report_exceptions.join("\n")}\n")
+      io.puts
+      io.puts report_exceptions
       io.printf("\nFinished in %f seconds.\n", Time.now - start)
       io.printf("%d tests, %d assertions, %d failures, %d errors, %d skips\n",
                 *numbers)
