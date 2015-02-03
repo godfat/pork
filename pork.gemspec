@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.require_paths = ["lib"]
   s.authors = ["Lin Jen-Shin (godfat)"]
-  s.date = "2015-01-28"
+  s.date = "2015-02-04"
   s.description = "Pork -- Simple and clean and modular testing library.\n\nInspired by [Bacon][].\n\n[Bacon]: https://github.com/chneukirchen/bacon"
   s.email = ["godfat (XD) godfat.org"]
   s.files = [
@@ -20,6 +20,7 @@ Gem::Specification.new do |s|
   "LICENSE",
   "README.md",
   "Rakefile",
+  "TODO.md",
   "lib/mutant/integration/pork.rb",
   "lib/pork.rb",
   "lib/pork/auto.rb",
@@ -33,6 +34,8 @@ Gem::Specification.new do |s|
   "lib/pork/isolate.rb",
   "lib/pork/mode/parallel.rb",
   "lib/pork/mode/shuffle.rb",
+  "lib/pork/more/bottomup_backtrace.rb",
+  "lib/pork/more/color.rb",
   "lib/pork/should.rb",
   "lib/pork/stat.rb",
   "lib/pork/test.rb",

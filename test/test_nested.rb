@@ -42,6 +42,7 @@ describe 'A' do
     paste
 
     would do
+      # flunk
       t.should.eq true
     end
 
@@ -58,6 +59,7 @@ end
 
 would 'also work on top-level' do
   true.should.eq true
+  # flunk
 end
 
 describe 'should(message)' do

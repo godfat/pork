@@ -1,10 +1,15 @@
 
+require 'pork/more/bottomup_backtrace'
+require 'pork/more/color'
+
 require 'thread'
 
 module Pork
-  class Stat < Struct.new(:io, :start, :mutex,
-                          :tests, :assertions, :skips, :failures, :errors,
-                          :exceptions)
+  Stat = Struct.new(:io, :start, :mutex,
+                    :tests, :assertions, :skips, :failures, :errors,
+                    :exceptions)
+
+  Stat::Imp = Module.new do
     def initialize io=$stdout, st=Time.now, mu=Mutex.new,
                    t=0, a=0, s=0, f=0, e=0, x=[]
       super
@@ -12,25 +17,22 @@ module Pork
     def incr_assertions; mutex.synchronize{ self.assertions += 1 }; end
     def incr_tests     ; mutex.synchronize{ self.tests      += 1 }; end
     def incr_skips     ; mutex.synchronize{ self.skips      += 1 }; end
-    def add_failure *e
+    def add_failure *err
       mutex.synchronize do
         self.failures += 1
-        exceptions << e
+        exceptions << err
       end
     end
-    def add_error *e
+    def add_error *err
       mutex.synchronize do
         self.errors += 1
-        exceptions << e
+        exceptions << err
       end
     end
     def passed?; exceptions.size == 0                        ; end
     def numbers; [tests, assertions, failures, errors, skips]; end
     def report
-      io.puts
-      io.puts exceptions.map{ |(e, m)|
-        "\n#{m}\n#{e.class}: #{e.message}\n  #{backtrace(e)}\n#{command(m)}"
-      }
+      io.printf("\n#{report_exceptions.join("\n")}\n")
       io.printf("\nFinished in %f seconds.\n", Time.now - start)
       io.printf("%d tests, %d assertions, %d failures, %d errors, %d skips\n",
                 *numbers)
@@ -41,29 +43,53 @@ module Pork
     end
 
     private
-    def backtrace e
-      if $VERBOSE
-        e.backtrace
-      else
-        strip(e.backtrace.reject{ |line| line =~ %r{/pork(/\w+)?\.rb:\d+} })
-      end.join("\n  ")
+    def report_exceptions
+      exceptions.reverse.map do |(err, msg)|
+        "\n  #{show_command(msg)}"   \
+        "\n  #{show_backtrace(err)}" \
+        "\n#{message(msg)}"          \
+        "\n#{show_exception(err)}"
+      end
     end
 
-    def strip backtrace
-      strip_home(strip_cwd(backtrace))
-    end
-
-    def strip_home backtrace
-      backtrace.map{ |path| path.sub(ENV['HOME'], '~') }
-    end
-
-    def strip_cwd backtrace
-      backtrace.map{ |path| path.sub(Dir.pwd, '.') }
+    def show_command name
+      "Replicate this test with:\n#{command(name)}"
     end
 
     def command name
-      "You can replicate this test with the following command:\n  " \
       "#{env(name)} #{Gem.ruby} -S #{$0} #{ARGV.join(' ')}"
+    end
+
+    def show_backtrace err
+      backtrace(err).join("\n  ")
+    end
+
+    def backtrace err
+      if $VERBOSE
+        err.backtrace
+      else
+        strip(err.backtrace.reject{ |line| line =~ %r{/pork(/\w+)?\.rb:\d+} })
+      end
+    end
+
+    def message msg
+      msg
+    end
+
+    def show_exception err
+      "#{err.class}: #{err.message}"
+    end
+
+    def strip bt
+      strip_home(strip_cwd(bt))
+    end
+
+    def strip_home bt
+      bt.map{ |path| path.sub(ENV['HOME'], '~') }
+    end
+
+    def strip_cwd bt
+      bt.map{ |path| path.sub(Dir.pwd, '.') }
     end
 
     def env name
@@ -82,4 +108,8 @@ module Pork
       "PORK_SEED=#{Pork.seed}"
     end
   end
+
+  Stat.__send__(:include, Stat::Imp)
+  Stat.__send__(:include, BottomupBacktrace)
+  Stat.__send__(:include, Color)
 end
