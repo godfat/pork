@@ -32,7 +32,7 @@ module Pork
   def self.trap sig='SIGINT'
     Signal.trap(sig) do
       stat.report
-      puts "\nterminated by signal SIGINT"
+      puts "\nterminated by signal #{sig}"
       exit 255
     end
   end
