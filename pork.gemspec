@@ -29,6 +29,7 @@ Gem::Specification.new do |s|
   "lib/pork/error.rb",
   "lib/pork/executor.rb",
   "lib/pork/expect.rb",
+  "lib/pork/extra/rainbows.rb",
   "lib/pork/imp.rb",
   "lib/pork/inspect.rb",
   "lib/pork/isolate.rb",
