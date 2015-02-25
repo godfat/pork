@@ -92,7 +92,7 @@ module Pork
     end
 
     def strip_cwd bt
-      bt.map{ |path| path.sub(Dir.pwd, '.') }
+      bt.map{ |path| path.sub("#{Dir.pwd}/", '') }
     end
 
     def env name
