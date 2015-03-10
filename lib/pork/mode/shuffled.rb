@@ -8,13 +8,11 @@ module Pork
     end
 
     def shuffled stat=Stat.new, paths=all_tests.values.flatten(1)
-      paths.shuffle.inject(stat) do |s, p|
-        isolate(p, s)
-      end
+      paths.shuffle.inject(stat, &method(:isolate))
     end
 
     protected
-    def isolate path, stat=Stat.new, super_env=nil
+    def isolate stat, path, super_env=nil
       env = Env.new(super_env)
       idx = path.first
 
@@ -31,7 +29,7 @@ module Pork
         _, desc, test = @tests[idx]
         run(desc, test, stat, env)
       else
-        @tests[idx][1].isolate(path.drop(1), stat, env)
+        @tests[idx][1].isolate(stat, path.drop(1), env)
       end
 
       stat
