@@ -8,7 +8,7 @@ at_exit do
     execute_mode(ENV['PORK_MODE'])
     trap
     run
-    %i[sequential shuffled parallel].each do |mode|
+    %w[sequential shuffled parallel].each do |mode|
       execute_mode(mode)
       run
     end
