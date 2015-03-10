@@ -12,9 +12,9 @@ module Pork
     def would    desc=:default, &test ; Executor.would(   desc, &test ); end
   end
 
-  # default to :sequential while eliminating warnings for uninitialized ivar
+  # default to :shuffled while eliminating warnings for uninitialized ivar
   def self.execute_mode execute=nil
-    @execute = execute || @execute ||= :sequential
+    @execute = execute || @execute ||= :shuffled
   end
 
   def self.Rainbows!
