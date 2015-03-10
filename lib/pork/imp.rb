@@ -28,13 +28,9 @@ module Pork
       @tests << [:would, desc, test]
     end
 
-    def execute stat=Stat.new
-      if block_given?
-        yield(stat) # XXX: see Isolate#isolate
-      else
-        execute_with_parent(stat)
-      end
-      stat
+    def execute mode, *args
+      require "pork/mode/#{mode}"
+      send(mode, *args)
     end
 
     private
@@ -76,22 +72,6 @@ module Pork
     end
 
     protected
-    def execute_with_parent stat, super_env=nil
-      env = Env.new(super_env)
-      @tests.each do |(type, arg, test)|
-        case type
-        when :before
-          env.before << arg
-        when :after
-          env.after  << arg
-        when :describe
-          arg.execute_with_parent(stat, env)
-        when :would
-          run(arg, test, stat, env)
-        end
-      end
-    end
-
     def search_stash desc
       @stash[desc] or @super_executor && @super_executor.search_stash(desc)
     end

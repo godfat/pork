@@ -1,5 +1,5 @@
 
-require 'pork/auto'
+require 'pork/test'
 
 describe Pork::Inspect do
   would 'hash' do

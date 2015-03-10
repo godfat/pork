@@ -1,5 +1,5 @@
 
-require 'pork/auto'
+require 'pork/test'
 
 describe 'A' do
   include Module.new{

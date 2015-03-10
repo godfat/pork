@@ -1,6 +1,5 @@
 
-require 'pork'
-require 'pork/isolate'
+require 'pork/mode/shuffled'
 
 module Pork
   module Parallel
@@ -12,7 +11,7 @@ module Pork
       paths.shuffle.each_slice(cores).map do |paths_slice|
         Thread.new do
           s = Stat.new
-          paths_slice.each{ |p| isolate(p, s) }
+          paths_slice.each{ |p| execute(:shuffled, s, [p]) }
           s
         end
       end.map(&:value).inject(stat, &:merge)

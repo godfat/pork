@@ -784,15 +784,15 @@ Pork.autorun(true)  # enable
 
 ### Pork.execute_mode
 
-By default, `Pork.execute_mode` is set to `:execute`, which would
+By default, `Pork.execute_mode` is set to `:sequential`, which would
 execute all tests in a sequential manner. The other options are:
 
-* `:execute` (default)
-* `:shuffle`
+* `:sequential` (default)
+* `:shuffled`
 * `:parallel`
 
-With `:shuffle`, it would execute all tests in a random order. It would be
-slightly slower than `:execute`. With `:parallel`, it would run tests with
+With `:shuffled`, it would execute all tests in a random order. It would be
+slightly slower than `:sequential`. With `:parallel`, it would run tests with
 8 threads concurrently, and of course, the orders are all random as well.
 You'll need to make sure your tests are thread safe or random tests would
 fail with this mode.
@@ -800,7 +800,7 @@ fail with this mode.
 Pass the symbol to it to use the mode:
 
 ``` ruby
-Pork.execute_mode :shuffle
+Pork.execute_mode :shuffled
 ```
 
 On the other hand, you could also set `ENV['PORK_MODE']` for picking an
@@ -808,13 +808,13 @@ execution mode. This would be convenient if you just want to switch to a
 particular mode temporary via command line. For example:
 
 ``` shell
-env PORK_MODE=shuffle rake test
+env PORK_MODE=shuffled rake test
 ```
 
 Or:
 
 ``` shell
-env PORK_MODE=shuffle ruby -Ilib test/test_pork.rb
+env PORK_MODE=shuffled ruby -Ilib test/test_pork.rb
 ```
 
 ### Pork.inspect_failure_mode

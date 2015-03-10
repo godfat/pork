@@ -1,4 +1,6 @@
 
+require 'pork/stat'
+
 module Pork
   module Color
     def case_skip    msg='s'; super(yellow {msg}); end
@@ -56,4 +58,6 @@ module Pork
       "\e[#{rgb}m#{yield}\e[0m"
     end
   end
+
+  Pork::Stat.__send__(:include, Pork::Color)
 end

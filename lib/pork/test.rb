@@ -1,17 +1,18 @@
 
 require 'pork/auto'
-require 'muack'
 
-copy do
-  before do
-    Muack::API.stub(Pork::Executor).all_tests.peek_return do |tests|
-      tests.reject do |name, _|
-        name =~ /^Pork::(Isolate|Shuffle|Parallel): /
-      end
+Pork.autorun(false)
+
+at_exit do
+  Pork.module_eval do
+    execute_mode(ENV['PORK_MODE'])
+    trap
+    run
+    %i[sequential shuffled parallel].each do |mode|
+      execute_mode(mode)
+      run
     end
-  end
-
-  after do
-    Muack.reset
+    stat.report
+    exit stat.failures + stat.errors + ($! && 1).to_i
   end
 end

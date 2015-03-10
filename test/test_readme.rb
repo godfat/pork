@@ -1,5 +1,5 @@
 
-require 'pork/auto'
+require 'pork/test'
 require 'uri'
 
 describe 'README.md' do

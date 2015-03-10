@@ -12,9 +12,9 @@ module Pork
     def would    desc=:default, &test ; Executor.would(   desc, &test ); end
   end
 
-  # default to :execute while eliminating warnings for uninitialized ivar
+  # default to :sequential while eliminating warnings for uninitialized ivar
   def self.execute_mode execute=nil
-    @execute = execute || @execute ||= :execute
+    @execute = execute || @execute ||= :sequential
   end
 
   def self.Rainbows!
@@ -43,21 +43,18 @@ module Pork
   end
 
   def self.run
+    Random.srand(ENV['PORK_SEED'].to_i) if ENV['PORK_SEED']
+    seed
     if ENV['PORK_TEST']
-      require 'pork/isolate'
+      require 'pork/mode/shuffled'
       if paths = Executor.all_tests[ENV['PORK_TEST']]
-        case execute_mode
-        when :execute
-          paths.each{ |p| Executor.isolate(p, stat) }
-        else
-          @stat = Executor.public_send(execute_mode, stat, paths)
-        end
+        @stat = Executor.execute(Pork.execute_mode, stat, paths)
       else
         puts "Cannot find test: #{ENV['PORK_TEST']}"
         exit 254
       end
     else
-      @stat = Executor.public_send(execute_mode, stat)
+      @stat = Executor.execute(Pork.execute_mode, stat)
     end
   end
 
@@ -65,10 +62,7 @@ module Pork
     @auto = auto
     @autorun ||= at_exit do
       next unless @auto
-      Random.srand(ENV['PORK_SEED'].to_i)   if ENV['PORK_SEED']
-      execute_mode(ENV['PORK_MODE'].to_sym) if ENV['PORK_MODE']
-      require "pork/mode/#{execute_mode}"   if execute_mode != :execute
-      seed
+      execute_mode(ENV['PORK_MODE'])
       trap
       run
       stat.report

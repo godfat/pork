@@ -1,6 +1,5 @@
 
-require 'pork/auto'
-require 'pork/should'
+require 'pork/test'
 
 describe Pork::Should do
   def check_group_list level=9
