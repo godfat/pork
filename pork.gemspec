@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.require_paths = ["lib"]
   s.authors = ["Lin Jen-Shin (godfat)"]
-  s.date = "2015-03-11"
+  s.date = "2015-03-17"
   s.description = "Pork -- Simple and clean and modular testing library.\n\nInspired by [Bacon][].\n\n[Bacon]: https://github.com/chneukirchen/bacon"
   s.email = ["godfat (XD) godfat.org"]
   s.files = [
@@ -21,7 +21,6 @@ Gem::Specification.new do |s|
   "README.md",
   "Rakefile",
   "TODO.md",
-  "lib/mutant/integration/pork.rb",
   "lib/pork.rb",
   "lib/pork/auto.rb",
   "lib/pork/context.rb",

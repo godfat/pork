@@ -1,5 +1,21 @@
 # CHANGES
 
+## Pork 1.2.0 -- 2015-03-17
+
+### Incompatible changes
+
+* Mutant integration is removed for now. Please let me know if it could
+  be integrated without a problem.
+* Default mode changed to `:shuffled`, and the original mode renamed to
+  `:sequential`.
+* Running individual test changed from description to file:line_number.
+  Input from @mz026
+
+### Enhancement
+
+* Paths in backtrace would no longer use `.` to indicate current directory.
+  Some editor such as Sublime didn't like it.
+
 ## Pork 1.1.3 -- 2015-02-04
 
 * Fixed exit status.
