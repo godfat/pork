@@ -47,7 +47,7 @@ module Pork
 
     private
     def report_exceptions
-      exceptions.reverse.map do |(err, msg)|
+      exceptions.reverse_each.map do |(err, msg)|
         "\n  #{show_command(msg)}"   \
         "\n  #{show_backtrace(err)}" \
         "\n#{message(msg)}"          \
