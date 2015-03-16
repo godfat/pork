@@ -30,7 +30,11 @@ module Pork
 
     def execute mode, *args
       require "pork/mode/#{mode}"
-      send(mode, *args)
+      if args.size == 1 || mode != :sequential
+        send(mode, *args)
+      else # cannot run sequential tests for specific paths
+        shuffled(*args)
+      end
     end
 
     private
