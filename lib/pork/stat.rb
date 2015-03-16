@@ -41,7 +41,7 @@ module Pork
                 *numbers)
     end
     def merge stat
-      self.class.new(io, start, nil,
+      self.class.new(io, start, mutex,
         *to_a.drop(3).zip(stat.to_a.drop(3)).map{ |(a, b)| a + b })
     end
 
