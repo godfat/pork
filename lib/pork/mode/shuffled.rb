@@ -7,7 +7,19 @@ module Pork
       @all_tests ||= build_all_tests
     end
 
-    def shuffled stat=Stat.new, paths=all_tests.values.flatten(1)
+    def all_paths
+      all_tests.values.flat_map(&:values).flatten(1)
+    end
+
+    def [] source_location
+      file_str, line_str = source_location.split(':')
+      file, line = File.expand_path(file_str), line_str.to_i
+      return unless tests = all_tests[file]
+      _, paths = tests.reverse_each.find{ |(l, _)| l <= line }
+      paths
+    end
+
+    def shuffled stat=Stat.new, paths=all_paths
       paths.shuffle.inject(stat, &method(:isolate))
     end
 
@@ -36,13 +48,14 @@ module Pork
     end
 
     def build_all_tests result={}, path=[]
-      @tests.each_with_index.inject(result) do |r, ((type, arg, _), index)|
+      @tests.each_with_index.inject(result) do |r, ((type, arg, test), index)|
         current = path + [index]
         case type
         when :describe
           arg.build_all_tests(r, current)
         when :would
-          (r[description_for("would #{arg}")] ||= []) << current
+          loc = test.source_location
+          ((r[loc.first] ||= {})[loc.last] ||= []) << current
         end
         r
       end

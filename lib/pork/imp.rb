@@ -46,7 +46,7 @@ module Pork
     def run desc, test, stat, env
       assertions = stat.assertions
       context = new(stat)
-      run_protected(desc, stat) do
+      run_protected(desc, stat, test) do
         env.run_before(context)
         context.instance_eval(&test)
         if assertions == stat.assertions
@@ -56,22 +56,26 @@ module Pork
       end
     ensure
       stat.incr_tests
-      run_protected(desc, stat){ env.run_after(context) }
+      run_protected(desc, stat, test){ env.run_after(context) }
     end
 
-    def run_protected desc, stat
+    def run_protected desc, stat, test
       yield
     rescue Error, StandardError => e
       case e
       when Skip
         stat.incr_skips
         stat.case_skip
-      when Failure
-        stat.add_failure(e, description_for("would #{desc}"))
-        stat.case_failed
-      when Error, StandardError
-        stat.add_error(  e, description_for("would #{desc}"))
-        stat.case_errored
+      else
+        err = [e, description_for("would #{desc}"), test.source_location]
+        case e
+        when Failure
+          stat.add_failure(err)
+          stat.case_failed
+        when Error, StandardError
+          stat.add_error(err)
+          stat.case_errored
+        end
       end
     end
 

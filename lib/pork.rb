@@ -47,7 +47,7 @@ module Pork
     seed
     if ENV['PORK_TEST']
       require 'pork/mode/shuffled'
-      if paths = Executor.all_tests[ENV['PORK_TEST']]
+      if paths = Executor[ENV['PORK_TEST']]
         @stat = Executor.execute(Pork.execute_mode, stat, paths)
       else
         puts "Cannot find test: #{ENV['PORK_TEST']}"

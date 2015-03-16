@@ -14,13 +14,13 @@ module Pork
     def incr_assertions; mutex.synchronize{ self.assertions += 1 }; end
     def incr_tests     ; mutex.synchronize{ self.tests      += 1 }; end
     def incr_skips     ; mutex.synchronize{ self.skips      += 1 }; end
-    def add_failure *err
+    def add_failure err
       mutex.synchronize do
         self.failures += 1
         exceptions << err
       end
     end
-    def add_error *err
+    def add_error err
       mutex.synchronize do
         self.errors += 1
         exceptions << err
@@ -47,20 +47,20 @@ module Pork
 
     private
     def report_exceptions
-      exceptions.reverse_each.map do |(err, msg)|
-        "\n  #{show_command(msg)}"   \
+      exceptions.reverse_each.map do |(err, msg, source_location)|
+        "\n  #{show_command(source_location)}"   \
         "\n  #{show_backtrace(err)}" \
         "\n#{message(msg)}"          \
         "\n#{show_exception(err)}"
       end
     end
 
-    def show_command name
-      "Replicate this test with:\n#{command(name)}"
+    def show_command source_location
+      "Replicate this test with:\n#{command(source_location)}"
     end
 
-    def command name
-      "#{env(name)} #{Gem.ruby} -S #{$0} #{ARGV.join(' ')}"
+    def command source_location
+      "#{env(source_location)} #{Gem.ruby} -S #{$0} #{ARGV.join(' ')}"
     end
 
     def show_backtrace err
@@ -95,12 +95,13 @@ module Pork
       bt.map{ |path| path.sub("#{Dir.pwd}/", '') }
     end
 
-    def env name
-      "env #{pork(name)} #{pork_mode} #{pork_seed}"
+    def env source_location
+      "env #{pork(source_location)} #{pork_mode} #{pork_seed}"
     end
 
-    def pork name
-      "PORK_TEST='#{name.gsub("'", "\\\\'")}'"
+    def pork source_location
+      file, line = source_location
+      "PORK_TEST='#{strip([file]).join}:#{line}'"
     end
 
     def pork_mode
