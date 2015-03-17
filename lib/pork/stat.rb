@@ -71,7 +71,7 @@ module Pork
       if $VERBOSE
         err.backtrace
       else
-        strip(err.backtrace.reject{ |line| line =~ %r{/pork(/\w+)?\.rb:\d+} })
+        strip(err.backtrace.reject{ |l| l =~ %r{/lib/pork(/\w+)*\.rb:\d+} })
       end
     end
 
