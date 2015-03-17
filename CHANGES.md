@@ -1,5 +1,12 @@
 # CHANGES
 
+## Pork 1.2.1 -- ?
+
+### Bugs fixed
+
+* Fixed that sometimes it cannot find the test because source_location
+  sometimes won't use the full path. Always use `File.expand_path` then.
+
 ## Pork 1.2.0 -- 2015-03-17
 
 ### Incompatible changes

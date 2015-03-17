@@ -54,8 +54,8 @@ module Pork
         when :describe
           arg.build_all_tests(r, current)
         when :would
-          loc = test.source_location
-          ((r[loc.first] ||= {})[loc.last] ||= []) << current
+          file, line = test.source_location
+          ((r[File.expand_path(file)] ||= {})[line] ||= []) << current
         end
         r
       end
