@@ -7,6 +7,7 @@ module Pork
                     :exceptions)
 
   Stat::Imp = Module.new do
+    attr_accessor :stop
     def initialize io=$stdout, st=Time.now, mu=Mutex.new,
                    t=0, a=0, s=0, f=0, e=0, x=[]
       super
@@ -32,11 +33,18 @@ module Pork
     def case_errored msg='E'; io.print msg; end
     def passed?; exceptions.size == 0                        ; end
     def numbers; [tests, assertions, failures, errors, skips]; end
-    def time_spent; Time.now - start; end
+    def velocity
+      time_spent = stop - start
+      [time_spent.round(6),
+       (tests / time_spent).round(4),
+       (assertions / time_spent).round(4)]
+    end
     def report
+      self.stop = Time.now
       io.puts
       io.puts report_exceptions
-      io.printf("\nFinished in %s seconds.\n", time_spent)
+      io.printf("\nFinished in %s seconds, %s tests/s, %s assertions/s \n",
+                *velocity)
       io.printf("%s tests, %s assertions, %s failures, %s errors, %s skips\n",
                 *numbers)
     end
