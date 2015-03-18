@@ -1,11 +1,12 @@
 # CHANGES
 
-## Pork 1.2.1 -- ?
+## Pork 1.2.1 -- 2015-03-18
 
 ### Bugs fixed
 
 * Fixed that sometimes it cannot find the test because source_location
   sometimes won't use the full path. Always use `File.expand_path` then.
+* Properly strip pork backtrace.
 
 ## Pork 1.2.0 -- 2015-03-17
 
