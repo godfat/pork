@@ -1,5 +1,11 @@
 # CHANGES
 
+## Pork 1.2.2 -- 2015-03-19
+
+### Enhancement
+
+* Show tests per second and assertions per second as in minitest.
+
 ## Pork 1.2.1 -- 2015-03-18
 
 ### Bugs fixed
