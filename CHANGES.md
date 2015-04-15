@@ -1,6 +1,14 @@
 # CHANGES
 
-## Pork 1.2.3 -- ?
+## Pork 1.2.3 -- 2015-04-16
+
+### Enhancement
+
+* Now `would` could take a second argument with `:group => [:name]`,
+  and you could also specifying the groups to run in `PORK_TEST`.
+  Checkout README for more information. Input from @mz026
+
+* `PORK_TEST` could also accept a file path without a line number now.
 
 ## Pork 1.2.2 -- 2015-03-19
 
