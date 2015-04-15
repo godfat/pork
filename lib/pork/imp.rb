@@ -24,8 +24,8 @@ module Pork
       @tests << [:describe, executor]
     end
 
-    def would desc=:default, &test
-      @tests << [:would, desc, test]
+    def would desc=:default, opts={}, &test
+      @tests << [:would, desc, test, opts]
     end
 
     def execute mode, *args

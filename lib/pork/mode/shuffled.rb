@@ -8,15 +8,32 @@ module Pork
     end
 
     def all_paths
-      all_tests.values.flat_map(&:values).flatten(1)
+      (all_tests[:files] || {}).values.flat_map(&:values).flatten(1)
     end
 
-    def [] source_location
-      file_str, line_str = source_location.split(':')
+    def [] index
+      by_groups(index) || by_source(index)
+    end
+
+    def by_groups groups
+      return unless tests = all_tests[:groups]
+      paths = groups.split(',').flat_map do |g|
+        tests[g.strip] || []
+      end
+      paths unless paths.empty?
+    end
+
+    def by_source source
+      return unless tests = all_tests[:files]
+      file_str, line_str = source.split(':')
       file, line = File.expand_path(file_str), line_str.to_i
-      return unless tests = all_tests[file]
-      _, paths = tests.reverse_each.find{ |(l, _)| l <= line }
-      paths
+      return unless cases = tests[file]
+      if line.zero?
+        cases.values.flatten(1)
+      else
+        _, paths = cases.reverse_each.find{ |(l, _)| l <= line }
+        paths
+      end
     end
 
     def shuffled stat=Stat.new, paths=all_paths
@@ -48,17 +65,32 @@ module Pork
     end
 
     def build_all_tests result={}, path=[]
-      @tests.each_with_index.inject(result) do |r, ((type, arg, test), index)|
+      @tests.each_with_index.inject(result) do |r,
+                                                ((type, imp, test, opts),
+                                                  index)|
         current = path + [index]
         case type
         when :describe
-          arg.build_all_tests(r, current)
+          imp.build_all_tests(r, current)
         when :would
-          file, line = test.source_location
-          ((r[File.expand_path(file)] ||= {})[line] ||= []) << current
+          groups = opts[:groups]
+          store_for_groups(r, current, groups) if groups
+          store_for_source(r, current, *test.source_location)
         end
         r
       end
+    end
+
+    def store_for_groups tests, path, groups
+      r = tests[:groups] ||= {}
+      groups.each do |g|
+        (r[g.to_s] ||= []) << path
+      end
+    end
+
+    def store_for_source tests, path, file, line
+      r = tests[:files] ||= {}
+      ((r[File.expand_path(file)] ||= {})[line] ||= []) << path
     end
   end
 
