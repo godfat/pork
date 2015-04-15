@@ -754,7 +754,9 @@ describe do
 end
 ```
 
+## The Options
 
+### `env PORK_TEST=`
 
 ### Pork.execute_mode
 
