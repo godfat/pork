@@ -361,16 +361,6 @@ run `rake test` to run all the tests.
 [Fish shell]: http://fishshell.com/
 [gemgem]: https://github.com/godfat/gemgem
 
-## Mutant integration
-
-Pork also ships with [mutant][] integration. Here's an example to run it:
-
-    mutant -Ilib -rjellyfish --use pork Jellyfish
-
-for [jellyfish][].
-
-[jellyfish]: https://github.com/godfat/jellyfish
-
 ## The API
 
 ### Kernel#should
