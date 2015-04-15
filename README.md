@@ -754,23 +754,7 @@ describe do
 end
 ```
 
-### Pork.autorun
 
-Calling this would register an `at_exit` hook to run tests at exit.
-This also accepts an argument to turn on and off autorun. Calling this
-multiple times is ok. (It's not thread safe though, don't call this twice
-from different threads at the same time. If you really want to do this,
-let's add a mutex for this)
-
-It would also exit with 0 if no error occurs or N for N errors and failures.
-
-``` ruby
-Pork.autorun        # enable
-Pork.autorun(false) # disable
-Pork.autorun(true)  # enable
-```
-
-`require 'pork/auto'` would call `Pork.autorun`
 
 ### Pork.execute_mode
 
@@ -855,6 +839,24 @@ Pork.inspect_failure_mode :newline
 ```
 
 Then it would always use the mode we specified.
+
+### Pork.autorun
+
+Calling this would register an `at_exit` hook to run tests at exit.
+This also accepts an argument to turn on and off autorun. Calling this
+multiple times is ok. (It's not thread safe though, don't call this twice
+from different threads at the same time. If you really want to do this,
+let's add a mutex for this)
+
+It would also exit with 0 if no error occurs or N for N errors and failures.
+
+``` ruby
+Pork.autorun        # enable
+Pork.autorun(false) # disable
+Pork.autorun(true)  # enable
+```
+
+`require 'pork/auto'` would call `Pork.autorun`
 
 ### Pork.Rainbows!
 
