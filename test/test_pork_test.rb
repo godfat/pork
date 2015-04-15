@@ -40,6 +40,7 @@ describe 'PORK_TEST=a' do
       Pork::Executor['a']     .size.should.eq 1
       Pork::Executor['b']     .size.should.eq 2
       Pork::Executor['b']          .should.eq Pork::Executor[__FILE__]
+      Pork::Executor['a,b']        .should.eq Pork::Executor[__FILE__]
       self.class['a']              .should.nil?
       self.class['b']         .size.should.eq 1
 

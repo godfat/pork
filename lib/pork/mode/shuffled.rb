@@ -19,7 +19,7 @@ module Pork
       return unless tests = all_tests[:groups]
       paths = groups.split(',').flat_map do |g|
         tests[g.strip] || []
-      end
+      end.uniq
       paths unless paths.empty?
     end
 
