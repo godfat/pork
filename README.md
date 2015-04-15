@@ -758,6 +758,77 @@ end
 
 ### `env PORK_TEST=`
 
+As the code base grows, at some point running the whole test suites could be
+very slow and frustrating while doing agile development. In this case, we
+might want to run only a subset of the whole test suites. Granted that we
+could already divide the tests into files, and only load one file and run
+tests inside the file. But if the tests are just slow, we might still want to
+run only a specific test case. This is where `env PORK_TEST=` shines.
+
+Suppose you run the tests via:
+
+``` shell
+ruby -Ilib test/test_pork.rb
+```
+
+Then you could do:
+
+``` shell
+env PORK_TEST=test/test_pork.rb:123 ruby -Ilib test/test_pork.rb
+```
+
+So that it would only run the test case around test_pork.rb line 123.
+If you run the tests via:
+
+``` shell
+rake test
+```
+
+Then you could do:
+
+``` shell
+env PORK_TEST=test/test_pork.rb:123 rake test
+```
+
+It's the same thing just that `rake test` might load more tests which would
+never run. Note that if you omit the line number, then the whole file would
+run.
+
+#### `env PORK_TEST=` with `:groups`
+
+`PORK_TEST` could also take a list of groups. Groups are defined in the tests,
+as the second argument to `would`. Take this as an example:
+
+
+``` ruby
+would 'pass', :groups => [:core, :more] do
+  ok
+end
+
+would 'also pass', :groups => [:more] do
+  ok
+end
+```
+
+Then if specifying `PORK_TEST=more`, then both tests would run. If specifying
+`PORK_TEST=core`, then only the first would run. We could also specifying
+multiple groups, separated with commas (,), like `PORK_TEST=core,more`,
+then of course both tests would run.
+
+This would be very useful when you want to run a specific test case without
+typing the whole file path and finding the line number. Just edit your test
+source by adding some temporary group like `:groups => [:test]` and then
+run the test command prefixed by `env PORK_TEST=test` then you're done.
+You could just remove the group after debugging. This must be much easier to
+do then commenting out a bunch of random codes in the tests.
+
+Summary by examples:
+
+* `env PORK_TEST='test/test_pork.rb:123' rake test`
+* `env PORK_TEST='test/test_pork.rb' rake test`
+* `env PORK_TEST='group0' rake test`
+* `env PORK_TEST='group0,group1' rake test`
+
 ### Pork.execute_mode
 
 By default, `Pork.execute_mode` is set to `:shuffled` which would execute
