@@ -10,5 +10,5 @@ Gemgem.init(dir) do |s|
   require 'pork/version'
   s.name    = 'pork'
   s.version = Pork::VERSION
-  %w[muack].each{ |g| s.add_development_dependency(g) }
+  %w[].each{ |g| s.add_development_dependency(g) }
 end
