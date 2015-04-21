@@ -931,6 +931,25 @@ Pork.autorun(true)  # enable
 
 `require 'pork/auto'` would call `Pork.autorun`
 
+### Pork.show_source!
+
+If you have [method_source][] installed, you could call this and have Pork
+print the source to the failing lines. Here's an example of what Pork would
+print with `Pork.show_source!`:
+
+```
+  Replicate this test with:
+env PORK_TEST='test/test_pork.rb:12' PORK_MODE=shuffled PORK_SEED=345 /usr/bin/ruby -S test/test_pork.rb
+  test/test_pork.rb:13:in `block in <main>'
+     would 'print the source' do
+  =>   flunk
+     end
+would print the source
+Pork::Error: Flunked
+```
+
+[method_source]: https://github.com/banister/method_source
+
 ### Pork.Rainbows!
 
 Have you seen Rainbows!?
