@@ -40,7 +40,7 @@ module Pork
       end
     end
 
-    def backtrace err
+    def backtrace *_
       super.map do |b|
         path, msgs = b.split(':', 2)
         dir , file = ::File.split(path)

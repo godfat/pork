@@ -55,10 +55,10 @@ module Pork
 
     private
     def report_exceptions
-      exceptions.reverse_each.map do |(err, msg, source_location)|
-        "\n  #{show_command(source_location)}"   \
-        "\n  #{show_backtrace(err)}" \
-        "\n#{show_message(msg)}"     \
+      exceptions.reverse_each.map do |(err, msg, test)|
+        "\n  #{show_command(test.source_location)}" \
+        "\n  #{show_backtrace(test, err)}"          \
+        "\n#{show_message(msg)}"                    \
         "\n#{show_exception(err)}"
       end
     end
@@ -71,15 +71,15 @@ module Pork
       "#{env(source_location)} #{Gem.ruby} -S #{$0} #{ARGV.join(' ')}"
     end
 
-    def show_backtrace err
-      backtrace(err).join("\n  ")
+    def show_backtrace test, err
+      backtrace(test, err).join("\n  ")
     end
 
-    def backtrace err
+    def backtrace test, err
       if $VERBOSE
         err.backtrace
       else
-        strip(err.backtrace.reject{ |l| l =~ %r{/lib/pork(/\w+)*\.rb:\d+} })
+        strip(reject_pork(test, err))
       end
     end
 
@@ -89,6 +89,15 @@ module Pork
 
     def show_exception err
       "#{err.class}: #{err.message}"
+    end
+
+    def reject_pork test, err
+      bt = err.backtrace.reject{ |l| l =~ %r{/lib/pork(/\w+)*\.rb:\d+} }
+      if bt.empty?
+        ["#{test.source_location.join(':')}:in `block in would'"]
+      else
+        bt
+      end
     end
 
     def strip bt

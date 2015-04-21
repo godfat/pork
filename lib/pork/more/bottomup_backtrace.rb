@@ -4,7 +4,7 @@ require 'pork/stat'
 module Pork
   module BottomupBacktrace
     private
-    def backtrace err
+    def backtrace *_
       super.reverse
     end
   end
