@@ -20,6 +20,10 @@ module Pork
       magenta(super)
     end
 
+    def highlight_line line
+      "#{color(41, super.chomp)}\n"
+    end
+
     def time_spent
       cyan(super)
     end

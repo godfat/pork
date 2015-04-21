@@ -2,6 +2,7 @@
 require 'pork/auto'
 
 Pork.autorun(false)
+Pork.show_source!
 
 at_exit do
   Pork.module_eval do

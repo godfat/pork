@@ -58,6 +58,7 @@ module Pork
       exceptions.reverse_each.map do |(err, msg, test)|
         "\n  #{show_command(test.source_location)}" \
         "\n  #{show_backtrace(test, err)}"          \
+        "#{show_source(test, err)}"                 \
         "\n#{show_message(msg)}"                    \
         "\n#{show_exception(err)}"
       end
@@ -81,6 +82,18 @@ module Pork
       else
         strip(reject_pork(test, err))
       end
+    end
+
+    def show_source _, _
+      ''
+    end
+
+    def highlight_line line
+      line
+    end
+
+    def backlight_line line
+      line
     end
 
     def show_message msg
