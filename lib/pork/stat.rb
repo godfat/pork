@@ -58,7 +58,7 @@ module Pork
       exceptions.reverse_each.map do |(err, msg, source_location)|
         "\n  #{show_command(source_location)}"   \
         "\n  #{show_backtrace(err)}" \
-        "\n#{message(msg)}"          \
+        "\n#{show_message(msg)}"     \
         "\n#{show_exception(err)}"
       end
     end
@@ -83,7 +83,7 @@ module Pork
       end
     end
 
-    def message msg
+    def show_message msg
       msg
     end
 

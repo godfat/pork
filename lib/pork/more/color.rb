@@ -12,7 +12,7 @@ module Pork
       gray(super)
     end
 
-    def message msg
+    def show_message msg
       blue(super)
     end
 
