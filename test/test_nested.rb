@@ -52,7 +52,7 @@ describe 'A' do
 
   would 'skip' do
     skip
-    should.flunk
+    flunk
   end
 end
 
