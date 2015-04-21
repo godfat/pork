@@ -25,7 +25,7 @@ module Pork
     end
 
     def would desc=:default, opts={}, &test
-      @tests << [:would, desc, test, opts]
+      @tests << [:would, desc, test || lambda{}, opts]
     end
 
     def execute mode, *args
