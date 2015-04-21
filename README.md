@@ -931,11 +931,11 @@ Pork.autorun(true)  # enable
 
 `require 'pork/auto'` would call `Pork.autorun`
 
-### Pork.show_source!
+### Pork.show_source
 
 If you have [method_source][] installed, you could call this and have Pork
 print the source to the failing lines. Here's an example of what Pork would
-print with `Pork.show_source!`:
+print with `Pork.show_source`:
 
 ```
   Replicate this test with:

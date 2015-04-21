@@ -22,7 +22,7 @@ module Pork
     Pork::Stat.__send__(:include, Pork::Rainbows)
   end
 
-  def self.show_source!
+  def self.show_source
     require 'pork/extra/show_source'
     Pork::Stat.__send__(:include, Pork::ShowSource)
   end
