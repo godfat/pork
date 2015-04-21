@@ -940,6 +940,7 @@ Have you seen Rainbows!?
 * Chun-Yi Liu (@trantorliu)
 * Lin Jen-Shin (@godfat)
 * Josh Kalderimis (@joshk)
+* Yang-Hsing Lin (@mz026)
 
 ## LICENSE:
 
