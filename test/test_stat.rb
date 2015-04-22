@@ -33,6 +33,7 @@ describe Pork::Stat do
     def verify source
       run
       err, _, test = @stat.exceptions.first
+      yield(err) if block_given?
       expect(@stat.send(:show_source, test, err)).include?(source)
     end
 
@@ -75,6 +76,13 @@ describe Pork::Stat do
 \e[41m  =>   f\e[0m
      end
       SOURCE
+    end
+
+    would 'show the line in the test, even if it is from 3rd party' do
+      @executor.would{ flunk }
+      verify("=> @executor.would{ flunk }") do |err|
+        err.set_backtrace(err.backtrace.unshift("bad.rb:#{__LINE__}"))
+      end
     end
   end
 end

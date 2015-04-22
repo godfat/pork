@@ -5,11 +5,14 @@ module Pork
   module ShowSource
     def show_source test, err
       source = test.source
+      sopath = "#{test.source_location.first}:"
       lowers = test.source_location.last
       uppers = lowers + source.size
       lineno = reject_pork(test, err).find do |backtrace|
-        l = backtrace[/(?<=\.rb:)\d+/].to_i
-        break l if l >= lowers && l < uppers
+        # find the line from the test source, exclude everything else
+        next unless backtrace.start_with?(sopath)
+        number = backtrace[/(?<=\.rb:)\d+/].to_i
+        break number if number >= lowers && number < uppers
       end
       lowerl = lineno - lowers
       upperl = MethodSource.expression_at(source, lowerl + 1).
