@@ -14,6 +14,7 @@ module Pork
         number = backtrace[/(?<=\.rb:)\d+/].to_i
         break number if number >= lowers && number < uppers
       end
+      return '' unless lineno # TODO: error might be coming from before block
       lowerl = lineno - lowers
       upperl = MethodSource.expression_at(source, lowerl + 1).
                  count("\n") + lowerl
