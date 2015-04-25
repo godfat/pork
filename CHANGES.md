@@ -1,5 +1,16 @@
 # CHANGES
 
+## Pork 1.2.4 -- 2015-04-25
+
+### Enhancement
+
+* Introduced `Pork.show_source` to print the source of failing tests. Using
+  this feature requires `method_source` installed.
+
+### Bugs fixed
+
+* Fixed a potential data race in parallel tests using `should`.
+
 ## Pork 1.2.3 -- 2015-04-16
 
 ### Enhancement

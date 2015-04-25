@@ -148,6 +148,10 @@ end
 ## REQUIREMENTS:
 
 * Tested with MRI (official CRuby), Rubinius and JRuby.
+* (Optional) [method_source][] if you would like to print the source for the
+  failing tests.
+
+[method_source]: https://github.com/banister/method_source
 
 ## INSTALLATION:
 
