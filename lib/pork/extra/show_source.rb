@@ -29,5 +29,7 @@ module Pork
       end.join
       "\n#{result.chomp}"
     end
+  rescue SyntaxError => e
+    "\nPork bug: Cannot parse the source. Please report: #{e}"
   end
 end
