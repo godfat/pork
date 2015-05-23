@@ -47,7 +47,7 @@ module Pork
     end
   end
 
-  def self.run
+  def self.execute
     Random.srand(ENV['PORK_SEED'].to_i) if ENV['PORK_SEED']
     seed
     if ENV['PORK_TEST']
@@ -63,14 +63,18 @@ module Pork
     end
   end
 
+  def self.run
+    execute_mode(ENV['PORK_MODE'])
+    trap
+    execute
+    stat.report
+  end
+
   def self.autorun auto=true
     @auto = auto
     @autorun ||= at_exit do
       next unless @auto
-      execute_mode(ENV['PORK_MODE'])
-      trap
       run
-      stat.report
       exit stat.failures + stat.errors + ($! && 1).to_i
     end
   end

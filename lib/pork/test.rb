@@ -8,10 +8,10 @@ at_exit do
   Pork.module_eval do
     execute_mode(ENV['PORK_MODE'])
     trap
-    run
+    execute
     %w[sequential shuffled parallel].each do |mode|
       execute_mode(mode)
-      run
+      execute
     end
     stat.report
     exit stat.failures + stat.errors + ($! && 1).to_i
