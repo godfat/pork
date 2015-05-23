@@ -1,11 +1,10 @@
 
 language: ruby
 rvm:
-  - 2.0
   - 2.1
   - 2.2
   - rbx-2
-  - jruby
+  - jruby-head
 
 install: 'bundle install --retry=3'
 script: 'ruby -r bundler/setup -S rake test'
