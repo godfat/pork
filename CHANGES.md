@@ -6,7 +6,6 @@
 
 * `Pork.run` is renamed to `Pork.execute`,
   and `Pork.run` would now do a full run.
-
 * `Pork::Executor.all_tests` would also include paths to describe blocks.
 
 ### Enhancement
