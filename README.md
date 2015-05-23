@@ -801,28 +801,30 @@ run.
 #### `env PORK_TEST=` with `:groups`
 
 `PORK_TEST` could also take a list of groups. Groups are defined in the tests,
-as the second argument to `would`. Take this as an example:
+as the second argument to `describe` and `would`. Take this as an example:
 
 
 ``` ruby
-would 'pass', :groups => [:core, :more] do
-  ok
-end
+describe 'all', :groups => [:all] do
+  would 'pass', :groups => [:core, :more] do
+    ok
+  end
 
-would 'also pass', :groups => [:more] do
-  ok
+  would 'also pass', :groups => [:more] do
+    ok
+  end
 end
 ```
 
-Then if specifying `PORK_TEST=more`, then both tests would run. If specifying
-`PORK_TEST=core`, then only the first would run. We could also specifying
-multiple groups, separated with commas (,), like `PORK_TEST=core,more`,
-then of course both tests would run.
+Then if specifying `PORK_TEST=all`, or `PORK_TEST=more`, then both tests
+would run. If specifying `PORK_TEST=core`, then only the first would run.
+We could also specifying multiple groups, separated with commas (,), like
+`PORK_TEST=core,more`, then of course both tests would run.
 
 This would be very useful when you want to run a specific test case without
 typing the whole file path and finding the line number. Just edit your test
-source by adding some temporary group like `:groups => [:test]` and then
-run the test command prefixed by `env PORK_TEST=test` then you're done.
+source by adding some temporary group like `:groups => [:only]` and then
+run the test command prefixed by `env PORK_TEST=only` then you're done.
 You could just remove the group after debugging. This must be much easier to
 do then commenting out a bunch of random codes in the tests.
 
