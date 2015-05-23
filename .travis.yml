@@ -1,9 +1,12 @@
 
 language: ruby
 rvm:
+  - 2.0
   - 2.1
   - 2.2
   - rbx-2
+  - rbx-head
+  - jruby
   - jruby-head
 
 install: 'bundle install --retry=3'

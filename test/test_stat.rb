@@ -11,6 +11,7 @@ describe Pork::Stat do
     0.should == {
     }
   rescue Pork::Failure => e
+    skip unless e.respond_to?(:backtrace_locations)
     File.open(__FILE__) do |f|
       line = e.backtrace_locations.find{ |l|
                l.label.include?('skip_if_backtrace_is_wrong')
