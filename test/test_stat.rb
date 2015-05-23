@@ -7,9 +7,21 @@ describe Pork::Stat do
     @executor = Class.new(Pork::Executor){init}
   end
 
-  def run
+  def skip_if_backtrace_is_wrong
+    0.should == {
+    }
+  rescue Pork::Failure => e
+    File.open(__FILE__) do |f|
+      line = e.backtrace_locations.find{ |l|
+               l.label.include?('skip_if_backtrace_is_wrong')
+             }.lineno.times.inject(''){ f.readline }
+      skip if line.include?('}')
+    end
+  end
+
+  def run check=:expect_one_error
     @stat = @executor.execute(Pork.execute_mode, Pork::Stat.new(StringIO.new))
-    expect_one_error
+    send(check)
   end
 
   def expect_one_error
@@ -17,6 +29,13 @@ describe Pork::Stat do
     expect(@stat.tests)     .eq 1
     expect(@stat.assertions).eq 0
     expect(@stat.errors)    .eq 1
+  end
+
+  def expect_one_failure
+    expect(@stat.io.string) .eq "\e[35mF\e[0m"
+    expect(@stat.tests)     .eq 1
+    expect(@stat.assertions).eq 0
+    expect(@stat.failures)  .eq 1
   end
 
   would 'always have backtrace' do
@@ -30,8 +49,8 @@ describe Pork::Stat do
   end
 
   describe 'Pork::Stat#show_source' do
-    def verify source
-      run
+    def verify source, check=:expect_one_error
+      run(check)
       err, _, test = @stat.exceptions.first
       yield(err) if block_given?
       expect(@stat.send(:show_source, test, err)).include?(source)
@@ -62,6 +81,24 @@ describe Pork::Stat do
      @executor.would do
 \e[41m  =>   raise \\\e[0m
 \e[41m  =>     'error'\e[0m
+     end
+      SOURCE
+    end
+
+    would 'multiple lines with == {}', :groups => [:only] do
+      skip_if_backtrace_is_wrong
+      @executor.would do
+        0.should == {
+
+
+        }
+      end
+      verify(<<-SOURCE.chomp, :expect_one_failure)
+     @executor.would do
+\e[41m  =>   0.should == {\e[0m
+\e[41m  => \e[0m
+\e[41m  => \e[0m
+\e[41m  =>   }\e[0m
      end
       SOURCE
     end
