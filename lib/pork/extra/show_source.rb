@@ -28,8 +28,8 @@ module Pork
         end
       end.join
       "\n#{result.chomp}"
+    rescue SyntaxError => e
+      "\nPork bug: Cannot parse the source. Please report: #{e}"
     end
-  rescue SyntaxError => e
-    "\nPork bug: Cannot parse the source. Please report: #{e}"
   end
 end
