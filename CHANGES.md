@@ -1,6 +1,6 @@
 # CHANGES
 
-## Pork 1.3.0 -- ?
+## Pork 1.3.0 -- 2015-05-24
 
 ### Incompatible changes
 
