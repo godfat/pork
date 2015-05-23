@@ -36,11 +36,11 @@ describe 'PORK_TEST=a' do
   describe 'PORK_TEST=b' do
     would 'find both', :groups => [:b] do
       line = __LINE__ - 1
-      Pork::Executor[__FILE__].size.should.eq 2
+      Pork::Executor[__FILE__].size.should.eq 4
       Pork::Executor['a']     .size.should.eq 1
       Pork::Executor['b']     .size.should.eq 2
-      Pork::Executor['b']          .should.eq Pork::Executor[__FILE__]
-      Pork::Executor['a,b']        .should.eq Pork::Executor[__FILE__]
+      Pork::Executor['b']          .should.eq Pork::Executor[__FILE__][0, 2]
+      Pork::Executor['a,b']        .should.eq Pork::Executor[__FILE__][0, 2]
       self.class['a']              .should.nil?
       self.class['b']         .size.should.eq 1
 
@@ -52,6 +52,18 @@ describe 'PORK_TEST=a' do
       expect(b[1])                .eq 'find both'
       expect(b[2].source_location).eq [__FILE__, line]
       expect(b[3])                .eq :groups => [:b]
+    end
+  end
+
+  describe 'PORK_TEST=c', :groups => [:c] do
+    would 'inherit groups' do
+      expect(Pork::Executor['c'].size).eq 2
+    end
+
+    describe 'inherit groups' do
+      would 'inherit groups' do
+        expect(Pork::Executor['c'].size).eq 2
+      end
     end
   end
 end
