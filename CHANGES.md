@@ -33,7 +33,7 @@
 
 ### Enhancement
 
-* Now `would` could take a second argument with `:group => [:name]`,
+* Now `would` could take a second argument with `:groups => [:name]`,
   and you could also specifying the groups to run in `PORK_TEST`.
   Checkout README for more information. Input from @mz026
 
