@@ -19,14 +19,13 @@ module Pork
     end
 
     def describe desc=:default, opts={}, &suite
-      o = @opts.merge(opts)
-      executor = Class.new(self){ init("#{desc}: ", o) }
+      executor = Class.new(self){ init("#{desc}: ") }
       executor.module_eval(&suite)
-      @tests << [:describe, executor]
+      @tests << [:describe, executor, suite || lambda{}, opts]
     end
 
     def would desc=:default, opts={}, &test
-      @tests << [:would, desc, test || lambda{}, @opts.merge(opts)]
+      @tests << [:would   , desc    , test  || lambda{}, opts]
     end
 
     def execute mode, *args
@@ -39,8 +38,8 @@ module Pork
     end
 
     private
-    def init desc='', opts={}
-      @desc, @opts, @tests, @stash = desc, opts, [], {}
+    def init desc=''
+      @desc, @tests, @stash = desc, [], {}
       @super_executor = ancestors[1..-1].find{ |a| a <= Executor }
     end
 

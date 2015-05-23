@@ -52,14 +52,17 @@ module Pork
     seed
     if ENV['PORK_TEST']
       require 'pork/mode/shuffled'
-      if paths = Executor[ENV['PORK_TEST']]
-        @stat = Executor.execute(Pork.execute_mode, stat, paths)
+      if tests = Executor[ENV['PORK_TEST']]
+        paths, imps =
+          tests.group_by{ |p| p.kind_of?(Array) }.values_at(true, false)
+        @stat = Executor.execute(execute_mode, stat, paths) if paths
+        @stat = imps.inject(stat){ |s, i| i.execute(execute_mode, s) } if imps
       else
         puts "Cannot find test: #{ENV['PORK_TEST']}"
         exit 254
       end
     else
-      @stat = Executor.execute(Pork.execute_mode, stat)
+      @stat = Executor.execute(execute_mode, stat)
     end
   end
 

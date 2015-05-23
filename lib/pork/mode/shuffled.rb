@@ -8,7 +8,8 @@ module Pork
     end
 
     def all_paths
-      (all_tests[:files] || {}).values.flat_map(&:values).flatten(1)
+      (all_tests[:files] || {}).values.flat_map(&:values).flatten(1).
+        select{ |path| path.kind_of?(Array) }
     end
 
     def [] index
@@ -69,28 +70,32 @@ module Pork
                                                 ((type, imp, test, opts),
                                                   index)|
         current = path + [index]
-        case type
-        when :describe
-          imp.build_all_tests(r, current)
-        when :would
-          groups = opts[:groups]
-          store_for_groups(r, current, groups) if groups
-          store_for_source(r, current, *test.source_location)
-        end
+        path_or_imp = case type
+                      when :describe
+                        imp
+                      when :would
+                        current
+                      else
+                        next r
+                      end
+        groups = opts[:groups]
+        store_for_groups(r, path_or_imp, groups) if groups
+        store_for_source(r, path_or_imp, *test.source_location)
+        imp.build_all_tests(r, current) if type == :describe
         r
       end
     end
 
-    def store_for_groups tests, path, groups
+    def store_for_groups tests, path_or_imp, groups
       r = tests[:groups] ||= {}
       groups.each do |g|
-        (r[g.to_s] ||= []) << path
+        (r[g.to_s] ||= []) << path_or_imp
       end
     end
 
-    def store_for_source tests, path, file, line
+    def store_for_source tests, path_or_imp, file, line
       r = tests[:files] ||= {}
-      ((r[File.expand_path(file)] ||= {})[line] ||= []) << path
+      ((r[File.expand_path(file)] ||= {})[line] ||= []) << path_or_imp
     end
   end
 
