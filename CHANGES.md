@@ -1,5 +1,24 @@
 # CHANGES
 
+## Pork 1.3.0 -- ?
+
+### Incompatible changes
+
+* `Pork.run` is renamed to `Pork.execute`,
+  and `Pork.run` would now do a full run.
+
+* `Pork::Executor.all_tests` would also include paths to describe blocks.
+
+### Enhancement
+
+* Now `describe` could also take a second argument to specify groups.
+* `PORK_TEST` could also accept a file path and line number pointing to a
+  describe block. Previously only would block would work.
+
+### Bugs fixed
+
+* `Pork.show_source` would never raise SyntaxError anymore.
+
 ## Pork 1.2.4 -- 2015-04-25
 
 ### Enhancement
