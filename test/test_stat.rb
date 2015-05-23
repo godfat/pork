@@ -85,7 +85,7 @@ describe Pork::Stat do
       SOURCE
     end
 
-    would 'multiple lines with == {}', :groups => [:only] do
+    would 'multiple lines with == {}' do
       skip_if_backtrace_is_wrong
       @executor.would do
         0.should == {
