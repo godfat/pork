@@ -57,7 +57,7 @@ module Pork
 
       if path.size == 1
         _, desc, test = @tests[idx]
-        run(desc, test, stat, env)
+        run(stat, desc, test, env)
       else
         @tests[idx][1].isolate(stat, path.drop(1), env)
       end

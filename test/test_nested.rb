@@ -72,3 +72,9 @@ describe 'should(message)' do
     end.message.should.eq "Expect qoo\nnnf"
   end
 end
+
+describe Pork::Context do
+  would(desc = rand) do
+    expect(pork_description).eq desc
+  end
+end

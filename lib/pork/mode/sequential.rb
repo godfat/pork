@@ -14,7 +14,7 @@ module Pork
         when :describe
           arg.sequential(stat, env)
         when :would
-          run(arg, test, stat, env)
+          run(stat, arg, test, env)
         end
       end
 

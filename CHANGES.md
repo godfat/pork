@@ -1,5 +1,14 @@
 # CHANGES
 
+## Pork 1.3.1 -- 2015-06-06
+
+### Enhancement
+
+* Added `pork_description` in the test case so that we could access the
+  description for the running test case. To access the full message,
+  use `self.class.send(:description_for, "would: #{pork_description}")`.
+  Note that this is not a public API yet, and is subject to change.
+
 ## Pork 1.3.0 -- 2015-05-24
 
 ### Incompatible changes

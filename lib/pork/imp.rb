@@ -43,10 +43,10 @@ module Pork
       @super_executor = ancestors[1..-1].find{ |a| a <= Executor }
     end
 
-    def run desc, test, stat, env
+    def run stat, desc, test, env
       assertions = stat.assertions
-      context = new(stat)
-      run_protected(desc, stat, test) do
+      context = new(stat, desc)
+      run_protected(stat, desc, test) do
         env.run_before(context)
         context.instance_eval(&test)
         if assertions == stat.assertions
@@ -56,10 +56,10 @@ module Pork
       end
     ensure
       stat.incr_tests
-      run_protected(desc, stat, test){ env.run_after(context) }
+      run_protected(stat, desc, test){ env.run_after(context) }
     end
 
-    def run_protected desc, stat, test
+    def run_protected stat, desc, test
       yield
     rescue Error, StandardError => e
       case e
