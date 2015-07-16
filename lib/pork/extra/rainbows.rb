@@ -1,10 +1,10 @@
 
 module Pork
   module Rainbows
-    def case_pass msg='.'
-      @rainbows ||= 0
-      io.print( color256(rainbows(@rainbows)){msg} )
-      @rainbows  += 1
+    def msg_pass
+      @rainbows ||= -1
+      @rainbows  += +1
+      color256(rainbows(@rainbows)){super}
     end
 
     private
