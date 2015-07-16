@@ -1,11 +1,11 @@
 
-require 'pork/stat'
+require 'pork'
 
 module Pork
   module Color
-    def case_skip    msg='s'; super(yellow( msg)); end
-    def case_failed  msg='F'; super(magenta(msg)); end
-    def case_errored msg='E'; super(red(    msg)); end
+    def msg_skip   ;  yellow(super); end
+    def msg_failed ; magenta(super); end
+    def msg_errored;     red(super); end
 
     private
     def command name
@@ -28,8 +28,8 @@ module Pork
       cyan(super)
     end
 
-    def numbers
-      super.zip(%w[green green magenta red yellow]).map do |(num, col)|
+    def numbers stat
+      stat.numbers.zip(%w[green green magenta red yellow]).map do |(num, col)|
         if num == 0
           num
         else
@@ -38,8 +38,8 @@ module Pork
       end
     end
 
-    def velocity
-      super.zip(%w[cyan blue blue]).map do |(str, col)|
+    def velocity stat
+      stat.velocity.zip(%w[cyan blue blue]).map do |(str, col)|
         send(col, str)
       end
     end
@@ -69,5 +69,5 @@ module Pork
     end
   end
 
-  Pork::Stat.__send__(:include, Pork::Color)
+  reporter_extensions << Color
 end

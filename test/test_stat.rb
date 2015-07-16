@@ -21,19 +21,21 @@ describe Pork::Stat do
   end
 
   def run check=:expect_one_error
-    @stat = @executor.execute(Pork.execute_mode, Pork::Stat.new(StringIO.new))
+    @stat = @executor.execute(
+      Pork.execute_mode,
+      Pork::Stat.new(Pork.reporter_class.new(StringIO.new)))
     send(check)
   end
 
   def expect_one_error
-    expect(@stat.io.string) .eq "\e[31mE\e[0m"
+    expect(@stat.reporter.io.string).eq "\e[31mE\e[0m"
     expect(@stat.tests)     .eq 1
     expect(@stat.assertions).eq 0
     expect(@stat.errors)    .eq 1
   end
 
   def expect_one_failure
-    expect(@stat.io.string) .eq "\e[35mF\e[0m"
+    expect(@stat.reporter.io.string).eq "\e[35mF\e[0m"
     expect(@stat.tests)     .eq 1
     expect(@stat.assertions).eq 0
     expect(@stat.failures)  .eq 1
@@ -46,7 +48,7 @@ describe Pork::Stat do
     err, _, test = @stat.exceptions.first
     err.set_backtrace([])
 
-    expect(@stat.send(:show_backtrace, test, err)).not.empty?
+    expect(@stat.reporter.send(:show_backtrace, test, err)).not.empty?
   end
 
   describe 'Pork::Stat#show_source' do
@@ -54,7 +56,7 @@ describe Pork::Stat do
       run(check)
       err, _, test = @stat.exceptions.first
       yield(err) if block_given?
-      expect(@stat.send(:show_source, test, err)).include?(source)
+      expect(@stat.reporter.send(:show_source, test, err)).include?(source)
     end
 
     would 'one line' do

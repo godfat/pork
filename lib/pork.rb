@@ -13,18 +13,32 @@ module Pork
   end
 
   # default to :shuffled while eliminating warnings for uninitialized ivar
-  def self.execute_mode execute=nil
-    @execute = execute || @execute ||= :shuffled
+  def self.execute_mode mode=nil
+    @execute_mode = mode || @execute_mode ||= :shuffled
+  end
+
+  def self.report_mode mode=nil
+    @report_mode = mode || @report_mode ||= :dot
+    require "pork/reporter/#{@report_mode}"
+    @report_mode
+  end
+
+  def self.reporter_class
+    const_get(report_mode.to_s.capitalize)
+  end
+
+  def self.reporter_extensions
+    @reporter_extensions ||= []
   end
 
   def self.Rainbows!
     require 'pork/extra/rainbows'
-    Pork::Stat.__send__(:include, Pork::Rainbows)
+    reporter_extensions << Rainbows
   end
 
   def self.show_source
     require 'pork/extra/show_source'
-    Pork::Stat.__send__(:include, Pork::ShowSource)
+    reporter_extensions << ShowSource
   end
 
   def self.stat
@@ -68,6 +82,7 @@ module Pork
 
   def self.run
     execute_mode(ENV['PORK_MODE'])
+    report_mode(ENV['PORK_REPORT'])
     trap
     execute
     stat.report

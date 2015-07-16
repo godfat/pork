@@ -8,6 +8,7 @@ Pork.Rainbows! if rand(10) == 0
 at_exit do
   Pork.module_eval do
     execute_mode(ENV['PORK_MODE'])
+    report_mode(ENV['PORK_REPORT'])
     trap
     execute
     %w[sequential shuffled parallel].each do |mode|

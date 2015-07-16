@@ -1,5 +1,5 @@
 
-require 'pork/stat'
+require 'pork'
 
 module Pork
   module BottomupBacktrace
@@ -9,5 +9,5 @@ module Pork
     end
   end
 
-  Pork::Stat.__send__(:include, Pork::BottomupBacktrace)
+  reporter_extensions << BottomupBacktrace
 end
