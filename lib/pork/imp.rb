@@ -46,6 +46,7 @@ module Pork
     def run stat, desc, test, env
       assertions = stat.assertions
       context = new(stat, desc)
+      stat.reporter.case_start(context)
       run_protected(stat, desc, test) do
         env.run_before(context)
         context.instance_eval(&test)
@@ -57,6 +58,7 @@ module Pork
     ensure
       stat.incr_tests
       run_protected(stat, desc, test){ env.run_after(context) }
+      stat.reporter.case_end
     end
 
     def run_protected stat, desc, test
