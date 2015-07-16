@@ -3,6 +3,7 @@ require 'pork/auto'
 
 Pork.autorun(false)
 Pork.show_source
+Pork.Rainbows! if rand(10) == 0
 
 at_exit do
   Pork.module_eval do
