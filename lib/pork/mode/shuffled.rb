@@ -8,8 +8,7 @@ module Pork
     end
 
     def all_paths
-      (all_tests[:files] || {}).values.flat_map(&:values).flatten(1).
-        select{ |path| path.kind_of?(Array) }
+      (all_tests[:files] || {}).values.flat_map(&:values).flatten(1).uniq
     end
 
     def [] index
@@ -30,7 +29,7 @@ module Pork
       file, line = File.expand_path(file_str), line_str.to_i
       return unless cases = tests[file]
       if line.zero?
-        cases.values.flatten(1)
+        cases.values.flatten(1).uniq
       else
         _, paths = cases.reverse_each.find{ |(l, _)| l <= line }
         paths
@@ -70,32 +69,36 @@ module Pork
                                                 ((type, imp, test, opts),
                                                   index)|
         current = path + [index]
-        path_or_imp = case type
-                      when :describe
-                        imp
-                      when :would
-                        current
-                      else
-                        next r
-                      end
-        groups = opts[:groups]
-        store_for_groups(r, path_or_imp, groups) if groups
-        store_for_source(r, path_or_imp, *test.source_location)
-        imp.build_all_tests(r, current) if type == :describe
+
+        case type
+        when :describe
+          imp.build_all_tests(r, current) do |nested|
+            store_path(r, nested, test, opts[:groups])
+          end
+        when :would
+          yield(current) if block_given?
+          store_path(r, current, test, opts[:groups])
+        end
+
         r
       end
     end
 
-    def store_for_groups tests, path_or_imp, groups
+    def store_path tests, path, test, groups
+      store_for_groups(tests, path, groups) if groups
+      store_for_source(tests, path, *test.source_location)
+    end
+
+    def store_for_groups tests, path, groups
       r = tests[:groups] ||= {}
       groups.each do |g|
-        (r[g.to_s] ||= []) << path_or_imp
+        (r[g.to_s] ||= []) << path
       end
     end
 
-    def store_for_source tests, path_or_imp, file, line
+    def store_for_source tests, path, file, line
       r = tests[:files] ||= {}
-      ((r[File.expand_path(file)] ||= {})[line] ||= []) << path_or_imp
+      ((r[File.expand_path(file)] ||= {})[line] ||= []) << path
     end
   end
 

@@ -67,10 +67,7 @@ module Pork
     if ENV['PORK_TEST']
       require 'pork/mode/shuffled'
       if tests = Executor[ENV['PORK_TEST']]
-        paths, imps =
-          tests.group_by{ |p| p.kind_of?(Array) }.values_at(true, false)
-        @stat = Executor.execute(execute_mode, stat, paths) if paths
-        @stat = imps.inject(stat){ |s, i| i.execute(execute_mode, s) } if imps
+        @stat = Executor.execute(execute_mode, stat, tests)
       else
         puts "Cannot find test: #{ENV['PORK_TEST']}"
         exit 254
