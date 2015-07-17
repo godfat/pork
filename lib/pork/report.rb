@@ -1,11 +1,11 @@
 
 module Pork
-  Reporter = Struct.new(:io)
+  Report = Struct.new(:io)
 
-  module Reporter::Imp
+  module Report::Imp
     def initialize o=$stdout
       super
-      Pork.reporter_extensions.each(&method(:extend))
+      Pork.report_extensions.each(&method(:extend))
     end
 
     def case_start _; end
@@ -122,5 +122,5 @@ module Pork
     end
   end
 
-  Reporter.__send__(:include, Reporter::Imp)
+  Report.__send__(:include, Report::Imp)
 end

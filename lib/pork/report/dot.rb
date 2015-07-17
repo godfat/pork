@@ -1,8 +1,8 @@
 
-require 'pork/reporter'
+require 'pork/report'
 
 module Pork
-  class Dot < Reporter
+  class Dot < Report
     def msg_pass   ; '.'; end
     def msg_skip   ; 's'; end
     def msg_failed ; 'F'; end

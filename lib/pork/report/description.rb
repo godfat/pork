@@ -1,5 +1,5 @@
 
-require 'pork/reporter/dot'
+require 'pork/report/dot'
 
 module Pork
   class Description < Dot

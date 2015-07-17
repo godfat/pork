@@ -1,6 +1,6 @@
 
 require 'thread'
-require 'pork/reporter'
+require 'pork/report'
 
 module Pork
   Stat = Struct.new(:reporter, :start, :mutex,
@@ -9,7 +9,7 @@ module Pork
 
   module Stat::Imp
     attr_accessor :stop
-    def initialize report=Pork.reporter_class.new,
+    def initialize rt=Pork.report_class.new,
                    st=Time.now, mu=Mutex.new,
                    t=0, a=0, s=0, f=0, e=0, x=[]
       super

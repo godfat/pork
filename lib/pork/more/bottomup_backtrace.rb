@@ -9,5 +9,5 @@ module Pork
     end
   end
 
-  reporter_extensions << BottomupBacktrace
+  report_extensions << BottomupBacktrace
 end

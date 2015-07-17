@@ -19,26 +19,26 @@ module Pork
 
   def self.report_mode mode=nil
     @report_mode = mode || @report_mode ||= :dot
-    require "pork/reporter/#{@report_mode}"
+    require "pork/report/#{@report_mode}"
     @report_mode
   end
 
-  def self.reporter_class
+  def self.report_class
     const_get(report_mode.to_s.capitalize)
   end
 
-  def self.reporter_extensions
-    @reporter_extensions ||= []
+  def self.report_extensions
+    @report_extensions ||= []
   end
 
   def self.Rainbows!
     require 'pork/extra/rainbows'
-    reporter_extensions << Rainbows
+    report_extensions << Rainbows
   end
 
   def self.show_source
     require 'pork/extra/show_source'
-    reporter_extensions << ShowSource
+    report_extensions << ShowSource
   end
 
   def self.stat

@@ -23,7 +23,7 @@ describe Pork::Stat do
   def run check=:expect_one_error
     @stat = @executor.execute(
       Pork.execute_mode,
-      Pork::Stat.new(Pork.reporter_class.new(StringIO.new)))
+      Pork::Stat.new(Pork.report_class.new(StringIO.new)))
     send(check)
   end
 

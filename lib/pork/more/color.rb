@@ -69,5 +69,5 @@ module Pork
     end
   end
 
-  reporter_extensions << Color
+  report_extensions << Color
 end
