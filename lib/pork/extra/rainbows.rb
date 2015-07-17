@@ -4,10 +4,14 @@ module Pork
     def msg_pass
       @rainbows ||= -1
       @rainbows  += +1
-      color256(rainbows(@rainbows), super)
+      color256(rainbows(@rainbows), strip_color(super))
     end
 
     private
+    def strip_color text
+      text.gsub(/\e\[\d+m/, '')
+    end
+
     def color256 rgb, text
       "\e[38;5;#{rgb}m#{text}\e[0m"
     end

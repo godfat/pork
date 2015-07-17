@@ -33,8 +33,7 @@ module Pork
 
   def self.Rainbows!
     require 'pork/extra/rainbows'
-    # Rainbows should be extended prior than Color to work
-    report_extensions.unshift Rainbows
+    report_extensions << Rainbows
   end
 
   def self.show_source
