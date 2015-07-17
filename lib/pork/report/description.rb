@@ -27,7 +27,7 @@ module Pork
         io.puts "#{'  ' * (levels - 1)}#{executor.desc}"
       end
 
-      io.print "#{'  ' * levels}#{context.pork_description}: "
+      io.print "#{'  ' * levels}#{context.pork_description}"
 
       self.last_executor = executor
     end
