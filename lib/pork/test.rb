@@ -5,7 +5,7 @@ Pork.autorun
 Pork.show_source
 Pork.Rainbows! if rand(10) == 0
 
-Pork.singleton_class.prepend Module.new{
+Pork.singleton_class.send(:prepend, Module.new{
   def execute
     super
     %w[sequential shuffled parallel].each do |mode|
@@ -13,4 +13,4 @@ Pork.singleton_class.prepend Module.new{
       super
     end
   end
-}
+})
