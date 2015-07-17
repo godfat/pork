@@ -1,6 +1,6 @@
 # CHANGES
 
-## Pork 1.4.0 -- ?
+## Pork 1.4.0 -- 2015-07-18
 
 ### Enhancement
 
