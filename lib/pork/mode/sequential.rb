@@ -3,7 +3,17 @@ require 'pork'
 
 module Pork
   module Sequential
-    def sequential stat=Stat.new, super_env=nil
+    def sequential stat=Stat.new, paths=nil
+      if paths
+        require 'pork/isolate'
+        paths.inject(stat, &method(:isolate))
+      else # maybe we could remove this mode if it's not faster and lighter
+        sequential_with_env(stat)
+      end
+    end
+
+    protected
+    def sequential_with_env stat, super_env=nil
       env = Env.new(super_env)
       @tests.each do |(type, arg, test)|
         case type
@@ -12,7 +22,7 @@ module Pork
         when :after
           env.after  << arg
         when :describe
-          arg.sequential(stat, env)
+          arg.sequential_with_env(stat, env)
         when :would
           run(stat, arg, test, env)
         end

@@ -65,7 +65,7 @@ module Pork
     Random.srand(ENV['PORK_SEED'].to_i) if ENV['PORK_SEED']
     seed
     if ENV['PORK_TEST']
-      require 'pork/mode/shuffled'
+      require 'pork/isolate'
       if tests = Executor[ENV['PORK_TEST']]
         @stat = Executor.execute(execute_mode, stat, tests)
       else
