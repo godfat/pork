@@ -5,7 +5,7 @@ module Pork
   module Report::Imp
     def initialize o=$stdout
       super
-      Pork.report_extensions.each(&method(:extend))
+      extend(*Pork.report_extensions.reverse)
     end
 
     def case_start _; end
