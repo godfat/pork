@@ -8,6 +8,11 @@
 * The replicating command for `ENV['PORK_SEED']` is more accurate now.
 * Now you can still run test sequentially when `ENV['PORK_TEST']` is set.
 
+### Bugs fixed
+
+* Using `ENV['PORK_TEST']` to specify a describe block would run all
+  before/after blocks properly now.
+
 ## Pork 1.3.1 -- 2015-06-06
 
 ### Enhancement
