@@ -835,6 +835,21 @@ Summary by examples:
 * `env PORK_TEST='group0' rake test`
 * `env PORK_TEST='group0,group1' rake test`
 
+### `env PORK_SEED=`
+
+By default, before running a test case, Pork would try to generate a
+random seed for each test case. This way, we could easily replicate
+each test case by setting the same random seed.
+
+However, this could hurt performance and randomness. This is a trade off
+before Ruby can restore arbitrary random state. If you don't want this
+behaviour, you could set `PORK_SEED=random` to force Pork only set the
+seed before running the entire test suite, saving you some performance
+and randomness.
+
+Otherwise, you don't have to care about this option. Just copy and
+paste the replicating command when one of your test cases failed.
+
 ### Pork.execute_mode
 
 By default, `Pork.execute_mode` is set to `:shuffled` which would execute
