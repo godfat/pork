@@ -8,7 +8,7 @@ module Pork
     def msg_errored;     red(super); end
 
     private
-    def command name
+    def command name, seed
       gray(super)
     end
 

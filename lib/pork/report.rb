@@ -34,21 +34,22 @@ module Pork
     end
 
     def messages stat
-      stat.exceptions.reverse_each.map do |(err, msg, test)|
-        "\n  #{show_command(test.source_location)}" \
-        "\n  #{show_backtrace(test, err)}"          \
-        "#{show_source(test, err)}"                 \
-        "\n#{show_message(msg)}"                    \
+      stat.exceptions.reverse_each.map do |(err, msg, test, seed)|
+        "\n  #{show_command(test.source_location, seed)}" \
+        "\n  #{show_backtrace(test, err)}"                \
+        "#{show_source(test, err)}"                       \
+        "\n#{show_message(msg)}"                          \
         "\n#{show_exception(err)}"
       end
     end
 
-    def show_command source_location
-      "Replicate this test with:\n#{command(source_location)}"
+    def show_command source_location, seed
+      "Replicate this test with:\n#{command(source_location, seed)}"
     end
 
-    def command source_location
-      "#{env(source_location)} #{Gem.ruby} -S #{$0} #{ARGV.join(' ')}"
+    def command source_location, seed
+      "env#{pork_test(source_location)} #{pork_mode} #{pork_seed(seed)}" \
+      " #{Gem.ruby} -S #{$0} #{ARGV.join(' ')}"
     end
 
     def show_backtrace test, err
@@ -104,21 +105,22 @@ module Pork
       bt.map{ |path| path.sub("#{Dir.pwd}/", '') }
     end
 
-    def env source_location
-      "env #{pork(source_location)} #{pork_mode} #{pork_seed}"
-    end
-
-    def pork source_location
-      file, line = source_location
-      "PORK_TEST='#{strip([file]).join}:#{line}'"
+    def pork_test source_location
+      if !!ENV['PORK_SEED'] == !!ENV['PORK_TEST'] || ENV['PORK_TEST']
+        file, line = source_location
+        " PORK_TEST='#{strip([file]).join}:#{line}'"
+      else
+        # cannot replicate a test case with PORK_SEED set and PORK_TEST unset
+        # unless we could restore random's state (srand didn't work for that)
+      end
     end
 
     def pork_mode
       "PORK_MODE=#{Pork.execute_mode}"
     end
 
-    def pork_seed
-      "PORK_SEED=#{Pork.seed}"
+    def pork_seed seed
+      "PORK_SEED=#{seed}"
     end
   end
 

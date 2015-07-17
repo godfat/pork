@@ -53,6 +53,25 @@ module Pork
               end
   end
 
+  def self.reseed
+    if ENV['PORK_SEED']
+      seed
+    else
+      new_seed = Random.new_seed
+      Random.srand(new_seed)
+      new_seed
+    end
+  end
+
+  def self.srand
+    case ENV['PORK_SEED']
+    when nil, 'random'
+      Random.srand(seed)
+    else
+      Random.srand(Integer(ENV['PORK_SEED']))
+    end
+  end
+
   def self.trap sig='SIGINT'
     Signal.trap(sig) do
       stat.report
@@ -62,8 +81,6 @@ module Pork
   end
 
   def self.execute
-    Random.srand(ENV['PORK_SEED'].to_i) if ENV['PORK_SEED']
-    seed
     if ENV['PORK_TEST']
       require 'pork/isolate'
       if tests = Executor[ENV['PORK_TEST']]
@@ -78,6 +95,7 @@ module Pork
   end
 
   def self.run
+    srand
     execute_mode(ENV['PORK_MODE'])
     report_mode(ENV['PORK_REPORT'])
     trap
