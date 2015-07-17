@@ -1,21 +1,16 @@
 
 require 'pork/auto'
 
-Pork.autorun(false)
+Pork.autorun
 Pork.show_source
 Pork.Rainbows! if rand(10) == 0
 
-at_exit do
-  Pork.module_eval do
-    execute_mode(ENV['PORK_MODE'])
-    report_mode(ENV['PORK_REPORT'])
-    trap
-    execute
+Pork.singleton_class.prepend Module.new{
+  def execute
+    super
     %w[sequential shuffled parallel].each do |mode|
       execute_mode(mode)
-      execute
+      super
     end
-    stat.report
-    exit stat.failures + stat.errors + ($! && 1).to_i
   end
-end
+}
