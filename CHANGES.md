@@ -6,7 +6,7 @@
 
 * Introduced `Pork.report_mode` and `ENV['PORK_REPORT']`.
 * The replicating command for `ENV['PORK_SEED']` is more accurate now.
-* Now you can still run test sequentially when ENV['PORK_TEST'] is set.
+* Now you can still run test sequentially when `ENV['PORK_TEST']` is set.
 
 ## Pork 1.3.1 -- 2015-06-06
 
