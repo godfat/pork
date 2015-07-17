@@ -4,12 +4,12 @@ module Pork
     def msg_pass
       @rainbows ||= -1
       @rainbows  += +1
-      color256(rainbows(@rainbows)){super}
+      color256(rainbows(@rainbows), super)
     end
 
     private
-    def color256 rgb
-      "\e[38;5;#{rgb}m#{yield}\e[0m"
+    def color256 rgb, text
+      "\e[38;5;#{rgb}m#{text}\e[0m"
     end
 
     def rainbows i
