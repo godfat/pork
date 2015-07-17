@@ -869,6 +869,42 @@ Or:
 env PORK_MODE=parallel ruby -Ilib test/test_pork.rb
 ```
 
+### Pork.report_mode
+
+By default, `Pork.report_mode` is set to `:dot` which would print a dot
+for each test case. This is the same as test/unit bundled in Ruby. We
+provide another option: `:description` which would print the description
+for each test case. This might be useful if you are not running a bunch
+of test cases. All the options are:
+
+* `:dot` (default)
+* `:description`
+
+Pass the symbol to it to use the mode:
+
+``` ruby
+Pork.report_mode :description
+```
+
+On the other hand, you could also set `ENV['PORK_REPORT']` for picking an
+reporting mode. This would be convenient if you just want to switch to a
+particular mode temporary via command line. For example:
+
+``` shell
+env PORK_REPORT=description rake test
+```
+
+Or:
+
+``` shell
+env PORK_REPORT=description ruby -Ilib test/test_pork.rb
+```
+
+Caveat: You might see interleaving description output if you're running with
+`Pork.execute_mode :shuffled` because... it's shuffled. You might want to run
+in `Pork.execute_mode :sequential` along with `Pork.report_mode :description`
+if you don't want to see interleaving descriptions.
+
 ### Pork.inspect_failure_mode
 
 By default, `Pork.inspect_failure_mode` is set to `:auto`, which would
