@@ -1,4 +1,4 @@
-# Pork [![Build Status](https://secure.travis-ci.org/godfat/pork.png?branch=master)](http://travis-ci.org/godfat/pork) [![Coverage Status](https://coveralls.io/repos/godfat/pork/badge.png)](https://coveralls.io/r/godfat/pork)
+# Pork [![Build Status](https://secure.travis-ci.org/godfat/pork.png?branch=master)](http://travis-ci.org/godfat/pork) [![Coverage Status](https://coveralls.io/repos/godfat/pork/badge.png)](https://coveralls.io/r/godfat/pork) [![Join the chat at https://gitter.im/godfat/pork](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/godfat/pork)
 
 by Lin Jen-Shin ([godfat](http://godfat.org))
 
