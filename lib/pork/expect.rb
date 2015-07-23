@@ -40,6 +40,10 @@ module Pork
     def lte rhs; self <= rhs; end
     def gte rhs; self >= rhs; end
 
+    def approx rhs, precision=10
+      round(precision) == rhs.round(precision)
+    end
+
     def raise exception=::RuntimeError
       satisfy("#{__not__}raising #{exception}") do
         begin

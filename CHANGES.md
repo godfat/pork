@@ -1,5 +1,15 @@
 # CHANGES
 
+## Pork 1.4.0 -- 2015-07-23
+
+### Enhancement
+
+* Introduced `Expect#approx` for comparing two floating point numbers.
+
+### Bugs fixed
+
+* Removed the extra colon with PORK_REPORT=description.
+
 ## Pork 1.4.0 -- 2015-07-18
 
 ### Enhancement

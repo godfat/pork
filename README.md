@@ -513,6 +513,19 @@ require 'pork/auto'
 would{ 1.should.gte 1 }
 ```
 
+### Pork::Expect#approx
+
+Comparing two floating point numbers is troublesome. `approx` would round on
+two numbers so it would make less false positives. There's an optional second
+argument which indicates the precision for the fractional part. By default
+it's 10. (round on 10)
+
+``` ruby
+require 'pork/auto'
+
+would{ 1.23.should.approx 1.225, 2 }
+```
+
 ### Pork::Expect#raise
 
 Expect for exceptions! There are two ways to call it. Either you could use
