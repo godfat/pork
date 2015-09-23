@@ -1,5 +1,11 @@
 # CHANGES
 
+## Pork 1.4.2 -- 2015-09-23
+
+### Bugs fixed
+
+* Do not extend anything if no `report_extensions` was loaded.
+
 ## Pork 1.4.1 -- 2015-07-23
 
 ### Enhancement
