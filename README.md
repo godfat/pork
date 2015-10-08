@@ -863,6 +863,27 @@ and randomness.
 Otherwise, you don't have to care about this option. Just copy and
 paste the replicating command when one of your test cases failed.
 
+### Pork.protected_exceptions
+
+By default, Pork only rescues exceptions derived from `StandardError`,
+this is due to the fact that we don't want to interfere with some system
+exception like signal handling and so on so forth. (e.g. `SignalException`,
+`LoadError`, `SyntaxError`, etc).
+
+However, some libraries do not raise exceptions derived from `StandardError`.
+I would recommend fix them, but as a workaround, you could also tell Pork to
+rescue those exceptions so that your test suites won't just stop there.
+
+Let's take webmock as an example, we'll do this to avoid stopping the tests
+whenever webmock complains:
+
+``` ruby
+Pork.protected_exceptions << WebMock::NetConnectNotAllowedError
+```
+
+This would effectively tell Pork to rescue it and treat it as a regular
+test error instead of stopping the whole process.
+
 ### Pork.execute_mode
 
 By default, `Pork.execute_mode` is set to `:shuffled` which would execute
