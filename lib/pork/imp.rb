@@ -60,7 +60,7 @@ module Pork
 
     def run_protected stat, desc, test, seed
       yield
-    rescue Error, StandardError => e
+    rescue *stat.protected_errors => e
       case e
       when Skip
         stat.incr_skips
@@ -71,7 +71,7 @@ module Pork
         when Failure
           stat.add_failure(err)
           stat.reporter.case_failed
-        when Error, StandardError
+        else
           stat.add_error(err)
           stat.reporter.case_errored
         end

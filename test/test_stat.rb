@@ -21,9 +21,9 @@ describe Pork::Stat do
   end
 
   def run check=:expect_one_error
-    @stat = @executor.execute(
-      Pork.execute_mode,
-      Pork::Stat.new(Pork.report_class.new(StringIO.new)))
+    stat = Pork::Stat.new(Pork.report_class.new(StringIO.new))
+    stat.protected_errors = pork_stat.protected_errors
+    @stat = @executor.execute(Pork.execute_mode, stat)
     send(check)
   end
 
@@ -39,6 +39,11 @@ describe Pork::Stat do
     expect(@stat.tests)     .eq 1
     expect(@stat.assertions).eq 0
     expect(@stat.failures)  .eq 1
+  end
+
+  would 'rescue custom errors' do
+    @executor.would{ raise WebMockError }
+    run
   end
 
   would 'always have backtrace' do

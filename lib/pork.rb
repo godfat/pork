@@ -31,6 +31,10 @@ module Pork
     @report_extensions ||= []
   end
 
+  def self.protected_errors
+    stat.protected_errors
+  end
+
   def self.Rainbows!
     require 'pork/extra/rainbows'
     report_extensions << Rainbows

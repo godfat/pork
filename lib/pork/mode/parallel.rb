@@ -10,7 +10,9 @@ module Pork
     def parallel stat=Stat.new, paths=all_paths
       paths.shuffle.each_slice(cores).map do |paths_slice|
         Thread.new do
-          execute(:shuffled, Stat.new(stat.reporter), paths_slice)
+          execute(:shuffled,
+                  Stat.new(stat.reporter, stat.protected_errors),
+                  paths_slice)
         end
       end.map(&:value).inject(stat, &:merge)
     end
