@@ -31,8 +31,8 @@ module Pork
     @report_extensions ||= []
   end
 
-  def self.protected_errors
-    stat.protected_errors
+  def self.protected_exceptions
+    stat.protected_exceptions
   end
 
   def self.Rainbows!

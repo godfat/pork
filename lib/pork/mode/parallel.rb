@@ -11,7 +11,7 @@ module Pork
       paths.shuffle.each_slice(cores).map do |paths_slice|
         Thread.new do
           execute(:shuffled,
-                  Stat.new(stat.reporter, stat.protected_errors),
+                  Stat.new(stat.reporter, stat.protected_exceptions),
                   paths_slice)
         end
       end.map(&:value).inject(stat, &:merge)

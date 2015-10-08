@@ -60,7 +60,7 @@ module Pork
 
     def run_protected stat, desc, test, seed
       yield
-    rescue *stat.protected_errors => e
+    rescue *stat.protected_exceptions => e
       case e
       when Skip
         stat.incr_skips

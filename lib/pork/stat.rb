@@ -3,14 +3,14 @@ require 'thread'
 require 'pork/report'
 
 module Pork
-  Stat = Struct.new(:reporter, :protected_errors, :start, :mutex,
+  Stat = Struct.new(:reporter, :protected_exceptions, :start, :mutex,
                     :tests, :assertions, :skips, :failures, :errors,
                     :exceptions)
 
   module Stat::Imp
     attr_accessor :stop
     def initialize rt=Pork.report_class.new,
-                   protected_errors=[Pork::Error, StandardError],
+                   protected_exceptions=[Pork::Error, StandardError],
                    st=Time.now, mu=Mutex.new,
                    t=0, a=0, s=0, f=0, e=0, x=[]
       super
@@ -50,7 +50,7 @@ module Pork
     end
 
     def merge stat
-      self.class.new(reporter, protected_errors, start, mutex,
+      self.class.new(reporter, protected_exceptions, start, mutex,
         *to_a.drop(4).zip(stat.to_a.drop(4)).map{ |(a, b)| a + b })
     end
   end
