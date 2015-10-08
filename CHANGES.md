@@ -1,5 +1,12 @@
 # CHANGES
 
+## Pork 1.4.3 -- 2015-10-08
+
+### Enhancement
+
+* Introduced `Pork.protected_exceptions` to protect exceptions aren't
+  derived from `StandardError`. Check README for usage.
+
 ## Pork 1.4.2 -- 2015-09-23
 
 ### Bugs fixed
