@@ -1,5 +1,12 @@
 # CHANGES
 
+## Pork 1.4.4 -- 2015-11-10
+
+### Bugs fixed
+
+* Now `Pork.protected_exceptions` would not create stat object.
+  We should not create it unless we're trying to run a test.
+
 ## Pork 1.4.3 -- 2015-10-08
 
 ### Enhancement
