@@ -10,7 +10,7 @@ module Pork
   module Stat::Imp
     attr_accessor :stop
     def initialize rt=Pork.report_class.new,
-                   protected_exceptions=[Pork::Error, StandardError],
+                   protected_exceptions=Pork.protected_exceptions,
                    st=Time.now, mu=Mutex.new,
                    t=0, a=0, s=0, f=0, e=0, x=[]
       super

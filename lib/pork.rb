@@ -32,7 +32,7 @@ module Pork
   end
 
   def self.protected_exceptions
-    stat.protected_exceptions
+    @protected_exceptions ||= [Pork::Error, StandardError]
   end
 
   def self.Rainbows!
