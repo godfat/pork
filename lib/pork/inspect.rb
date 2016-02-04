@@ -82,10 +82,10 @@ module Pork
     def diff_hash expect, actual, result={}, prefix=''
       expect.inject(result) do |r, (key, e)|
         a = if actual.key?(key)
-          actual[key]
-        else
-          Undefined
-        end
+              actual[key]
+            else
+              Undefined
+            end
         diff_object(e, a, r, "#{prefix}#{key.inspect}")
       end
     end
@@ -93,10 +93,10 @@ module Pork
     def diff_array expect, actual, result={}, prefix=''
       expect.each.with_index.inject(result) do |r, (e, idx)|
         a = if idx < actual.size
-          actual[idx]
-        else
-          OutOfBound
-        end
+              actual[idx]
+            else
+              OutOfBound
+            end
         diff_object(e, a, r, "#{prefix}#{idx}")
       end
     end

@@ -34,7 +34,7 @@ module Pork
       end
     end
 
-    def passed?; exceptions.size == 0                        ; end
+    def passed?; exceptions.empty?                           ; end
     def numbers; [tests, assertions, failures, errors, skips]; end
 
     def velocity

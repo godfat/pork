@@ -47,9 +47,7 @@ module Pork
       run_protected(stat, desc, test, seed) do
         env.run_before(context)
         context.instance_eval(&test)
-        if assertions == stat.assertions
-          raise Error.new('Missing assertions')
-        end
+        raise Error.new('Missing assertions') if assertions == stat.assertions
         stat.reporter.case_pass
       end
     ensure
