@@ -38,10 +38,12 @@ module Pork
       end
     end
 
+    def loadings values
+      with_colors(values, %w[green cyan blue])
+    end
+
     def velocity values
-      values.zip(%w[cyan blue blue]).map do |(str, col)|
-        send(col, str)
-      end
+      with_colors(values, %w[cyan blue blue])
     end
 
     def backtrace *_
@@ -51,6 +53,12 @@ module Pork
         msg = msgs.sub(/(\d+):/){red($1)+':'}.sub(/`.+?'/){green($&)}
 
         "#{dir+'/'}#{yellow(file)}:#{msg}"
+      end
+    end
+
+    def with_colors values, colors
+      values.zip(colors).map do |(str, col)|
+        send(col, str)
       end
     end
 

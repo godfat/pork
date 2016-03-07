@@ -15,8 +15,12 @@ module Pork
     def case_failed ; io.print msg_failed ; end
     def case_errored; io.print msg_errored; end
 
-    def prepare at
-      io.puts "Loaded in #{velocity([Time.now - at]).first} seconds."
+    def prepare at, loaded
+      elapsed = Time.now - at
+      files = $LOADED_FEATURES.size - loaded
+      io.printf("Loaded %s files in %s seconds, %s files/s\n",
+                *loadings([files, elapsed.round(6),
+                           (files / elapsed).round(4)]))
       io.puts
     end
 
@@ -30,6 +34,10 @@ module Pork
     end
 
     private
+    def loadings values
+      values
+    end
+
     def velocity values
       values
     end

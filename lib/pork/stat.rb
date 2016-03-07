@@ -44,8 +44,8 @@ module Pork
        (assertions / time_spent).round(4)]
     end
 
-    def prepare at
-      reporter.prepare(at)
+    def prepare at, loaded
+      reporter.prepare(at, loaded)
     end
 
     def report
