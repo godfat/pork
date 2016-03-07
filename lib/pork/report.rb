@@ -15,22 +15,27 @@ module Pork
     def case_failed ; io.print msg_failed ; end
     def case_errored; io.print msg_errored; end
 
+    def prepare at
+      io.puts "Loaded in #{velocity([Time.now - at]).first} seconds."
+      io.puts
+    end
+
     def report stat
       io.puts
       io.puts messages(stat)
       io.printf("\nFinished in %s seconds, %s tests/s, %s assertions/s \n",
-                *velocity(stat))
+                *velocity(stat.velocity))
       io.printf("%s tests, %s assertions, %s failures, %s errors, %s skips\n",
-                *numbers(stat))
+                *numbers(stat.numbers))
     end
 
     private
-    def velocity stat
-      stat.velocity
+    def velocity values
+      values
     end
 
-    def numbers stat
-      stat.numbers
+    def numbers values
+      values
     end
 
     def messages stat

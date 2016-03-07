@@ -28,8 +28,8 @@ module Pork
       cyan(super)
     end
 
-    def numbers stat
-      stat.numbers.zip(%w[green green magenta red yellow]).map do |(num, col)|
+    def numbers values
+      values.zip(%w[green green magenta red yellow]).map do |(num, col)|
         if num == 0
           num
         else
@@ -38,8 +38,8 @@ module Pork
       end
     end
 
-    def velocity stat
-      stat.velocity.zip(%w[cyan blue blue]).map do |(str, col)|
+    def velocity values
+      values.zip(%w[cyan blue blue]).map do |(str, col)|
         send(col, str)
       end
     end

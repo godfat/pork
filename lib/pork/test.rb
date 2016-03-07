@@ -1,7 +1,6 @@
 
 require 'pork/auto'
 
-Pork.autorun
 Pork.show_source
 Pork.Rainbows! if rand(10) == 0
 

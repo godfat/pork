@@ -103,8 +103,13 @@ module Pork
     execute_mode(ENV['PORK_MODE'])
     report_mode(ENV['PORK_REPORT'])
     trap
+    stat.prepare(@at)
     execute
     stat.report
+  end
+
+  def self.prepare at=Time.now
+    @at = at
   end
 
   def self.autorun auto=true
