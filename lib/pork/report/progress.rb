@@ -34,11 +34,9 @@ module Pork
     end
 
     class Bar < ProgressBar::Base
-      attr_accessor :mutex, :thread
+      attr_accessor :thread
 
       def initialize reporter, *args
-        self.mutex = Mutex.new
-
         super(*args)
 
         # don't print extra newline
@@ -50,17 +48,18 @@ module Pork
           m.reporter = reporter
         end
 
-        # still tick in case the test is very slow
+        # set FPS to 30
         self.thread = Thread.new do
           until finished?
-            sleep(0.1)
-            mutex.synchronize(&output.method(:refresh))
+            sleep(0.033)
+            update_progress(:itself)
           end
         end
       end
 
-      def update_progress *args
-        mutex.synchronize{ super }
+      def tick
+        progressable.increment
+        thread.join if finished?
       end
     end
 
@@ -68,7 +67,6 @@ module Pork
       if bar
         bar.total += paths.size
       else
-        io.sync = true
         self.bar = Bar.new(self, :output => io, :total => paths.size,
                                  :format => format)
       end
@@ -80,7 +78,7 @@ module Pork
     def case_errored; self.failed = true; end
 
     def case_end
-      bar.increment
+      bar.tick
     end
 
     def paint text
