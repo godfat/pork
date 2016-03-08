@@ -34,13 +34,32 @@ module Pork
     end
 
     class Bar < ProgressBar::Base
+      attr_accessor :mutex, :thread
+
       def initialize reporter, *args
         super(*args)
+
+        # don't print extra newline
         output.extend(CarriageReturn)
+
+        # colourize the bar
         @format.molecules.each do |m|
           m.extend(Painter)
           m.reporter = reporter
         end
+
+        # still tick in case the test is very slow
+        self.mutex = Mutex.new
+        self.thread = Thread.new do
+          until finished?
+            sleep(0.1)
+            mutex.synchronize(&output.method(:refresh))
+          end
+        end
+      end
+
+      def increment
+        mutex.synchronize{ super }
       end
     end
 
