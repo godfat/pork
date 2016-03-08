@@ -43,6 +43,7 @@ Gem::Specification.new do |s|
   "lib/pork/report.rb".freeze,
   "lib/pork/report/description.rb".freeze,
   "lib/pork/report/dot.rb".freeze,
+  "lib/pork/report/progress.rb".freeze,
   "lib/pork/stat.rb".freeze,
   "lib/pork/test.rb".freeze,
   "lib/pork/version.rb".freeze,

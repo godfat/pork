@@ -7,6 +7,16 @@ module Pork
       color256(rainbows(@rainbows), strip_color(super))
     end
 
+    def paint text
+      @demping ||= -1
+      @demping  += +1
+      @rainbows = @demping
+      strip_color(text).each_char.map do |c|
+        @rainbows += +1
+        color256(rainbows(@rainbows), c)
+      end.join
+    end
+
     private
     def strip_color text
       text.gsub(/\e\[\d+m/, '')

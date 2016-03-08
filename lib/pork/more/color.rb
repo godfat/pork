@@ -42,6 +42,18 @@ module Pork
       with_colors(values, %w[cyan blue blue])
     end
 
+    def ok text
+      green(text)
+    end
+
+    def bad text
+      red(text)
+    end
+
+    def time text
+      cyan(text)
+    end
+
     def backtrace *_
       super.map do |b|
         path, msgs = b.split(':', 2)

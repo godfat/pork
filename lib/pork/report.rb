@@ -49,6 +49,18 @@ module Pork
       values
     end
 
+    def ok text
+      text
+    end
+
+    def bad text
+      text
+    end
+
+    def time text
+      text
+    end
+
     def messages stat
       stat.exceptions.reverse_each.map do |(err, msg, test, seed)|
         "\n  #{show_command(test.source_location, seed)}" \
