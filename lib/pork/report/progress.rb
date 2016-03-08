@@ -61,11 +61,15 @@ module Pork
         progressable.increment
         thread.join if finished?
       end
+
+      def raise size
+        progressable.total += size
+      end
     end
 
     def prepare paths
       if bar
-        bar.total += paths.size
+        bar.raise(paths.size)
       else
         self.bar = Bar.new(self, :output => io, :total => paths.size,
                                  :format => format)
