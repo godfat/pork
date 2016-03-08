@@ -53,11 +53,18 @@ module Pork
       end
     end
 
-    def paint   text; text         ; end
-    def case_pass   ; bar.increment; end
-    def case_skip   ;                end
+    def case_pass   ; end
+    def case_skip   ; end
     def case_failed ; self.failed = true; end
     def case_errored; self.failed = true; end
+
+    def case_end
+      bar.increment
+    end
+
+    def paint text
+      text
+    end
 
     private
     def format
