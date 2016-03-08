@@ -61,7 +61,7 @@ module Pork
 
     private
     def format
-      "   #{time('%P%')} (%c/%C) |%b>%i| #{time('%e')} "
+      "   %c/%C (#{time('%P%')}) |%b>%i| #{time('%e')} "
     end
   end
 end
