@@ -86,7 +86,6 @@ module Pork
 
   def self.execute
     if ENV['PORK_TEST']
-      require 'pork/isolate'
       if tests = Executor[ENV['PORK_TEST']]
         @stat = Executor.execute(execute_mode, stat, tests)
       else

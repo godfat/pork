@@ -1,5 +1,6 @@
 
 require 'pork/imp'
+require 'pork/isolate'
 require 'pork/context'
 
 module Pork
@@ -8,7 +9,7 @@ module Pork
     # pork/isolate was not loaded. (i.e. isolate would override it anyway)
     singleton_class.superclass.send(:remove_method, :[])
 
-    extend Imp
+    extend Isolate, Imp
     include Context
     init
   end

@@ -1,7 +1,6 @@
 
 require 'ruby-progressbar'
 
-require 'pork/isolate'
 require 'pork/report'
 
 module Pork

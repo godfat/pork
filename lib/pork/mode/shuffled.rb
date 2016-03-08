@@ -1,6 +1,4 @@
 
-require 'pork/isolate'
-
 module Pork
   module Shuffled
     def shuffled stat=Stat.new, paths=all_paths

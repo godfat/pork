@@ -1,6 +1,4 @@
 
-require 'pork'
-
 module Pork
   module Isolate
     def all_tests
@@ -97,6 +95,4 @@ module Pork
       ((r[File.expand_path(file)] ||= {})[line] ||= []) << path
     end
   end
-
-  Executor.extend(Isolate)
 end
