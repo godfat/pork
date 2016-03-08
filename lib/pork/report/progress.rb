@@ -68,6 +68,7 @@ module Pork
       if bar
         bar.total += paths.size
       else
+        io.sync = true
         self.bar = Bar.new(self, :output => io, :total => paths.size,
                                  :format => format)
       end
