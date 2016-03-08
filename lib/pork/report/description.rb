@@ -6,7 +6,7 @@ module Pork
     attr_accessor :last_executor
 
     def msg_pass
-      msg = "\e[1Go"
+      msg = "\ro"
       if respond_to?(:green, true)
         green(msg)
       else
@@ -14,9 +14,9 @@ module Pork
       end
     end
 
-    def msg_skip   ; "\e[1G#{super}"; end
-    def msg_failed ; "\e[1G#{super}"; end
-    def msg_errored; "\e[1G#{super}"; end
+    def msg_skip   ; "\r#{super}"; end
+    def msg_failed ; "\r#{super}"; end
+    def msg_errored; "\r#{super}"; end
 
     def case_start context
       self.last_executor ||= Executor
