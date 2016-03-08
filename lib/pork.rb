@@ -103,14 +103,14 @@ module Pork
     execute_mode(ENV['PORK_MODE'])
     report_mode(ENV['PORK_REPORT'])
     trap
-    stat.prepare(@at, @loaded)
+    stat.loaded(@at, @files)
     execute
     stat.report
   end
 
-  def self.prepare at=Time.now
+  def self.loaded at=Time.now
     @at = at
-    @loaded = $LOADED_FEATURES.size
+    @files = $LOADED_FEATURES.size
   end
 
   def self.autorun auto=true

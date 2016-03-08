@@ -15,12 +15,12 @@ module Pork
     def case_failed ; io.print msg_failed ; end
     def case_errored; io.print msg_errored; end
 
-    def prepare at, loaded
+    def loaded at, files
       elapsed = Time.now - at
-      files = $LOADED_FEATURES.size - loaded
+      delta = $LOADED_FEATURES.size - files
       io.printf("Loaded %s files in %s seconds, %s files/s\n",
-                *loadings([files, elapsed.round(6),
-                           (files / elapsed).round(4)]))
+                *loadings([delta, elapsed.round(6),
+                           (delta / elapsed).round(4)]))
       io.puts
     end
 
