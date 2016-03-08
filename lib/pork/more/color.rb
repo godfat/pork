@@ -24,10 +24,6 @@ module Pork
       "#{color(41, super.chomp)}\n"
     end
 
-    def time_spent
-      cyan(super)
-    end
-
     def numbers values
       values.zip(%w[green green magenta red yellow]).map do |(num, col)|
         if num == 0
