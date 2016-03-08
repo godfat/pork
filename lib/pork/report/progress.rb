@@ -37,6 +37,8 @@ module Pork
       attr_accessor :mutex, :thread
 
       def initialize reporter, *args
+        self.mutex = Mutex.new
+
         super(*args)
 
         # don't print extra newline
@@ -49,7 +51,6 @@ module Pork
         end
 
         # still tick in case the test is very slow
-        self.mutex = Mutex.new
         self.thread = Thread.new do
           until finished?
             sleep(0.1)
@@ -58,7 +59,7 @@ module Pork
         end
       end
 
-      def increment
+      def update_progress *args
         mutex.synchronize{ super }
       end
     end
