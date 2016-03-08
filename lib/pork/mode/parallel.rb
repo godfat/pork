@@ -8,6 +8,7 @@ module Pork
     end
 
     def parallel stat=Stat.new, paths=all_paths
+      stat.prepare(paths)
       paths.shuffle.each_slice(cores).map do |paths_slice|
         Thread.new do
           execute(:shuffled,

@@ -24,6 +24,9 @@ module Pork
       io.puts
     end
 
+    def prepare paths
+    end
+
     def report stat
       io.puts
       io.puts messages(stat)

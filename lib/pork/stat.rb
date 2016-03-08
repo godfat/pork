@@ -48,6 +48,10 @@ module Pork
       reporter.loaded(at, files)
     end
 
+    def prepare paths
+      reporter.prepare(paths)
+    end
+
     def report
       self.stop = Time.now
       reporter.report(self)

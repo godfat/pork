@@ -6,9 +6,10 @@ module Pork
     def sequential stat=Stat.new, paths=nil
       if paths
         require 'pork/isolate'
+        stat.prepare(paths)
         paths.inject(stat, &method(:isolate))
       else # maybe we could remove this mode if it's not faster and lighter
-        sequential_with_env(stat)
+        sequential_with_env(stat) # XXX: doesn't work for PORK_REPORT=progress
       end
     end
 
