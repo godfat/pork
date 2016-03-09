@@ -12,4 +12,5 @@ Gemgem.init(dir) do |s|
   s.version = Pork::VERSION
   %w[method_source ruby-progressbar].
     each(&s.method(:add_development_dependency))
+  s.files.delete('screenshot.png')
 end
