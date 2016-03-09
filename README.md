@@ -150,8 +150,11 @@ end
 * Tested with MRI (official CRuby), Rubinius and JRuby.
 * (Optional) [method_source][] if you would like to print the source for the
   failing tests.
+* (Optional) [ruby-progressbar][] if you like porgressbar for showing
+  progress. Checkout [Pork.report_mode](#porkreport_mode) for using it.
 
 [method_source]: https://github.com/banister/method_source
+[ruby-progressbar]: https://github.com/jfelchner/ruby-progressbar
 
 ## INSTALLATION:
 
@@ -930,12 +933,19 @@ of test cases. All the options are:
 * `:description`
 * `:progressbar` (needs [ruby-progressbar][])
 
-[ruby-progressbar]: https://github.com/jfelchner/ruby-progressbar
-
 Pass the symbol to it to use the mode:
 
 ``` ruby
 Pork.report_mode :description
+```
+
+Or if you want to use a progressbar:
+
+``` ruby
+Pork.report_mode :progressbar
+
+# Show your love for rainbows when you're feeling lucky! Highly recommended!
+Pork.Rainbows! if rand(50) == 0
 ```
 
 On the other hand, you could also set `ENV['PORK_REPORT']` for picking an
@@ -943,13 +953,13 @@ reporting mode. This would be convenient if you just want to switch to a
 particular mode temporary via command line. For example:
 
 ``` shell
-env PORK_REPORT=description rake test
+env PORK_REPORT=progressbar rake test
 ```
 
 Or:
 
 ``` shell
-env PORK_REPORT=description ruby -Ilib test/test_pork.rb
+env PORK_REPORT=progressbar ruby -Ilib test/test_pork.rb
 ```
 
 Caveat: You might see interleaving description output if you're running with
@@ -1042,8 +1052,6 @@ would print the source
 Pork::Error: Flunked
 ```
 
-[method_source]: https://github.com/banister/method_source
-
 ### Pork.Rainbows!
 
 Have you seen Rainbows!?
@@ -1059,7 +1067,7 @@ Have you seen Rainbows!?
 
 Apache License 2.0
 
-Copyright (c) 2014-2015, Lin Jen-Shin (godfat)
+Copyright (c) 2014-2016, Lin Jen-Shin (godfat)
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
