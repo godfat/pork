@@ -943,7 +943,6 @@ Or if you want to use a progressbar:
 
 ``` ruby
 Pork.report_mode :progressbar
-
 # Show your love for rainbows when you're feeling lucky! Highly recommended!
 Pork.Rainbows! if rand(50) == 0
 ```
