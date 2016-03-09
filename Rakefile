@@ -10,5 +10,6 @@ Gemgem.init(dir) do |s|
   require 'pork/version'
   s.name    = 'pork'
   s.version = Pork::VERSION
-  %w[method_source].each{ |g| s.add_development_dependency(g) }
+  %w[method_source ruby-progressbar].
+    each(&s.method(:add_development_dependency))
 end
