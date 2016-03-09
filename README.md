@@ -1056,6 +1056,8 @@ Pork::Error: Flunked
 
 Have you seen Rainbows!?
 
+![Screenshot](https://github.com/godfat/rib/raw/master/screenshot.png)
+
 ## CONTRIBUTORS:
 
 * Chun-Yi Liu (@trantorliu)
