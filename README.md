@@ -961,10 +961,11 @@ Or:
 env PORK_REPORT=progressbar ruby -Ilib test/test_pork.rb
 ```
 
-Caveat: You might see interleaving description output if you're running with
-`Pork.execute_mode :shuffled` because... it's shuffled. You might want to run
-in `Pork.execute_mode :sequential` along with `Pork.report_mode :description`
-if you don't want to see interleaving descriptions.
+Caveat: You might see interleaving description output if you're running
+`Pork.report_mode :description` with `Pork.execute_mode :shuffled` because...
+it's shuffled. You might want to run in `Pork.execute_mode :sequential`
+when using description report if you don't want to see interleaving
+descriptions.
 
 ### Pork.inspect_failure_mode
 
