@@ -928,6 +928,9 @@ of test cases. All the options are:
 
 * `:dot` (default)
 * `:description`
+* `:progressbar` (needs [ruby-progressbar][])
+
+[ruby-progressbar]: https://github.com/jfelchner/ruby-progressbar
 
 Pass the symbol to it to use the mode:
 

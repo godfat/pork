@@ -4,7 +4,7 @@ require 'ruby-progressbar'
 require 'pork/report'
 
 module Pork
-  class Progress < Report
+  class Progressbar < Report
     attr_accessor :bar, :failed
 
     module CarriageReturn
@@ -32,7 +32,7 @@ module Pork
       end
     end
 
-    class Bar < ProgressBar::Base
+    class Bar < ::ProgressBar::Base
       attr_accessor :thread
 
       def initialize reporter, *args

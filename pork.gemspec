@@ -1,9 +1,9 @@
 # -*- encoding: utf-8 -*-
-# stub: pork 1.4.4 ruby lib
+# stub: pork 1.5.0 ruby lib
 
 Gem::Specification.new do |s|
   s.name = "pork".freeze
-  s.version = "1.4.4"
+  s.version = "1.5.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0".freeze) if s.respond_to? :required_rubygems_version=
   s.require_paths = ["lib".freeze]
@@ -43,7 +43,7 @@ Gem::Specification.new do |s|
   "lib/pork/report.rb".freeze,
   "lib/pork/report/description.rb".freeze,
   "lib/pork/report/dot.rb".freeze,
-  "lib/pork/report/progress.rb".freeze,
+  "lib/pork/report/progressbar.rb".freeze,
   "lib/pork/stat.rb".freeze,
   "lib/pork/test.rb".freeze,
   "lib/pork/version.rb".freeze,

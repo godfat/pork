@@ -1,5 +1,15 @@
 # CHANGES
 
+## Pork 1.5.0 -- 2016-03-09
+
+### Enhancement
+
+* Now it would show loading time between pork was loaded and test started.
+  You could tweak the time by using `Pork.loaded`.
+* Pork in sequential mode would just use Isolate internally. This would
+  reduce the internal complexity.
+* Added `PORK_REPORT=progressbar`, using `ruby-progressbar` underneath.
+
 ## Pork 1.4.4 -- 2015-11-10
 
 ### Bugs fixed
