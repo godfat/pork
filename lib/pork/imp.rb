@@ -21,11 +21,12 @@ module Pork
     def describe desc=:default, opts={}, &suite
       executor = Class.new(self){ init("#{desc}: ") }
       executor.module_eval(&suite)
-      @tests << [:describe, executor, suite || lambda{}, opts]
+      @tests << [:describe, executor, suite, opts]
     end
 
     def would desc=:default, opts={}, &test
-      @tests << [:would   , desc    , test  || lambda{}, opts]
+      raise ArgumentError.new("no block given") unless test
+      @tests << [:would   , desc    , test, opts]
     end
 
     def execute mode, *args

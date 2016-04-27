@@ -47,12 +47,13 @@ describe Pork::Stat do
   end
 
   would 'always have backtrace' do
-    @executor.would
+    @executor.would{}
     run
 
     err, _, test = @stat.exceptions.first
     err.set_backtrace([])
 
+    expect(err).kind_of?(Pork::Error)
     expect(@stat.reporter.send(:show_backtrace, test, err)).not.empty?
   end
 
