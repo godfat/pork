@@ -102,7 +102,7 @@ module Pork
     execute_mode(ENV['PORK_MODE'])
     report_mode(ENV['PORK_REPORT'])
     trap
-    stat.loaded(@at, @files)
+    stat.loaded(@at, @files) if instance_variable_defined?(:@at)
     execute
     stat.report
   end
