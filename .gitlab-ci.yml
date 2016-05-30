@@ -4,4 +4,4 @@ before_script:
 
 test:
   script:
-    - rake test
+    - ruby -vS rake test
