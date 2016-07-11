@@ -5,3 +5,5 @@ before_script:
 test:
   script:
     - ruby -vS rake test
+  path:
+    - .
