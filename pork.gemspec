@@ -8,11 +8,12 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = Gem::Requirement.new(">= 0".freeze) if s.respond_to? :required_rubygems_version=
   s.require_paths = ["lib".freeze]
   s.authors = ["Lin Jen-Shin (godfat)".freeze]
-  s.date = "2016-03-10"
+  s.date = "2016-07-11"
   s.description = "Pork -- Simple and clean and modular testing library.\n\nInspired by [Bacon][].\n\n[Bacon]: https://github.com/chneukirchen/bacon".freeze
   s.email = ["godfat (XD) godfat.org".freeze]
   s.files = [
   ".gitignore".freeze,
+  ".gitlab-ci.yml".freeze,
   ".gitmodules".freeze,
   ".travis.yml".freeze,
   "CHANGES.md".freeze,
@@ -60,7 +61,7 @@ Gem::Specification.new do |s|
   "test/test_stat.rb".freeze]
   s.homepage = "https://github.com/godfat/pork".freeze
   s.licenses = ["Apache License 2.0".freeze]
-  s.rubygems_version = "2.6.1".freeze
+  s.rubygems_version = "2.6.6".freeze
   s.summary = "Pork -- Simple and clean and modular testing library.".freeze
   s.test_files = [
   "test/test_bacon.rb".freeze,
