@@ -22,4 +22,4 @@ gem:
     - rake gem:build
   artifacts:
     paths:
-      - pkg
+      - pkg/
