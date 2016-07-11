@@ -3,6 +3,8 @@ before_script:
   - which ruby
 
 test:
+  before_script:
+    - bundle install
   script:
     - ruby -vS rake test
   artifacts:
