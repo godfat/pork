@@ -11,7 +11,7 @@ test:
   script:
     - rake test
 
-gem/build:
+gem:build:
   dependencies:
     - test
   script:
