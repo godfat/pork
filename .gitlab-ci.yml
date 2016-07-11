@@ -2,11 +2,22 @@ before_script:
   - ruby -v
   - which ruby
 
+stages:
+  - test
+  - gem
+
 test:
+  stage: test
   before_script:
-    - bundle install
+    - gem install bundler --no-ri --no-rdoc
+    - bundle install --retry=3
   script:
     - rake test
+
+gem:
+  stage: gem
+  script:
+    - rake gem:build
   artifacts:
     paths:
-      - .
+      - pkg
