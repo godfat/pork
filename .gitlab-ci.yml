@@ -4,7 +4,12 @@ before_script:
   - ruby -v
   - which ruby
 
+stages:
+  - test
+  - gem:build
+
 test:
+  stage: test
   before_script:
     - gem install bundler --no-ri --no-rdoc
     - bundle install --retry=3
@@ -12,8 +17,7 @@ test:
     - rake test
 
 gem:build:
-  dependencies:
-    - test
+  stage: gem:build
   script:
     - rake gem:build
   artifacts:
