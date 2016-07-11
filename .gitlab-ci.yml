@@ -6,4 +6,5 @@ test:
   script:
     - ruby -vS rake test
   artifacts:
-    paths: .
+    paths:
+      - .
