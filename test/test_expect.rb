@@ -2,6 +2,9 @@
 require 'pork/test'
 
 describe Pork::Expect do
+  would 'break it' do
+  end
+
   would 'eq' do
     expect(1).eq 1
   end
