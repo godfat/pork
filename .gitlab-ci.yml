@@ -1,5 +1,12 @@
 image: ruby:2.3
 
+cache:
+  paths:
+    - vendor
+
+variables:
+  GEM_HOME: vendor
+
 info:
   script:
     - uname -a
@@ -19,7 +26,7 @@ prepare:
   stage: prepare
   script:
     - gem install bundler --no-ri --no-rdoc
-    - bundle install --retry=3
+    - bundle install --retry=3 --path vendor
 
 test:
   stage: test
