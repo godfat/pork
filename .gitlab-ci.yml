@@ -19,7 +19,6 @@ prepare:
   script:
     - gem install bundler --no-ri --no-rdoc
     - bundle install --retry=3 --path vendor
-    - ls vendor
 
 info:
   stage: test
@@ -32,6 +31,8 @@ info:
     - gem env
     - gem list
     - ls -al
+    - ls vendor
+    - ls vendor/gems
 
 test:
   stage: test
