@@ -1,13 +1,21 @@
 image: ruby:2.3
 
 cache:
+  key: vendor
   paths:
     - vendor
 
 variables:
   GEM_HOME: vendor
 
+stages:
+  - prepare
+  - test
+  - gem:build
+  - gem:release
+
 info:
+  stage: prepare
   script:
     - uname -a
     - whoami
@@ -15,12 +23,6 @@ info:
     - ruby -v
     - which ruby
     - ls -al
-
-stages:
-  - prepare
-  - test
-  - gem:build
-  - gem:release
 
 prepare:
   stage: prepare
