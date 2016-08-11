@@ -49,4 +49,5 @@ gem:release:
   when: manual
   stage: gem:release
   script:
+    - git status
     - rake gem:release
