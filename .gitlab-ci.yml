@@ -2,19 +2,26 @@ image: ruby:2.3
 
 info:
   script:
+    - uname -a
+    - whoami
     - pwd
     - ruby -v
     - which ruby
+    - ls -al
 
 stages:
+  - prepare
   - test
   - gem:build
 
-test:
-  stage: test
-  before_script:
+prepare:
+  stage: prepare
+  script:
     - gem install bundler --no-ri --no-rdoc
     - bundle install --retry=3
+
+test:
+  stage: test
   script:
     - rake test
 
@@ -25,3 +32,9 @@ gem:build:
   artifacts:
     paths:
       - pkg/
+
+gem:release:
+  when: manual
+  stage: gem:release
+  script:
+    - rake gem:release
