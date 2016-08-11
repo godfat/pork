@@ -6,7 +6,7 @@ cache:
     - vendor
 
 variables:
-  GEM_HOME: vendor
+  GEM_HOME: vendor/ruby/2.3.0
 
 stages:
   - prepare
@@ -18,7 +18,7 @@ prepare:
   stage: prepare
   script:
     - which bundler || gem install bundler --no-ri --no-rdoc
-    - bundle install --retry=3 --path vendor
+    - bundle install --path vendor
 
 info:
   stage: test
@@ -31,7 +31,6 @@ info:
     - gem env
     - gem list
     - ls -al
-    - ls -R vendor
 
 test:
   stage: test
