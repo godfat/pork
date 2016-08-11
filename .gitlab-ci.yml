@@ -22,7 +22,8 @@ prepare:
 
 info:
   stage: prepare
-  dependencies: prepare
+  dependencies:
+    - prepare
   script:
     - uname -a
     - whoami
