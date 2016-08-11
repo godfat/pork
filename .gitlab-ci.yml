@@ -31,14 +31,11 @@ info:
     - gem env
     - gem list
     - ls -al
-    - ls vendor
-    - ls vendor/gems
+    - ls -R vendor
 
 test:
   stage: test
   script:
-    - ls vendor
-    - ls vendor/gems
     - rake test
 
 gem:build:
