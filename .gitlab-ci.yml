@@ -1,6 +1,7 @@
 image: ruby:2.3
 
 before_script:
+  - pwd
   - ruby -v
   - which ruby
 
