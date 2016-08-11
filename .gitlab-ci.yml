@@ -1,7 +1,6 @@
 image: ruby:2.3
 
 cache:
-  key: vendor
   paths:
     - vendor
 
@@ -17,13 +16,11 @@ stages:
 prepare:
   stage: prepare
   script:
-    - gem install bundler --no-ri --no-rdoc
+    - which bundler || gem install bundler --no-ri --no-rdoc
     - bundle install --retry=3 --path vendor
 
 info:
-  stage: prepare
-  dependencies:
-    - prepare
+  stage: test
   script:
     - uname -a
     - whoami
@@ -40,6 +37,7 @@ test:
   stage: test
   script:
     - ls vendor
+    - ls vendor/gems
     - rake test
 
 gem:build:
