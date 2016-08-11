@@ -21,7 +21,8 @@ prepare:
     - bundle install --retry=3 --path vendor
 
 info:
-  stage: test
+  stage: prepare
+  dependencies: prepare
   script:
     - uname -a
     - whoami
