@@ -27,10 +27,12 @@ prepare:
   script:
     - gem install bundler --no-ri --no-rdoc
     - bundle install --retry=3 --path vendor
+    - ls vendor
 
 test:
   stage: test
   script:
+    - ls vendor
     - rake test
 
 gem:build:
