@@ -5,8 +5,8 @@ cache:
   paths:
     - vendor
 
-variables:
-  GEM_HOME: vendor/ruby/2.3.0
+before_script:
+  - export GEM_HOME=vendor/`ruby -e 'puts [Gem.ruby_engine, Gem.ruby_api_version].join("/")'`
 
 stages:
   - prepare
