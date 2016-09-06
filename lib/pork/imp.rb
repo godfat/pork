@@ -65,7 +65,7 @@ module Pork
         stat.incr_skips
         stat.reporter.case_skip
       else
-        err = [e, description_for("would #{desc}: "), test, seed]
+        err = [e, description_for("would #{desc}"), test, seed]
         case e
         when Failure
           stat.add_failure(err)
