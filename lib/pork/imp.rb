@@ -19,7 +19,7 @@ module Pork
     end
 
     def describe desc=:default, opts={}, &suite
-      executor = Class.new(self){ init("#{desc}: ") }
+      executor = Class.new(self){ init(desc) }
       executor.module_eval(&suite)
       @tests << [:describe, executor, suite, opts]
     end
@@ -65,7 +65,7 @@ module Pork
         stat.incr_skips
         stat.reporter.case_skip
       else
-        err = [e, description_for("would #{desc}"), test, seed]
+        err = [e, description_for("would #{desc}: "), test, seed]
         case e
         when Failure
           stat.add_failure(err)
@@ -83,7 +83,11 @@ module Pork
     end
 
     def description_for name=''
-      "#{@super_executor && @super_executor.description_for}#{@desc}#{name}"
+      if @super_executor
+        "#{@super_executor.description_for}#{@desc}: #{name}"
+      else
+        name
+      end
     end
   end
 end
