@@ -1,4 +1,5 @@
 
+require 'pork/suite'
 require 'pork/isolator'
 
 module Pork
