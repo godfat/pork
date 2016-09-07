@@ -8,7 +8,7 @@ describe 'meta' do
   end
 
   def execute
-    Pork::Isolator[@suite].execute(Pork.execute_mode, @stat)
+    Pork::Executor.execute(:suite => @suite, :stat => @stat)
   end
 
   would 'raise missing assertion' do

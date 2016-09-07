@@ -2,18 +2,17 @@
 require 'pork/mode/shuffled'
 
 module Pork
-  class Parallel
+  class Parallel < Struct.new(:isolator)
     def cores
       8
     end
 
-    def execute isolator, stat=Stat.new, paths=isolator.all_paths
-      executor = Shuffled.new
+    def execute stat=Stat.new, paths=isolator.all_paths
+      executor = Shuffled.new(isolator)
       stat.prepare(paths)
       paths.shuffle.each_slice(cores).map do |paths_slice|
         Thread.new do
           executor.execute(
-            isolator,
             Stat.new(stat.reporter, stat.protected_exceptions),
             paths_slice)
         end

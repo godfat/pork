@@ -8,13 +8,13 @@ end
 
 module Pork
   module Should
-    def execute mode, stat=Stat.new, *args
+    def execute stat=Stat.new, *args
       thread = Thread.current
       original_group, group = thread.group, ThreadGroup.new
       original_stat = thread[:pork_stat]
       group.add(thread)
       thread[:pork_stat] = stat
-      super(mode, stat, *args)
+      super(stat, *args)
     ensure
       thread[:pork_stat] = original_stat
       original_group.add(thread)

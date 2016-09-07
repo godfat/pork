@@ -9,11 +9,6 @@ module Pork
       @map[suite] ||= new(suite)
     end
 
-    def execute mode=Pork.execute_mode, *args
-      require "pork/mode/#{mode}"
-      Pork.const_get(mode.to_s.capitalize).new.execute(self, *args)
-    end
-
     def all_tests
       @all_tests ||= build_all_tests
     end
