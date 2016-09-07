@@ -236,13 +236,14 @@ describe "before/after" do
     @a = 2
   end
 
+  # after should run in reverse order
   after do
-    @a.should.eq 2
-    @a = 3
+    @a.should.eq 3
   end
 
   after do
-    @a.should.eq 3
+    @a.should.eq 2
+    @a = 3
   end
 
   would "run in the right order" do

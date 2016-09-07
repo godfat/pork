@@ -637,20 +637,21 @@ end
 Each `after` block would be called after each `would` block (test case).
 You would probably want to cleanup stuffs inside `after` blocks.
 
-Each nested `describe` would also run parents' `after` block as well.
+Note that each nested `describe` would also run parents' `after` block in a
+reverse manner as opposed to `before`.
 
 ``` ruby
 require 'pork/auto'
 
 describe do
   after do
-    @a.should.eq 1
-    @a += 1
+    @a.should.eq 2
   end
 
   describe do
     after do
-      @a.should.eq 2
+      @a.should.eq 1
+      @a += 1
     end
 
     would do

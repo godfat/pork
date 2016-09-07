@@ -11,8 +11,8 @@ module Pork
     end
 
     def run_after context
+      after.reverse_each{ |b| context.instance_eval(&b) }
       super_env && super_env.run_after(context)
-      after.each{ |b| context.instance_eval(&b) }
     end
   end
 end
