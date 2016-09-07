@@ -3,7 +3,7 @@ require 'pork/runner'
 require 'pork/context'
 
 module Pork
-  class Executor < Struct.new(:pork_stat, :pork_description)
+  class Suite < Struct.new(:pork_stat, :pork_description)
     module Imp
       attr_reader :desc, :tests
 
@@ -43,7 +43,7 @@ module Pork
       private
       def init desc=''
         @desc, @tests, @stash = desc, [], {}
-        @super_executor = ancestors[1..-1].find{ |a| a <= Executor }
+        @super_executor = ancestors[1..-1].find{ |a| a <= Suite }
       end
 
       protected

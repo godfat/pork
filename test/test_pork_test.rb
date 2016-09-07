@@ -2,17 +2,17 @@
 require 'pork/test'
 
 describe 'PORK_TEST=a' do
-  def verify line, executor, index
-    path = Pork::Isolator[executor][index].first
-    type, desc, block, opts = extract(path, executor)
+  def verify line, suite, index
+    path = Pork::Isolator[suite][index].first
+    type, desc, block, opts = extract(path, suite)
     expect(type)                 .eq :would
     expect(desc)                 .eq 'find the corresponding test case'
     expect(block.source_location).eq [__FILE__, line]
     expect(opts)                 .eq :groups => [:a, :b]
   end
 
-  def extract path, executor
-    path.inject(executor.tests) do |tests, idx|
+  def extract path, suite
+    path.inject(suite.tests) do |tests, idx|
       type, arg, = tests[idx]
       case type
       when :describe # we need to go deeper
@@ -25,11 +25,11 @@ describe 'PORK_TEST=a' do
 
   would 'find the corresponding test case', :groups => [:a, :b] do
     line = __LINE__ - 1
-    [self.class, Pork::Executor].each do |executor|
-      verify(line, executor, "#{__FILE__}:#{__LINE__}") # line
-      verify(line, executor, 'a')                       # group
-      verify(line, executor, "#{__FILE__}:#{__LINE__}") # diff line
-      verify(line, executor, __FILE__)                  # file
+    [self.class, Pork::Suite].each do |suite|
+      verify(line, suite, "#{__FILE__}:#{__LINE__}") # line
+      verify(line, suite, 'a')                       # group
+      verify(line, suite, "#{__FILE__}:#{__LINE__}") # diff line
+      verify(line, suite, __FILE__)                  # file
       # for self.class, would is the 1st, for Pork::Executor, would is 2nd
     end
   end
@@ -48,7 +48,7 @@ describe 'PORK_TEST=a' do
       local['a']     .should.nil?
       local['b'].size.should.eq 1
 
-      a, b = top['b'].map{ |path| extract(path, Pork::Executor) }
+      a, b = top['b'].map{ |path| extract(path, Pork::Suite) }
       expect(a[0])                .eq :would
       expect(a[1])                .eq 'find the corresponding test case'
       expect(a[3])                .eq :groups => [:a, :b]

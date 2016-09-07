@@ -4,7 +4,7 @@ require 'stringio'
 
 describe Pork::Stat do
   before do
-    @executor = Class.new(Pork::Executor){init}
+    @suite = Class.new(Pork::Suite){init}
   end
 
   def skip_if_backtrace_is_wrong
@@ -23,7 +23,7 @@ describe Pork::Stat do
   def run check=:expect_one_error
     stat = Pork::Stat.new(Pork.report_class.new(StringIO.new))
     stat.protected_exceptions = pork_stat.protected_exceptions
-    @stat = Pork::Isolator[@executor].execute(Pork.execute_mode, stat)
+    @stat = Pork::Isolator[@suite].execute(Pork.execute_mode, stat)
     send(check)
   end
 
@@ -42,12 +42,12 @@ describe Pork::Stat do
   end
 
   would 'rescue custom errors' do
-    @executor.would{ raise WebMockError }
+    @suite.would{ raise WebMockError }
     run
   end
 
   would 'always have backtrace' do
-    @executor.would{}
+    @suite.would{}
     run
 
     err, _, test = @stat.exceptions.first
@@ -67,28 +67,28 @@ describe Pork::Stat do
     end
 
     would 'one line' do
-      @executor.would{ flunk }
-      verify('=> @executor.would{ flunk }')
+      @suite.would{ flunk }
+      verify('=> @suite.would{ flunk }')
     end
 
     would 'more lines' do
-      @executor.would do
+      @suite.would do
         flunk
       end
       verify(<<-SOURCE.chomp)
-     @executor.would do
+     @suite.would do
 \e[41m  =>   flunk\e[0m
      end
       SOURCE
     end
 
     would 'multiple lines' do
-      @executor.would do
+      @suite.would do
         raise \
           'error'
       end
       verify(<<-SOURCE.chomp)
-     @executor.would do
+     @suite.would do
 \e[41m  =>   raise \\\e[0m
 \e[41m  =>     'error'\e[0m
      end
@@ -97,14 +97,14 @@ describe Pork::Stat do
 
     would 'multiple lines with == {}' do
       skip_if_backtrace_is_wrong
-      @executor.would do
+      @suite.would do
         0.should == {
 
 
         }
       end
       verify(<<-SOURCE.chomp, :expect_one_failure)
-     @executor.would do
+     @suite.would do
 \e[41m  =>   0.should == {\e[0m
 \e[41m  => \e[0m
 \e[41m  => \e[0m
@@ -114,20 +114,20 @@ describe Pork::Stat do
     end
 
     would 'show the line in the test, not other methods' do
-      @executor.send(:define_method, :f){ flunk }
-      @executor.would do
+      @suite.send(:define_method, :f){ flunk }
+      @suite.would do
         f
       end
       verify(<<-SOURCE.chomp)
-     @executor.would do
+     @suite.would do
 \e[41m  =>   f\e[0m
      end
       SOURCE
     end
 
     would 'show the line in the test, even if it is from 3rd party' do
-      @executor.would{ flunk }
-      verify("=> @executor.would{ flunk }") do |err|
+      @suite.would{ flunk }
+      verify("=> @suite.would{ flunk }") do |err|
         err.set_backtrace(err.backtrace.unshift("bad.rb:#{__LINE__}"))
       end
     end

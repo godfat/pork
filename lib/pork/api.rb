@@ -1,31 +1,31 @@
 
-require 'pork/executor'
+require 'pork/suite'
 
 module Pork
   module API
     module_function
     def before &block
-      Executor.before(&block)
+      Suite.before(&block)
     end
 
     def after &block
-      Executor.after(&block)
+      Suite.after(&block)
     end
 
     def copy desc=:default, &block
-      Executor.copy(desc, &block)
+      Suite.copy(desc, &block)
     end
 
     def paste desc=:default, *args
-      Executor.paste(desc, *args)
+      Suite.paste(desc, *args)
     end
 
     def describe desc=:default, opts={}, &suite
-      Executor.describe(desc, opts, &suite)
+      Suite.describe(desc, opts, &suite)
     end
 
     def would desc=:default, opts={}, &test
-      Executor.would(desc, opts, &test)
+      Suite.would(desc, opts, &test)
     end
   end
 end

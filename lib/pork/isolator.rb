@@ -1,12 +1,12 @@
 
 require 'pork/env'
-require 'pork/executor'
+require 'pork/suite'
 
 module Pork
-  class Isolator < Struct.new(:executor)
-    def self.[] executor=Executor
+  class Isolator < Struct.new(:suite)
+    def self.[] suite=Suite
       @map ||= {}
-      @map[executor] ||= new(executor)
+      @map[suite] ||= new(suite)
     end
 
     def execute mode=Pork.execute_mode, *args
@@ -54,7 +54,7 @@ module Pork
       env = Env.new(super_env)
       idx = path.first
 
-      executor.tests.first(idx).each do |(type, arg, _)|
+      suite.tests.first(idx).each do |(type, arg, _)|
         case type
         when :before
           env.before << arg
@@ -64,17 +64,17 @@ module Pork
       end
 
       if path.size == 1
-        _, desc, test = executor.tests[idx]
-        executor.run(stat, desc, test, env)
+        _, desc, test = suite.tests[idx]
+        suite.run(stat, desc, test, env)
       else
-        Isolator[executor.tests[idx][1]].isolate(stat, path.drop(1), env)
+        Isolator[suite.tests[idx][1]].isolate(stat, path.drop(1), env)
       end
 
       stat
     end
 
     def build_all_tests result={}, path=[]
-      executor.tests.each_with_index.inject(result) do |
+      suite.tests.each_with_index.inject(result) do |
         r, ((type, imp, test, opts), index)|
         current = path + [index]
 

@@ -343,7 +343,7 @@ end
 
 describe 'describe arguments' do
   check = lambda do |ctx, desc, name=nil|
-    ctx.should.lt Pork::Executor
+    ctx.should.lt Pork::Suite
     ctx.description_for(name).should.eq "#{desc}: #{name}"
   end
 
@@ -372,8 +372,8 @@ describe 'describe arguments' do
   end
 
   would 'work with namespaced modules' do
-    str = 'Pork::Executor'
-    Pork::API.describe(Pork::Executor) do
+    str = 'Pork::Suite'
+    Pork::API.describe(Pork::Suite) do
       check[self, str]
       would 'd' do check[self.class, str, 'd'] end
     end

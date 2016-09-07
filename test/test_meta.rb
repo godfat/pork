@@ -4,16 +4,16 @@ require 'pork/test'
 describe 'meta' do
   before do
     @stat = Pork::Stat.new(Pork.report_class.new(StringIO.new))
-    @executor = Class.new(Pork::Executor){init}
+    @suite = Class.new(Pork::Suite){init}
   end
 
   def execute
-    Pork::Isolator[@executor].execute(Pork.execute_mode, @stat)
+    Pork::Isolator[@suite].execute(Pork.execute_mode, @stat)
   end
 
   would 'raise missing assertion' do
-    @executor.would{}
-    @executor.after{ok} # defined after would so no run for that
+    @suite.would{}
+    @suite.after{ok} # defined after would so no run for that
     stat = execute
     err, _, _ = stat.exceptions.first
 
@@ -22,8 +22,8 @@ describe 'meta' do
   end
 
   would 'not raise missing assertion if there is one in after block' do
-    @executor.after{ok}
-    @executor.would{}
+    @suite.after{ok}
+    @suite.would{}
     stat = execute
 
     expect(stat.exceptions).empty?
@@ -31,8 +31,8 @@ describe 'meta' do
 
   would 'run after block even if there is an error in test' do
     called = false
-    @executor.after{ called = true }
-    @executor.would{ flunk }
+    @suite.after{ called = true }
+    @suite.would{ flunk }
     execute
 
     expect(called).eq true
