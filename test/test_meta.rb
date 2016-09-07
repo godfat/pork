@@ -11,6 +11,7 @@ describe 'meta' do
 
   would 'raise missing assertion' do
     @executor.would{}
+    @executor.after{ok} # defined after would so no run for that
     stat = execute
     err, _, _ = stat.exceptions.first
 
@@ -24,5 +25,14 @@ describe 'meta' do
     stat = execute
 
     expect(stat.exceptions).empty?
+  end
+
+  would 'run after block even if there is an error in test' do
+    called = false
+    @executor.after{ called = true }
+    @executor.would{ flunk }
+    execute
+
+    expect(called).eq true
   end
 end

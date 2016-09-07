@@ -47,12 +47,23 @@ module Pork
 
       stat.reporter.case_start(context)
 
-      run_protected(stat, desc, test, seed) do
+      passed = run_protected(stat, desc, test, seed) do
         env.run_before(context)
         context.instance_eval(&test)
+      end
+
+      run_protected(stat, desc, test, seed) do
         env.run_after(context)
-        raise Error.new('Missing assertions') if assertions == stat.assertions
-        stat.reporter.case_pass
+      end
+
+      if passed
+        if assertions == stat.assertions
+          run_protected(stat, desc, test, seed) do
+            raise Error.new('Missing assertions')
+          end
+        else
+          stat.reporter.case_pass
+        end
       end
 
       stat.incr_tests
@@ -60,6 +71,7 @@ module Pork
 
     def run_protected stat, desc, test, seed
       yield
+      true
     rescue *stat.protected_exceptions => e
       case e
       when Skip
@@ -76,6 +88,7 @@ module Pork
           stat.reporter.case_errored
         end
       end
+      false
     end
 
     protected
