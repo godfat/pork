@@ -1,6 +1,4 @@
 
-require 'pork'
-
 module Pork
   module BottomupBacktrace
     private

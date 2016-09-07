@@ -1,6 +1,4 @@
 
-require 'pork/expect'
-
 module Kernel
   def should *args, &block
     stat = Thread.current.group.list.find{ |t| t[:pork_stat] }[:pork_stat]

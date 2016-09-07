@@ -1,6 +1,4 @@
 
-require 'pork'
-
 module Pork
   module Color
     def msg_skip   ;  yellow(super); end
