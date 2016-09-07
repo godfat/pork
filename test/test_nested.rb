@@ -88,12 +88,16 @@ describe 'assertion in after block' do
   end
 end
 
-would 'raise missing assertion' do
-  stat = Pork::Stat.new(Pork.report_class.new(StringIO.new))
-  executor = Class.new(Pork::Executor){init}
-  executor.would{}
-  stat = executor.execute(Pork.execute_mode, stat)
-  err, _, _ = stat.exceptions.first
-  expect(err).kind_of?(Pork::Error)
-  expect(err.message).eq 'Missing assertions'
+describe 'no before/after after would' do
+  would do
+    ok
+  end
+
+  before do
+    flunk
+  end
+
+  after do
+    flunk
+  end
 end
