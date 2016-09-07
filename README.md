@@ -93,7 +93,7 @@ end
 
 describe 'C' do
   # Also, we're not forced to include something in all describe blocks.
-  # If we want, we could do this instead: `Pork::Executor.include(Module.new)`
+  # If we want, we could do this instead: `Pork::Suite.include(Module.new)`
   # That would be the same as including in `Bacon::Context`
   would 'not respond_to? in_module nor in_describe' do
     should.not.respond_to?(:in_module)
@@ -298,7 +298,7 @@ Pork.autorun
 
 Here it `require 'pork/should'`, and it would load the monkey patches for
 inserting `Kernel#should` shown in SYNOPSIS. This is actually optional,
-and could be replaced with `Pork::Executor#expect`. For example, we could
+and could be replaced with `Pork::Suite#expect`. For example, we could
 also write it this way:
 
 ``` ruby
@@ -580,9 +580,9 @@ So this creates a test suite which should be containing various test cases
 suite, which accepts anything could be converted to a string. The _default_
 description is `:default` (which would be converted to `'default: '`)
 
-Each `describe` block would create a new subclass of `Pork::Executor` for
+Each `describe` block would create a new subclass of `Pork::Suite` for
 isolating test suites. Each nested `describe` block would be a subclass of
-its parent `Pork::Executor`.
+its parent `Pork::Suite`.
 
 ``` ruby
 require 'pork/auto'
@@ -602,7 +602,7 @@ description of the test case, which accepts anything could be converted to
 a string. The _default_ description is also `:default`.
 
 Each `would` block would be run inside a new instance of the describing
-`Pork::Executor` to isolate instance variables.
+`Pork::Suite` to isolate instance variables.
 
 ### Pork::API.before
 
@@ -694,7 +694,7 @@ describe do
 end
 ```
 
-### Pork::Executor#expect
+### Pork::Suite#expect
 
 It is the core of `Kernel#should`. Think of:
 
@@ -720,7 +720,7 @@ is equivalent to:
 expect(object, 'message').eq(1)
 ```
 
-### Pork::Executor#skip
+### Pork::Suite#skip
 
 At times we might want to skip some tests while leave the codes there without
 removing them or commenting them out. This is where `skip` would be helpful.
@@ -735,7 +735,7 @@ describe do
 end
 ```
 
-### Pork::Executor#ok
+### Pork::Suite#ok
 
 Because Pork would complain if a test case does not have any assertions,
 sometimes we might want to tell Pork that it's ok because we've already
@@ -758,7 +758,7 @@ describe do
 end
 ```
 
-### Pork::Executor#flunk
+### Pork::Suite#flunk
 
 If we're writing program carefully, there are a few cases where a condition
 would never meet. We could `raise "IMPOSSIBLE"` or we could simply call
