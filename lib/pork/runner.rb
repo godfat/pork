@@ -14,15 +14,11 @@ module Pork
         context.instance_eval(&test)
       end
 
-      protected do
-        env.run_after(context)
-      end
+      protected{ env.run_after(context) }
 
       if passed
         if assertions == stat.assertions
-          protected do
-            raise Error.new('Missing assertions')
-          end
+          protected{ raise Error.new('Missing assertions') }
         else
           stat.reporter.case_pass
         end
