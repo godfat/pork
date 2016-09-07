@@ -29,7 +29,7 @@ module Pork
       @tests << [:would   , desc    , test, opts]
     end
 
-    def execute mode, *args
+    def execute mode=Pork.execute_mode, *args
       require "pork/mode/#{mode}"
       public_send(mode, *args)
     end
