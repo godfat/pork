@@ -3,6 +3,7 @@ require 'pork/env'
 require 'pork/stat'
 require 'pork/error'
 require 'pork/expect'
+require 'pork/runner'
 
 module Pork
   module Imp
@@ -34,74 +35,27 @@ module Pork
       public_send(mode, *args)
     end
 
-    private
-    def init desc=''
-      @desc, @tests, @stash = desc, [], {}
-      @super_executor = ancestors[1..-1].find{ |a| a <= Executor }
-    end
-
-    def run stat, desc, test, env
-      assertions = stat.assertions
-      context = new(stat, desc)
-      seed = Pork.reseed
-
-      stat.reporter.case_start(context)
-
-      passed = run_protected(stat, desc, test, seed) do
-        env.run_before(context)
-        context.instance_eval(&test)
-      end
-
-      run_protected(stat, desc, test, seed) do
-        env.run_after(context)
-      end
-
-      if passed
-        if assertions == stat.assertions
-          run_protected(stat, desc, test, seed) do
-            raise Error.new('Missing assertions')
-          end
-        else
-          stat.reporter.case_pass
-        end
-      end
-
-      stat.incr_tests
-    end
-
-    def run_protected stat, desc, test, seed
-      yield
-      true
-    rescue *stat.protected_exceptions => e
-      case e
-      when Skip
-        stat.incr_skips
-        stat.reporter.case_skip
-      else
-        err = [e, description_for("would #{desc}"), test, seed]
-        case e
-        when Failure
-          stat.add_failure(err)
-          stat.reporter.case_failed
-        else
-          stat.add_error(err)
-          stat.reporter.case_errored
-        end
-      end
-      false
-    end
-
-    protected
-    def search_stash desc
-      @stash[desc] or @super_executor && @super_executor.search_stash(desc)
-    end
-
     def description_for name=''
       if @super_executor
         "#{@super_executor.description_for}#{@desc}: #{name}"
       else
         name
       end
+    end
+
+    private
+    def init desc=''
+      @desc, @tests, @stash = desc, [], {}
+      @super_executor = ancestors[1..-1].find{ |a| a <= Executor }
+    end
+
+    def run *args
+      Runner.new(self, Pork.reseed, *args).run
+    end
+
+    protected
+    def search_stash desc
+      @stash[desc] or @super_executor && @super_executor.search_stash(desc)
     end
   end
 end
