@@ -5,7 +5,8 @@ module Pork
   module Report::Imp
     def initialize o=$stdout
       super
-      extend(*Pork.report_extensions.reverse) if Pork.report_extensions.any?
+      extensions = Pork.report_extensions
+      extend(*extensions.reverse) if extensions.any?
     end
 
     def case_start _; end
