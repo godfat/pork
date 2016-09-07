@@ -75,12 +75,11 @@ module Pork
       end
     end
 
-    def case_pass   ; end
     def case_skip   ; end
     def case_failed ; self.failed = true; end
     def case_errored; self.failed = true; end
 
-    def case_end
+    def case_pass
       bar.tick
     end
 

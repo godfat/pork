@@ -78,3 +78,22 @@ describe Pork::Context do
     expect(pork_description).eq desc
   end
 end
+
+describe 'assertion in after block' do
+  after do
+    ok
+  end
+
+  would do
+  end
+end
+
+would 'raise missing assertion' do
+  stat = Pork::Stat.new(Pork.report_class.new(StringIO.new))
+  executor = Class.new(Pork::Executor){init}
+  executor.would{}
+  stat = executor.execute(Pork.execute_mode, stat)
+  err, _, _ = stat.exceptions.first
+  expect(err).kind_of?(Pork::Error)
+  expect(err.message).eq 'Missing assertions'
+end

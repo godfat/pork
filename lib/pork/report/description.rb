@@ -32,7 +32,7 @@ module Pork
       self.last_executor = executor
     end
 
-    def case_end
+    def case_pass
       io.puts
     end
   end

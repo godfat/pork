@@ -54,6 +54,7 @@ describe Pork::Stat do
     err.set_backtrace([])
 
     expect(err).kind_of?(Pork::Error)
+    expect(err.message).eq 'Missing assertions'
     expect(@stat.reporter.send(:show_backtrace, test, err)).not.empty?
   end
 

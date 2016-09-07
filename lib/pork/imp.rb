@@ -44,17 +44,18 @@ module Pork
       assertions = stat.assertions
       context = new(stat, desc)
       seed = Pork.reseed
+
       stat.reporter.case_start(context)
+
       run_protected(stat, desc, test, seed) do
         env.run_before(context)
         context.instance_eval(&test)
+        env.run_after(context)
         raise Error.new('Missing assertions') if assertions == stat.assertions
         stat.reporter.case_pass
       end
-    ensure
+
       stat.incr_tests
-      run_protected(stat, desc, test, seed){ env.run_after(context) }
-      stat.reporter.case_end
     end
 
     def run_protected stat, desc, test, seed
