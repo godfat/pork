@@ -2,10 +2,10 @@
 require 'pork/error'
 
 module Pork
-  class Runner < Struct.new(:executor, :seed, :stat, :desc, :test, :env)
+  class Runner < Struct.new(:suite, :seed, :stat, :desc, :test, :env)
     def run
       assertions = stat.assertions
-      context = executor.new(stat, desc)
+      context = suite.new(stat, desc)
 
       stat.reporter.case_start(context)
 
@@ -37,7 +37,7 @@ module Pork
         stat.incr_skips
         stat.reporter.case_skip
       else
-        err = [e, executor.description_for("would #{desc}"), test, seed]
+        err = [e, suite.description_for("would #{desc}"), test, seed]
         case e
         when Failure
           stat.add_failure(err)
