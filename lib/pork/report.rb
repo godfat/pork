@@ -10,6 +10,7 @@ module Pork
     end
 
     def case_start _; end
+    def case_end    ; end
     def case_pass   ; io.print msg_pass   ; end
     def case_skip   ; io.print msg_skip   ; end
     def case_failed ; io.print msg_failed ; end

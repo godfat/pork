@@ -3,7 +3,7 @@ require 'pork/report/dot'
 
 module Pork
   class Description < Dot
-    attr_accessor :last_executor
+    attr_accessor :last_suite
 
     def msg_pass
       msg = "\ro"
@@ -19,20 +19,20 @@ module Pork
     def msg_errored; "\r#{super}"; end
 
     def case_start context
-      self.last_executor ||= Executor
-      executor = context.class
-      levels = executor.ancestors.drop(1).count{ |a| a <= Executor }
+      self.last_suite ||= Suite
+      suite = context.class
+      levels = suite.ancestors.drop(1).count{ |a| a <= Suite }
 
-      if executor != Executor && last_executor != executor
-        io.puts "#{'  ' * (levels - 1)}#{executor.desc}"
+      if suite != Suite && last_suite != suite
+        io.puts "#{'  ' * (levels - 1)}#{suite.desc}"
       end
 
       io.print "#{'  ' * levels}#{context.pork_description}"
 
-      self.last_executor = executor
+      self.last_suite = suite
     end
 
-    def case_pass
+    def case_end
       io.puts
     end
   end

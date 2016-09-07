@@ -25,6 +25,7 @@ module Pork
       end
 
       stat.incr_tests
+      stat.reporter.case_end
     end
 
     private
