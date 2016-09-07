@@ -23,6 +23,10 @@ module Pork
     @report_extensions ||= []
   end
 
+  def self.execute_extensions
+    @execute_extensions ||= []
+  end
+
   def self.protected_exceptions
     @protected_exceptions ||= [Pork::Error, StandardError]
   end

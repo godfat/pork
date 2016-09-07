@@ -20,4 +20,6 @@ module Pork
       original_group.add(thread)
     end
   end
+
+  execute_extensions << Should
 end
