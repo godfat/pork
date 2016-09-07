@@ -1,5 +1,5 @@
 
-require 'pork/executor'
+require 'pork/expect'
 
 module Kernel
   def should *args, &block
@@ -22,6 +22,4 @@ module Pork
       original_group.add(thread)
     end
   end
-
-  Executor.extend(Should)
 end

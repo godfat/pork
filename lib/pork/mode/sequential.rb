@@ -1,11 +1,11 @@
 
 module Pork
   module Sequential
-    def sequential stat=Stat.new, paths=all_paths
+    extend self
+
+    def execute isolator, stat=Stat.new, paths=isolator.all_paths
       stat.prepare(paths)
-      paths.inject(stat, &method(:isolate))
+      paths.inject(stat, &isolator.method(:isolate))
     end
   end
-
-  Executor.extend(Sequential)
 end

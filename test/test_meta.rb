@@ -1,4 +1,6 @@
 
+require 'pork/test'
+
 describe 'meta' do
   before do
     @stat = Pork::Stat.new(Pork.report_class.new(StringIO.new))
@@ -6,7 +8,7 @@ describe 'meta' do
   end
 
   def execute
-    @executor.execute(Pork.execute_mode, @stat)
+    Pork::Isolator[@executor].execute(Pork.execute_mode, @stat)
   end
 
   would 'raise missing assertion' do

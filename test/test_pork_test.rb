@@ -3,7 +3,7 @@ require 'pork/test'
 
 describe 'PORK_TEST=a' do
   def verify line, executor, index
-    path = executor[index].first
+    path = Pork::Isolator[executor][index].first
     type, desc, block, opts = extract(path, executor)
     expect(type)                 .eq :would
     expect(desc)                 .eq 'find the corresponding test case'
@@ -12,11 +12,11 @@ describe 'PORK_TEST=a' do
   end
 
   def extract path, executor
-    path.inject(executor.instance_variable_get(:@tests)) do |tests, idx|
+    path.inject(executor.tests) do |tests, idx|
       type, arg, = tests[idx]
       case type
       when :describe # we need to go deeper
-        arg.instance_variable_get(:@tests)
+        arg.tests
       else
         tests[idx] # should end here
       end
@@ -37,16 +37,18 @@ describe 'PORK_TEST=a' do
   describe 'PORK_TEST=b' do
     would 'find both', :groups => [:b] do
       line = __LINE__ - 1
-      woulds = Pork::Executor[__FILE__]
-      woulds               .size.should.eq 4
-      Pork::Executor['a']  .size.should.eq 1
-      Pork::Executor['b']  .size.should.eq 2
-      Pork::Executor['b']       .should.eq woulds.first(2)
-      Pork::Executor['a,b']     .should.eq woulds.first(2)
-      self.class['a']           .should.nil?
-      self.class['b']      .size.should.eq 1
+      top = Pork::Isolator[]
+      woulds = top[__FILE__]
+      woulds    .size.should.eq 4
+      top['a']  .size.should.eq 1
+      top['b']  .size.should.eq 2
+      top['b']       .should.eq woulds.first(2)
+      top['a,b']     .should.eq woulds.first(2)
+      local = Pork::Isolator[self.class]
+      local['a']     .should.nil?
+      local['b'].size.should.eq 1
 
-      a, b = Pork::Executor['b'].map{ |path| extract(path, Pork::Executor) }
+      a, b = top['b'].map{ |path| extract(path, Pork::Executor) }
       expect(a[0])                .eq :would
       expect(a[1])                .eq 'find the corresponding test case'
       expect(a[3])                .eq :groups => [:a, :b]
@@ -60,12 +62,13 @@ describe 'PORK_TEST=a' do
   describe 'PORK_TEST=c', :groups => [:c] do
     would 'inherit groups from describe', :groups => [:d] do
       line = __LINE__ - 2
-      c = Pork::Executor['c']
-      d = Pork::Executor['d']
-      expect(c.size)                               .eq 2
-      expect(d.size)                               .eq 1
-      expect(c.first)                              .eq d.first
-      expect(Pork::Executor["#{__FILE__}:#{line}"]).eq c
+      isolator = Pork::Isolator[]
+      c = isolator['c']
+      d = isolator['d']
+      expect(c.size)                         .eq 2
+      expect(d.size)                         .eq 1
+      expect(c.first)                        .eq d.first
+      expect(isolator["#{__FILE__}:#{line}"]).eq c
     end
 
     would 'dummy' do

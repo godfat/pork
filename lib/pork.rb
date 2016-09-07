@@ -1,6 +1,7 @@
 
 require 'pork/api'
-require 'pork/executor'
+require 'pork/stat'
+require 'pork/isolator'
 
 module Pork
   # default to :shuffled while eliminating warnings for uninitialized ivar
@@ -76,15 +77,16 @@ module Pork
   end
 
   def self.execute
+    isolator = Isolator[]
     if ENV['PORK_TEST']
-      if tests = Executor[ENV['PORK_TEST']]
-        @stat = Executor.execute(execute_mode, stat, tests)
+      if tests = isolator[ENV['PORK_TEST']]
+        @stat = isolator.execute(execute_mode, stat, tests)
       else
         puts "Cannot find test: #{ENV['PORK_TEST']}"
         exit 254
       end
     else
-      @stat = Executor.execute(execute_mode, stat)
+      @stat = isolator.execute(execute_mode, stat)
     end
   end
 

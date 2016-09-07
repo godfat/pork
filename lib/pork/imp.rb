@@ -1,8 +1,4 @@
 
-require 'pork/env'
-require 'pork/stat'
-require 'pork/error'
-require 'pork/expect'
 require 'pork/runner'
 
 module Pork
@@ -30,11 +26,6 @@ module Pork
       @tests << [:would   , desc    , test, opts]
     end
 
-    def execute mode=Pork.execute_mode, *args
-      require "pork/mode/#{mode}"
-      public_send(mode, *args)
-    end
-
     def description_for name=''
       if @super_executor
         "#{@super_executor.description_for}#{@desc}: #{name}"
@@ -43,14 +34,14 @@ module Pork
       end
     end
 
+    def run *args
+      Runner.new(self, Pork.reseed, *args).run
+    end
+
     private
     def init desc=''
       @desc, @tests, @stash = desc, [], {}
       @super_executor = ancestors[1..-1].find{ |a| a <= Executor }
-    end
-
-    def run *args
-      Runner.new(self, Pork.reseed, *args).run
     end
 
     protected

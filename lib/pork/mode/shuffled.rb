@@ -1,11 +1,11 @@
 
 module Pork
   module Shuffled
-    def shuffled stat=Stat.new, paths=all_paths
+    extend self
+
+    def execute isolator, stat=Stat.new, paths=isolator.all_paths
       stat.prepare(paths)
-      paths.shuffle.inject(stat, &method(:isolate))
+      paths.shuffle.inject(stat, &isolator.method(:isolate))
     end
   end
-
-  Executor.extend(Shuffled)
 end

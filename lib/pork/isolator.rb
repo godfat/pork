@@ -1,6 +1,21 @@
 
+require 'pork/env'
+require 'pork/executor'
+
 module Pork
-  module Isolate
+  class Isolator < Struct.new(:executor)
+    def self.[] executor=Executor
+      @map ||= {}
+      @map[executor] ||= new(executor)
+    end
+
+    def execute mode=Pork.execute_mode, *args
+      require "pork/mode/#{mode}"
+      mod = Pork.const_get(mode.to_s.capitalize)
+      mod.extend(Should)
+      mod.execute(self, *args)
+    end
+
     def all_tests
       @all_tests ||= build_all_tests
     end
@@ -39,7 +54,7 @@ module Pork
       env = Env.new(super_env)
       idx = path.first
 
-      @tests.first(idx).each do |(type, arg, _)|
+      executor.tests.first(idx).each do |(type, arg, _)|
         case type
         when :before
           env.before << arg
@@ -49,24 +64,23 @@ module Pork
       end
 
       if path.size == 1
-        _, desc, test = @tests[idx]
-        run(stat, desc, test, env)
+        _, desc, test = executor.tests[idx]
+        executor.run(stat, desc, test, env)
       else
-        @tests[idx][1].isolate(stat, path.drop(1), env)
+        Isolator[executor.tests[idx][1]].isolate(stat, path.drop(1), env)
       end
 
       stat
     end
 
     def build_all_tests result={}, path=[]
-      @tests.each_with_index.inject(result) do |r,
-                                                ((type, imp, test, opts),
-                                                  index)|
+      executor.tests.each_with_index.inject(result) do |
+        r, ((type, imp, test, opts), index)|
         current = path + [index]
 
         case type
         when :describe
-          imp.build_all_tests(r, current) do |nested|
+          Isolator[imp].build_all_tests(r, current) do |nested|
             store_path(r, nested, test, opts[:groups])
           end
         when :would

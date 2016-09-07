@@ -1,4 +1,6 @@
 
+require 'pork/error'
+
 module Pork
   class Runner < Struct.new(:executor, :seed, :stat, :desc, :test, :env)
     def run

@@ -3,21 +3,22 @@ require 'pork/mode/shuffled'
 
 module Pork
   module Parallel
+    extend self
+
     def cores
       8
     end
 
-    def parallel stat=Stat.new, paths=all_paths
+    def execute isolator, stat=Stat.new, paths=isolator.all_paths
       stat.prepare(paths)
       paths.shuffle.each_slice(cores).map do |paths_slice|
         Thread.new do
-          execute(:shuffled,
-                  Stat.new(stat.reporter, stat.protected_exceptions),
-                  paths_slice)
+          Shuffled.execute(
+            isolator,
+            Stat.new(stat.reporter, stat.protected_exceptions),
+            paths_slice)
         end
       end.map(&:value).inject(stat, &:merge)
     end
   end
-
-  Executor.extend(Parallel)
 end
