@@ -11,9 +11,7 @@ module Pork
 
     def execute mode=Pork.execute_mode, *args
       require "pork/mode/#{mode}"
-      mod = Pork.const_get(mode.to_s.capitalize)
-      mod.extend(*Pork.execute_extensions.reverse) if Pork.execute_extensions.any?
-      mod.execute(self, *args)
+      Pork.const_get(mode.to_s.capitalize).new.execute(self, *args)
     end
 
     def all_tests
