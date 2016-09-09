@@ -3,7 +3,7 @@ require 'pork/suite'
 require 'pork/isolator'
 
 module Pork
-  Executor = Struct.new(:isolator) do
+  class Executor < Struct.new(:isolator)
     def self.[] index
       Isolator[][index]
     end

@@ -2,7 +2,7 @@
 require 'pork/error'
 
 module Pork
-  Runner = Struct.new(:suite, :seed, :stat, :desc, :test, :env) do
+  class Runner < Struct.new(:suite, :seed, :stat, :desc, :test, :env)
     def run
       assertions = stat.assertions
       context = suite.new(stat, desc)

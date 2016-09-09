@@ -1,6 +1,6 @@
 
 module Pork
-  Env = Struct.new(:super_env, :before, :after) do
+  class Env < Struct.new(:super_env, :before, :after)
     def initialize se=nil
       super(se, [], [])
     end
