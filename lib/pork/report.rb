@@ -153,5 +153,5 @@ module Pork
     end
   end
 
-  Report.__send__(:include, Report::Imp)
+  Report.include(Report::Imp)
 end

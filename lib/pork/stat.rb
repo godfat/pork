@@ -63,5 +63,5 @@ module Pork
     end
   end
 
-  Stat.__send__(:include, Stat::Imp)
+  Stat.include(Stat::Imp)
 end
