@@ -1,5 +1,29 @@
 # CHANGES
 
+## Pork 2.0.0 -- 2016-09-10
+
+### Incompatible changes
+
+* `Pork::Executor` is now renamed to `Pork::Suite`, and the new
+  `Pork::Executor` would be served as the real executor who's responsible
+  for running the test suites!
+* `Pork::Executor.execute` would now take a hash as the argument.
+* `Pork::Suite.after` would now run in a reverse manner because that would
+  serve better as a destructor.
+
+### Enhancement
+
+* `Pork::Suite.desc` would now preserve the original argument being passed to
+  `Pork::Suite.describe`, rather than converting it to a string.
+* Major internal structure cleanup. Now we don't include everything into the
+  context, but use different objects to do different things. For example,
+  now we have `Pork::Isolator` to isolate the context.
+* Introduced `Pork.execute_extensions` which would be extending to
+  `Pork::Executor`. The only extension for it for now is `Pork::Should`.
+* Don't crash if `Pork.loaded` was never called.
+* Now you could also make assertions in `after` block without triggering
+  `Missing assertions` errors.
+
 ## Pork 1.5.0 -- 2016-03-10
 
 ### Enhancement
