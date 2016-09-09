@@ -5,7 +5,7 @@ module Pork
     @inspect = inspect || @inspect ||= :auto
   end
 
-  class Inspect < Struct.new(:flip)
+  Inspect = Struct.new(:flip) do
     Undefined = Object.new
     Undefined.singleton_class.module_eval do
       def inspect

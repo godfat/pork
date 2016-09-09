@@ -3,7 +3,7 @@ require 'pork/env'
 require 'pork/suite'
 
 module Pork
-  class Isolator < Struct.new(:suite)
+  Isolator = Struct.new(:suite) do
     def self.[] suite=Suite
       @map ||= {}
       @map[suite] ||= new(suite)

@@ -2,7 +2,7 @@
 require 'pork/mode/shuffled'
 
 module Pork
-  class Parallel < Struct.new(:isolator)
+  Parallel = Struct.new(:isolator) do
     def cores
       8
     end
