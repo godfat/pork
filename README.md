@@ -7,6 +7,7 @@ by Lin Jen-Shin ([godfat](http://godfat.org))
 * [github](https://github.com/godfat/pork)
 * [rubygems](https://rubygems.org/gems/pork)
 * [rdoc](http://rdoc.info/github/godfat/pork)
+* [issues](https://github.com/godfat/pork/issues) (feel free to ask for support)
 
 ## DESCRIPTION:
 
