@@ -68,38 +68,78 @@ module Pork
 
     def build_all_tests result={}, path=[]
       suite.tests.each_with_index.inject(result) do |
-        r, ((type, imp, test, opts), index)|
+        tests, ((type, imp, block, opts), index)|
         current = path + [index]
 
         case type
+        when :describe, :would
+          source_location = expand_source_location(block)
+          init_source_store_path(tests, source_location)
+        end
+
+        case type
         when :describe
-          Isolator[imp].build_all_tests(r, current) do |nested|
-            store_path(r, nested, test, opts[:groups])
+          Isolator[imp].build_all_tests(tests, current) do |nested|
+            store_path(tests, nested, source_location, opts[:groups])
           end
         when :would
           yield(current) if block_given?
-          store_path(r, current, test, opts[:groups])
+          store_path(tests, current, source_location, opts[:groups])
         end
 
-        r
+        tests
       end
     end
 
-    def store_path tests, path, test, groups
+    def expand_source_location block
+      file, line = block.source_location
+      [File.expand_path(file), line]
+    end
+
+    def init_source_store_path tests, source_location
+      source, line = source_location
+
+      root = tests[:files] ||= {}
+      map = root[source] ||= {}
+
+      # Most of the time, line is always getting larger because we're
+      # scanning from top to bottom, and we really need to make sure
+      # that the map is sorted because whenever we're looking up which
+      # test we want from a particular line, we want to find the closest
+      # block rounding up. See Isolator#by_source
+      # However, it's not always appending from top to bottom, because
+      # we might be adding more tests from Suite#paste, and the original
+      # test could be defined in the same file, on previous lines!
+      # Because of this, we really need to make sure the map is balanced.
+      # If we ever have ordered map in Ruby, we don't have to do this...
+      # See the test for Isolator.all_tests (test/test_isolator.rb)
+      balanced_append(map, line, [])
+    end
+
+    def store_path tests, path, source_location, groups
       store_for_groups(tests, path, groups) if groups
-      store_for_source(tests, path, *test.source_location)
+      store_for_source(tests, path, source_location)
     end
 
     def store_for_groups tests, path, groups
-      r = tests[:groups] ||= {}
+      map = tests[:groups] ||= {}
       groups.each do |g|
-        (r[g.to_s] ||= []) << path
+        (map[g.to_s] ||= []) << path
       end
     end
 
-    def store_for_source tests, path, file, line
-      r = tests[:files] ||= {}
-      ((r[File.expand_path(file)] ||= {})[line] ||= []) << path
+    def store_for_source tests, path, source_location
+      source, line = source_location
+
+      tests[:files][source][line] << path
+    end
+
+    def balanced_append map, key, value
+      last_key = map.reverse_each.first.first unless map.empty?
+
+      map[key] ||= []
+
+      map.replace(Hash[map.sort]) if last_key && key < last_key
     end
   end
 end
