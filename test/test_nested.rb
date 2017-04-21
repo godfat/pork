@@ -14,7 +14,7 @@ describe 'A' do
 
   would 'f' do
     f.should.eq m
-    f.should.kind_of? Fixnum
+    f.should.kind_of? Integer
     lambda{ f.should.eq '' }.should.raise Pork::Failure
   end
 
