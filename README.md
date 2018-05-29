@@ -148,7 +148,7 @@ end
 
 ## REQUIREMENTS:
 
-* Tested with MRI (official CRuby), Rubinius and JRuby.
+* Tested with MRI (official CRuby) and JRuby.
 * (Optional) [method_source][] if you would like to print the source for the
   failing tests.
 * (Optional) [ruby-progressbar][] if you like porgressbar for showing
