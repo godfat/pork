@@ -2,6 +2,7 @@ sudo: false
 language: ruby
 
 install: 'gem install bundler; bundle install --retry=3'
+before_script: unset CI
 script: 'ruby --enable-frozen-string-literal -r bundler/setup -S rake test'
 
 matrix:
