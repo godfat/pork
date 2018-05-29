@@ -127,11 +127,13 @@ module Pork
     end
 
     def strip_home bt
-      bt.map{ |path| path.sub(ENV['HOME'], '~') }
+      home = ENV['HOME']
+      bt.map{ |path| path.sub(home, '~') }
     end
 
     def strip_cwd bt
-      bt.map{ |path| path.sub("#{Dir.pwd}/", '') }
+      cwd = Dir.pwd
+      bt.map{ |path| path.sub("#{cwd}/", '') }
     end
 
     def pork_test source_location

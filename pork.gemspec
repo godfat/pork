@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = Gem::Requirement.new(">= 0".freeze) if s.respond_to? :required_rubygems_version=
   s.require_paths = ["lib".freeze]
   s.authors = ["Lin Jen-Shin (godfat)".freeze]
-  s.date = "2017-03-13"
+  s.date = "2018-05-29"
   s.description = "Pork -- Simple and clean and modular testing library.\n\nInspired by [Bacon][].\n\n[Bacon]: https://github.com/chneukirchen/bacon".freeze
   s.email = ["godfat (XD) godfat.org".freeze]
   s.files = [
@@ -55,6 +55,7 @@ Gem::Specification.new do |s|
   "test/test_bacon.rb".freeze,
   "test/test_expect.rb".freeze,
   "test/test_inspect.rb".freeze,
+  "test/test_isolator.rb".freeze,
   "test/test_meta.rb".freeze,
   "test/test_nested.rb".freeze,
   "test/test_pork_test.rb".freeze,
@@ -64,12 +65,13 @@ Gem::Specification.new do |s|
   "test/test_suite.rb".freeze]
   s.homepage = "https://github.com/godfat/pork".freeze
   s.licenses = ["Apache-2.0".freeze]
-  s.rubygems_version = "2.6.10".freeze
+  s.rubygems_version = "2.7.7".freeze
   s.summary = "Pork -- Simple and clean and modular testing library.".freeze
   s.test_files = [
   "test/test_bacon.rb".freeze,
   "test/test_expect.rb".freeze,
   "test/test_inspect.rb".freeze,
+  "test/test_isolator.rb".freeze,
   "test/test_meta.rb".freeze,
   "test/test_nested.rb".freeze,
   "test/test_pork_test.rb".freeze,
