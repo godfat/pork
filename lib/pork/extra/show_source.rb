@@ -47,7 +47,7 @@ module Pork
         end
       end.join
       "\n#{result.chomp}"
-    rescue SyntaxError => e
+    rescue SyntaxError, MethodSource::SourceNotFoundError => e
       "\nPork bug: Cannot parse the source. Please report: #{e}"
     end
   end
