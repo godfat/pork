@@ -5,7 +5,7 @@ module Pork
   class Runner < Struct.new(:suite, :seed, :stat, :desc, :test, :env)
     def run
       assertions = stat.assertions
-      context = suite.new(stat, desc)
+      context = suite.new(stat, desc, [])
 
       stat.reporter.case_start(context)
 

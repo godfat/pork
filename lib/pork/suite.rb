@@ -1,14 +1,29 @@
 
+require 'fiber'
+
 require 'pork/runner'
 require 'pork/context'
 
 module Pork
-  class Suite < Struct.new(:pork_stat, :pork_description)
+  class Suite < Struct.new(:pork_stat, :pork_description, :pork_fibers)
     module Imp
       attr_reader :desc, :tests
 
       def before &block; @tests << [:before, block]; end
       def after  &block; @tests << [:after , block]; end
+
+      def around &block
+        before do
+          fiber = Fiber.new{ instance_exec(Fiber.method(:yield), &block) }
+          pork_fibers << fiber
+          fiber.resume
+        end
+
+        after do
+          fiber = pork_fibers.pop
+          fiber.resume if fiber.alive?
+        end
+      end
 
       def copy  desc=:default, &suite
         @stash[desc] = suite

@@ -663,6 +663,49 @@ describe do
 end
 ```
 
+### Pork::API.around
+
+Each `around` block would be called before each `would` block (test case),
+and whenever it's called, it can take an argument representing the `would`
+block (test case). Whenever `call` is called on the test case, it will run.
+Essentially it's wrapping around the `would` block.
+
+Note that each nested `describe` would also run parents' `around` block,
+following the same order of `before` (in order) and `after` (reverse order).
+
+``` ruby
+require 'pork/auto'
+
+describe do
+  around do |test|
+    @a = 0
+
+    test.call
+
+    @a.should.eq 2
+  end
+
+  describe do
+    around do |test|
+      @a.should.eq 0
+      @a += 1
+
+      test.call
+
+      @a.should.eq 1
+      @a += 1
+    end
+
+    would do
+      @a.should.eq 1
+    end
+  end
+end
+```
+
+Note that if `test.call` was never called, it'll just act like a `before`
+block. All the tests will still run unlike RSpec.
+
 ### Pork::API.copy and Pork::API.paste
 
 It could be a bit confusing at first, but just think of `copy` as a way to

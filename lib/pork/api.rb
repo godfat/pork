@@ -12,6 +12,10 @@ module Pork
       Suite.after(&block)
     end
 
+    def around &block
+      Suite.around(&block)
+    end
+
     def copy desc=:default, &block
       Suite.copy(desc, &block)
     end
