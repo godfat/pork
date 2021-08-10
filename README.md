@@ -1114,7 +1114,7 @@ Have you seen Rainbows!?
 
 Apache License 2.0 (Apache-2.0)
 
-Copyright (c) 2014-2019, Lin Jen-Shin (godfat)
+Copyright (c) 2014-2021, Lin Jen-Shin (godfat)
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
