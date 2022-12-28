@@ -1,5 +1,22 @@
 # CHANGES
 
+## Pork 2.1.0 -- 2022-12-28
+
+### Bugs fixed
+
+* `Pork.show_source` can work under frozen literal string mode now.
+* Fix picking the right test for the file line number from `ENV['PORK_TEST']`
+  (I totally forgot the details for this from 2017, but I think it should
+  make it more accurate anyway)
+* Ruby 3.2 compatibility fix. (Removed the use of `Random::DEFAULT`)
+
+### Enhancement
+
+* Introduced `Pork::API.around` which will pass the test object to the block,
+  and whenever the object is called with `call` it'll run the test. Note that
+  if `call` was never called, it'll act like `Pork::API.before` and the test
+  will still run unlike RSpec. To skip the test, call `skip` directly.
+
 ## Pork 2.0.0 -- 2016-09-10
 
 ### Incompatible changes
