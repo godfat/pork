@@ -27,7 +27,7 @@ module Pork
       sopath = "#{test.source_location.first}:"
       lowers = test.source_location.last
       uppers = lowers + source.size
-      lineno = reject_pork(test, err).find do |backtrace|
+      lineno = reject_pork(test, err.backtrace).find do |backtrace|
         # find the line from the test source, exclude everything else
         next unless backtrace.start_with?(sopath)
         number = backtrace[/(?<=\.rb:)\d+/].to_i

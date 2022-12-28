@@ -86,10 +86,16 @@ module Pork
     end
 
     def backtrace test, err
-      if $VERBOSE
+      bt = if $VERBOSE
         err.backtrace
       else
-        strip(reject_pork(test, err))
+        strip(reject_pork(test, err.backtrace))
+      end
+
+      if bt.empty?
+        ["#{test.source_location.join(':')}:in `block in would'"]
+      else
+        bt
       end
     end
 
@@ -113,13 +119,8 @@ module Pork
       "#{err.class}: #{err.message}"
     end
 
-    def reject_pork test, err
-      bt = err.backtrace.reject{ |l| l =~ %r{/lib/pork(/\w+)*\.rb:\d+} }
-      if bt.empty?
-        ["#{test.source_location.join(':')}:in `block in would'"]
-      else
-        bt
-      end
+    def reject_pork test, bt
+      bt.reject{ |l| l =~ %r{/lib/pork(/\w+)*\.rb:\d+} }
     end
 
     def strip bt
