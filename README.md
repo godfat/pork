@@ -1,4 +1,4 @@
-# Pork [![Build Status](https://secure.travis-ci.org/godfat/pork.png?branch=master)](http://travis-ci.org/godfat/pork) [![Coverage Status](https://coveralls.io/repos/github/godfat/pork/badge.png)](https://coveralls.io/github/godfat/pork) [![Join the chat at https://gitter.im/godfat/pork](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/godfat/pork)
+# Pork [![Pipeline status](https://gitlab.com/godfat/pork/badges/master/pipeline.svg)](https://gitlab.com/godfat/pork/-/pipelines)
 
 by Lin Jen-Shin ([godfat](http://godfat.org))
 
