@@ -46,11 +46,7 @@ module Pork
   end
 
   def self.seed
-    @seed ||= if Random.const_defined?(:DEFAULT)
-                Random::DEFAULT.seed
-              else
-                Thread.current.randomizer.seed # Rubinius (rbx)
-              end
+    @seed ||= Random.seed
   end
 
   def self.reseed
