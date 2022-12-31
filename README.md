@@ -1,12 +1,12 @@
 # Pork [![Pipeline status](https://gitlab.com/godfat/pork/badges/master/pipeline.svg)](https://gitlab.com/godfat/pork/-/pipelines)
 
-by Lin Jen-Shin ([godfat](http://godfat.org))
+by Lin Jen-Shin ([godfat](https://godfat.org))
 
 ## LINKS:
 
 * [github](https://github.com/godfat/pork)
 * [rubygems](https://rubygems.org/gems/pork)
-* [rdoc](http://rdoc.info/github/godfat/pork)
+* [rdoc](https://rubydoc.info/github/godfat/pork)
 * [issues](https://github.com/godfat/pork/issues) (feel free to ask for support)
 
 ## DESCRIPTION:
@@ -366,7 +366,7 @@ With Bash shell:
 Personally I have a [rake task][gemgem] which would do this for me, so I just
 run `rake test` to run all the tests.
 
-[Fish shell]: http://fishshell.com/
+[Fish shell]: https://fishshell.com
 [gemgem]: https://github.com/godfat/gemgem
 
 ## The API
@@ -1114,13 +1114,13 @@ Have you seen Rainbows!?
 
 Apache License 2.0 (Apache-2.0)
 
-Copyright (c) 2014-2022, Lin Jen-Shin (godfat)
+Copyright (c) 2014-2023, Lin Jen-Shin (godfat)
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-<http://www.apache.org/licenses/LICENSE-2.0>
+<https://www.apache.org/licenses/LICENSE-2.0>
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
