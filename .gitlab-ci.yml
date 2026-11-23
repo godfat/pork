@@ -29,3 +29,7 @@ ruby:4.0:
 jruby:latest:
   extends: .test
   image: jruby:latest
+  before_script:
+    - apt-get update && apt-get install -y git # git for pulling fork for method_source
+    - bundle install --retry=3
+    - unset CI # Don't run coverage
