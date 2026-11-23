@@ -3,9 +3,10 @@ require 'pork/test'
 
 describe Pork::Inspect do
   would 'hash' do
-    Pork::Inspect.with_auto(
-      {:b => 1, :a => 0}, :==, [{:a => 1, :b => 0}], false).
-      should.eq '{:a=>0, :b=>1}.==({:a=>1, :b=>0}) to return true'
+    a = {:b => 1, :a => 0}
+    b = {:a => 1, :b => 0}
+    Pork::Inspect.with_auto(a, :==, [b], false).should.
+      eq "#{a.sort.to_h.inspect}.==(#{b.sort.to_h.inspect}) to return true"
   end
 
   would 'newline' do
