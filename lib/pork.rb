@@ -31,6 +31,10 @@ module Pork
     @protected_exceptions ||= [Pork::Error, StandardError]
   end
 
+  def self.I_am_feeling_lucky!
+    Rainbows! if rand(10) == 0
+  end
+
   def self.Rainbows!
     require 'pork/extra/rainbows'
     report_extensions << Rainbows

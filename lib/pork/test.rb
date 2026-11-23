@@ -2,7 +2,7 @@
 require 'pork/auto'
 
 Pork.show_source
-Pork.Rainbows! if rand(10) == 0
+Pork.I_am_feeling_lucky!
 
 WebMockError = Class.new(Exception)
 Pork.protected_exceptions << WebMockError
