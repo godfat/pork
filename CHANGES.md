@@ -1,5 +1,12 @@
 # CHANGES
 
+## Pork 2.1.1 -- 2026-11-23
+
+### Enhancement
+
+* Introduced `Pork.I_am_feeling_lucky!` which is `Rainbows! if rand(10) == 0`.
+  Just for fun after 4 years!
+
 ## Pork 2.1.0 -- 2022-12-28
 
 ### Bugs fixed
